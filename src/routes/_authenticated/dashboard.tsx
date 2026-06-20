@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { motion } from "framer-motion";
 import { ArrowRight, Plug, Sparkles, TrendingUp, Award, Activity } from "lucide-react";
 import { listMyPlatforms } from "@/lib/platforms.functions";
-import { PLATFORMS, type PlatformId } from "@/lib/platforms/registry";
+import { PLATFORMS, type PlatformId, type PlatformMeta } from "@/lib/platforms/registry";
 import { computeCPFlowScore, tierGradient } from "@/lib/score";
 import { PlatformLogo } from "@/components/platform-logo";
 import { GlassCard } from "@/components/glass-card";
@@ -178,7 +178,7 @@ function Kpi({ icon: Icon, label, value }: { icon: React.ComponentType<{ classNa
 function PlatformStatCard({
   meta, row,
 }: {
-  meta: ReturnType<typeof PLATFORMS[PlatformId]>;
+  meta: PlatformMeta;
   row: { platform: string; username: string; rating: number | null; max_rating: number | null; rank_label: string | null; problems_solved: number; contest_count: number };
 }) {
   return (

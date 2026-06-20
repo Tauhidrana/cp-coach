@@ -9,6 +9,7 @@ import {
   Map,
   LogOut,
   Zap,
+  Plug,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/use-auth";
@@ -16,6 +17,7 @@ import { Button } from "@/components/ui/button";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/platforms", label: "Platforms", icon: Plug },
   { to: "/analytics", label: "Analytics", icon: LineChart },
   { to: "/sheet", label: "Daily Sheet", icon: ListChecks },
   { to: "/coach", label: "AI Coach", icon: Sparkles },

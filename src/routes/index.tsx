@@ -40,6 +40,10 @@ const features = [
   { icon: Sparkles, title: "Personal Roadmap", desc: "AI-built path from your current to your target level." },
 ];
 
+function AnimatedNumber({ to }: { to: number }) {
+  return <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{to}</motion.span>;
+}
+
 function Landing() {
   return (
     <div className="min-h-screen relative overflow-hidden">

@@ -235,13 +235,27 @@ Produce 5-7 milestones, ordered by progression. Prioritize the user's weakest to
 export const getMyProfile = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("profiles")
-      .select("codeforces_handle, display_name, target_rating")
-      .eq("id", context.userId)
-      .maybeSingle();
-    if (error) throw error;
-    return data;
+    const [{ data: profile, error: pErr }, { data: cfRow }] = await Promise.all([
+      context.supabase
+        .from("profiles")
+        .select("codeforces_handle, display_name, target_rating")
+        .eq("id", context.userId)
+        .maybeSingle(),
+      context.supabase
+        .from("user_platforms")
+        .select("username")
+        .eq("user_id", context.userId)
+        .eq("platform", "codeforces")
+        .maybeSingle(),
+    ]);
+    if (pErr) throw pErr;
+    // Prefer the platform connection; fall back to legacy profile field.
+    const handle = cfRow?.username ?? profile?.codeforces_handle ?? null;
+    return {
+      codeforces_handle: handle,
+      display_name: profile?.display_name ?? null,
+      target_rating: profile?.target_rating ?? null,
+    };
   });
 
 export const saveMyProfile = createServerFn({ method: "POST" })

@@ -65,6 +65,57 @@ export type Database = {
         }
         Relationships: []
       }
+      user_platforms: {
+        Row: {
+          contest_count: number
+          created_at: string
+          id: string
+          is_manual: boolean
+          last_synced_at: string | null
+          max_rating: number | null
+          platform: string
+          problems_solved: number
+          rank_label: string | null
+          rating: number | null
+          raw_data: Json | null
+          updated_at: string
+          user_id: string
+          username: string
+        }
+        Insert: {
+          contest_count?: number
+          created_at?: string
+          id?: string
+          is_manual?: boolean
+          last_synced_at?: string | null
+          max_rating?: number | null
+          platform: string
+          problems_solved?: number
+          rank_label?: string | null
+          rating?: number | null
+          raw_data?: Json | null
+          updated_at?: string
+          user_id: string
+          username: string
+        }
+        Update: {
+          contest_count?: number
+          created_at?: string
+          id?: string
+          is_manual?: boolean
+          last_synced_at?: string | null
+          max_rating?: number | null
+          platform?: string
+          problems_solved?: number
+          rank_label?: string | null
+          rating?: number | null
+          raw_data?: Json | null
+          updated_at?: string
+          user_id?: string
+          username?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

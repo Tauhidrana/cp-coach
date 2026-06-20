@@ -12,6 +12,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PLATFORM_LIST } from "@/lib/platforms/registry";
+import { PlatformLogo, FloatingLogos } from "@/components/platform-logo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,13 +32,17 @@ export const Route = createFileRoute("/")({
 });
 
 const features = [
-  { icon: BarChart3, title: "Deep CF Analytics", desc: "Rating progress, topic strength, submission heatmap." },
-  { icon: Target, title: "Weak-Topic Detection", desc: "Find the cracks in your prep, automatically." },
-  { icon: Calendar, title: "Daily Smart Sheets", desc: "Problems tuned to your rating and weak tags." },
-  { icon: Bot, title: "AI Coach", desc: "Gemini-powered feedback on what to study next." },
+  { icon: BarChart3, title: "Cross-Platform Analytics", desc: "One unified view of Codeforces, LeetCode, AtCoder & more." },
+  { icon: Target, title: "Unified CP Flow Score", desc: "A single 0-100 rating that captures your true CP strength." },
+  { icon: Calendar, title: "Daily Smart Sheets", desc: "Problems picked for your level and weak topics." },
+  { icon: Bot, title: "Cross-Platform AI Coach", desc: "Gemini-powered guidance tuned to every account you connect." },
   { icon: Trophy, title: "Contest Tracker", desc: "Upcoming rounds with countdowns and bookmarks." },
-  { icon: Sparkles, title: "Personal Roadmap", desc: "AI-built path from your rating to your target." },
+  { icon: Sparkles, title: "Personal Roadmap", desc: "AI-built path from your current to your target level." },
 ];
+
+function AnimatedNumber({ to }: { to: number }) {
+  return <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{to}</motion.span>;
+}
 
 function Landing() {
   return (
@@ -44,6 +50,7 @@ function Landing() {
       {/* Background */}
       <div className="absolute inset-0 grid-bg pointer-events-none" />
       <div className="absolute inset-0 bg-mesh pointer-events-none opacity-60" />
+      <FloatingLogos platforms={PLATFORM_LIST} />
 
       {/* Nav */}
       <header className="relative z-10">
@@ -76,15 +83,15 @@ function Landing() {
         >
           <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-muted-foreground mb-6">
             <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-            AI-powered Codeforces companion
+            AI-powered Competitive Programming Ecosystem
           </div>
           <h1 className="text-5xl md:text-7xl font-display font-bold leading-[1.05] tracking-tight">
             Practice Smarter.<br />
             <span className="text-gradient-brand">Climb Faster.</span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
-            CP Flow analyses your Codeforces history, surfaces your weakest topics, and ships
-            a personalized daily sheet — so every solve moves your rating up.
+            Track, analyze and improve across every competitive programming platform — Codeforces,
+            LeetCode, AtCoder, CodeChef and more — in one unified profile.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
             <Link to="/auth">
@@ -110,42 +117,76 @@ function Landing() {
         >
           <div className="glass-strong rounded-3xl p-2 shadow-glow ring-1 ring-primary/20">
             <div className="rounded-2xl bg-card/80 p-6 md:p-10 text-left">
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between gap-6 mb-6 flex-wrap">
                 <div>
-                  <div className="text-xs text-muted-foreground">Today's smart sheet</div>
-                  <div className="text-2xl font-display font-semibold">5 problems · weak-tag biased</div>
+                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">CP Flow Score</div>
+                  <div className="flex items-baseline gap-2 mt-1">
+                    <motion.span
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      className="text-6xl font-display font-bold text-gradient-brand tabular-nums"
+                    >
+                      <AnimatedNumber to={84} />
+                    </motion.span>
+                    <span className="text-lg text-muted-foreground">/ 100 · Advanced</span>
+                  </div>
                 </div>
                 <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="px-2 py-1 rounded-md bg-success/10 text-success">+45 this week</span>
+                  <span className="px-2 py-1 rounded-md bg-success/10 text-success">+7 this month</span>
                 </div>
               </div>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {[
-                  { name: "Robot Bicentennial", tag: "dp", r: 1300, d: "easy" },
-                  { name: "Almost Sorted", tag: "two pointers", r: 1400, d: "easy" },
-                  { name: "Tree Queries", tag: "trees", r: 1500, d: "medium" },
-                  { name: "XOR Constructions", tag: "bitmasks", r: 1600, d: "medium" },
-                  { name: "Prime Pursuit", tag: "number theory", r: 1800, d: "hard" },
-                ].map((p, i) => (
+                  { p: PLATFORM_LIST[0], handle: "tourist", rating: 3849, solved: 1452 },
+                  { p: PLATFORM_LIST[1], handle: "neal_wu", rating: 2810, solved: 1820 },
+                  { p: PLATFORM_LIST[2], handle: "tourist", rating: 4229, solved: 1167 },
+                  { p: PLATFORM_LIST[3], handle: "gennady_k", rating: 2600, solved: 740 },
+                ].map((row, i) => (
                   <motion.div
-                    key={p.name}
+                    key={row.p.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + i * 0.05 }}
-                    className="rounded-xl border border-border/60 bg-card/40 p-4"
+                    transition={{ delay: 0.4 + i * 0.08 }}
+                    className="rounded-xl border border-border/60 bg-card/40 p-4 relative overflow-hidden"
                   >
-                    <div className="flex items-center justify-between text-[10px] text-muted-foreground uppercase tracking-wider">
-                      <span>{p.d}</span>
-                      <span>{p.r}</span>
+                    <div className="absolute -top-8 -right-8 size-20 rounded-full opacity-20 blur-xl" style={{ background: row.p.color }} />
+                    <div className="relative flex items-center gap-2">
+                      <PlatformLogo p={row.p} size={28} />
+                      <div className="text-xs text-muted-foreground truncate">@{row.handle}</div>
                     </div>
-                    <div className="mt-2 text-sm font-medium leading-tight">{p.name}</div>
-                    <div className="mt-3 inline-flex items-center text-xs text-primary">
-                      <span className="size-1.5 rounded-full bg-primary mr-1.5" />{p.tag}
+                    <div className="relative mt-3 grid grid-cols-2 gap-2 text-center">
+                      <div>
+                        <div className="text-lg font-display font-semibold tabular-nums">{row.rating}</div>
+                        <div className="text-[9px] uppercase text-muted-foreground tracking-wider">Rating</div>
+                      </div>
+                      <div>
+                        <div className="text-lg font-display font-semibold tabular-nums">{row.solved}</div>
+                        <div className="text-[9px] uppercase text-muted-foreground tracking-wider">Solved</div>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
               </div>
             </div>
+          </div>
+        </motion.div>
+
+        {/* Trusted platforms strip */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="mt-14"
+        >
+          <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-5">Works with</div>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {PLATFORM_LIST.map((p) => (
+              <div key={p.id} className="glass rounded-xl px-3 py-2 flex items-center gap-2">
+                <PlatformLogo p={p} size={24} />
+                <span className="text-xs font-medium">{p.name}</span>
+              </div>
+            ))}
           </div>
         </motion.div>
       </section>

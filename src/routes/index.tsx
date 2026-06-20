@@ -12,6 +12,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PLATFORM_LIST } from "@/lib/platforms/registry";
+import { PlatformLogo, FloatingLogos } from "@/components/platform-logo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,12 +32,12 @@ export const Route = createFileRoute("/")({
 });
 
 const features = [
-  { icon: BarChart3, title: "Deep CF Analytics", desc: "Rating progress, topic strength, submission heatmap." },
-  { icon: Target, title: "Weak-Topic Detection", desc: "Find the cracks in your prep, automatically." },
-  { icon: Calendar, title: "Daily Smart Sheets", desc: "Problems tuned to your rating and weak tags." },
-  { icon: Bot, title: "AI Coach", desc: "Gemini-powered feedback on what to study next." },
+  { icon: BarChart3, title: "Cross-Platform Analytics", desc: "One unified view of Codeforces, LeetCode, AtCoder & more." },
+  { icon: Target, title: "Unified CP Flow Score", desc: "A single 0-100 rating that captures your true CP strength." },
+  { icon: Calendar, title: "Daily Smart Sheets", desc: "Problems picked for your level and weak topics." },
+  { icon: Bot, title: "Cross-Platform AI Coach", desc: "Gemini-powered guidance tuned to every account you connect." },
   { icon: Trophy, title: "Contest Tracker", desc: "Upcoming rounds with countdowns and bookmarks." },
-  { icon: Sparkles, title: "Personal Roadmap", desc: "AI-built path from your rating to your target." },
+  { icon: Sparkles, title: "Personal Roadmap", desc: "AI-built path from your current to your target level." },
 ];
 
 function Landing() {
@@ -44,6 +46,7 @@ function Landing() {
       {/* Background */}
       <div className="absolute inset-0 grid-bg pointer-events-none" />
       <div className="absolute inset-0 bg-mesh pointer-events-none opacity-60" />
+      <FloatingLogos platforms={PLATFORM_LIST} />
 
       {/* Nav */}
       <header className="relative z-10">
@@ -76,15 +79,15 @@ function Landing() {
         >
           <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-muted-foreground mb-6">
             <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-            AI-powered Codeforces companion
+            AI-powered Competitive Programming Ecosystem
           </div>
           <h1 className="text-5xl md:text-7xl font-display font-bold leading-[1.05] tracking-tight">
             Practice Smarter.<br />
             <span className="text-gradient-brand">Climb Faster.</span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
-            CP Flow analyses your Codeforces history, surfaces your weakest topics, and ships
-            a personalized daily sheet — so every solve moves your rating up.
+            Track, analyze and improve across every competitive programming platform — Codeforces,
+            LeetCode, AtCoder, CodeChef and more — in one unified profile.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
             <Link to="/auth">

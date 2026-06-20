@@ -20,13 +20,19 @@ export const connectPlatform = createServerFn({ method: "POST" })
     const apiPlatforms = ["codeforces", "leetcode", "atcoder"] as const;
     const isApi = (apiPlatforms as readonly string[]).includes(data.platform);
 
-    let stats = {
-      rating: null as number | null,
-      maxRating: null as number | null,
-      rankLabel: null as string | null,
+    let stats: {
+      rating: number | null;
+      maxRating: number | null;
+      rankLabel: string | null;
+      problemsSolved: number;
+      contestCount: number;
+      raw?: Record<string, unknown>;
+    } = {
+      rating: null,
+      maxRating: null,
+      rankLabel: null,
       problemsSolved: 0,
       contestCount: 0,
-      raw: undefined as Record<string, unknown> | undefined,
     };
 
     if (isApi) {

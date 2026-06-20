@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedSheetRouteImport } from './routes/_authenticated/sheet'
 import { Route as AuthenticatedRoadmapRouteImport } from './routes/_authenticated/roadmap'
+import { Route as AuthenticatedPlatformsRouteImport } from './routes/_authenticated/platforms'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedContestsRouteImport } from './routes/_authenticated/contests'
 import { Route as AuthenticatedCoachRouteImport } from './routes/_authenticated/coach'
@@ -41,6 +42,11 @@ const AuthenticatedSheetRoute = AuthenticatedSheetRouteImport.update({
 const AuthenticatedRoadmapRoute = AuthenticatedRoadmapRouteImport.update({
   id: '/roadmap',
   path: '/roadmap',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPlatformsRoute = AuthenticatedPlatformsRouteImport.update({
+  id: '/platforms',
+  path: '/platforms',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/coach': typeof AuthenticatedCoachRoute
   '/contests': typeof AuthenticatedContestsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/platforms': typeof AuthenticatedPlatformsRoute
   '/roadmap': typeof AuthenticatedRoadmapRoute
   '/sheet': typeof AuthenticatedSheetRoute
 }
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/coach': typeof AuthenticatedCoachRoute
   '/contests': typeof AuthenticatedContestsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/platforms': typeof AuthenticatedPlatformsRoute
   '/roadmap': typeof AuthenticatedRoadmapRoute
   '/sheet': typeof AuthenticatedSheetRoute
 }
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/_authenticated/coach': typeof AuthenticatedCoachRoute
   '/_authenticated/contests': typeof AuthenticatedContestsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/platforms': typeof AuthenticatedPlatformsRoute
   '/_authenticated/roadmap': typeof AuthenticatedRoadmapRoute
   '/_authenticated/sheet': typeof AuthenticatedSheetRoute
 }
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/contests'
     | '/dashboard'
+    | '/platforms'
     | '/roadmap'
     | '/sheet'
   fileRoutesByTo: FileRoutesByTo
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/contests'
     | '/dashboard'
+    | '/platforms'
     | '/roadmap'
     | '/sheet'
   id:
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '/_authenticated/coach'
     | '/_authenticated/contests'
     | '/_authenticated/dashboard'
+    | '/_authenticated/platforms'
     | '/_authenticated/roadmap'
     | '/_authenticated/sheet'
   fileRoutesById: FileRoutesById
@@ -173,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRoadmapRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/platforms': {
+      id: '/_authenticated/platforms'
+      path: '/platforms'
+      fullPath: '/platforms'
+      preLoaderRoute: typeof AuthenticatedPlatformsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -209,6 +228,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCoachRoute: typeof AuthenticatedCoachRoute
   AuthenticatedContestsRoute: typeof AuthenticatedContestsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedPlatformsRoute: typeof AuthenticatedPlatformsRoute
   AuthenticatedRoadmapRoute: typeof AuthenticatedRoadmapRoute
   AuthenticatedSheetRoute: typeof AuthenticatedSheetRoute
 }
@@ -218,6 +238,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCoachRoute: AuthenticatedCoachRoute,
   AuthenticatedContestsRoute: AuthenticatedContestsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedPlatformsRoute: AuthenticatedPlatformsRoute,
   AuthenticatedRoadmapRoute: AuthenticatedRoadmapRoute,
   AuthenticatedSheetRoute: AuthenticatedSheetRoute,
 }

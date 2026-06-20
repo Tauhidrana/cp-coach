@@ -14,7 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      contest_bookmarks: {
+        Row: {
+          contest_id: number
+          contest_name: string
+          created_at: string
+          start_time: string
+          user_id: string
+        }
+        Insert: {
+          contest_id: number
+          contest_name: string
+          created_at?: string
+          start_time: string
+          user_id: string
+        }
+        Update: {
+          contest_id?: number
+          contest_name?: string
+          created_at?: string
+          start_time?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          codeforces_handle: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          target_rating: number | null
+          updated_at: string
+        }
+        Insert: {
+          codeforces_handle?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          target_rating?: number | null
+          updated_at?: string
+        }
+        Update: {
+          codeforces_handle?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          target_rating?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

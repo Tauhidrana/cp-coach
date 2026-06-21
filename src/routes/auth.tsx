@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Zap, ArrowLeft, Loader2 } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
 import { lovable } from "@/integrations/lovable";
 import { supabase } from "@/integrations/supabase/client";

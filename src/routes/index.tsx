@@ -11,6 +11,7 @@ import {
   Trophy,
   CheckCircle2,
 } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
 import { PLATFORM_LIST } from "@/lib/platforms/registry";
 import { PlatformLogo, FloatingLogos } from "@/components/platform-logo";

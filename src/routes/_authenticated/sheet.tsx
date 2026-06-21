@@ -24,12 +24,24 @@ export const Route = createFileRoute("/_authenticated/sheet")({
 function SheetPage() {
   const profileFn = useServerFn(getMyProfile);
   const genFn = useServerFn(generateSheet);
+  const doneFn = useServerFn(isSheetCompletedToday);
+  const markFn = useServerFn(markSheetCompletedToday);
+  const qc = useQueryClient();
   const { data: profile } = useQuery({ queryKey: ["profile"], queryFn: () => profileFn() });
+  const { data: doneToday } = useQuery({ queryKey: ["sheet-done-today"], queryFn: () => doneFn() });
   const handle = profile?.codeforces_handle ?? "";
   const [size, setSize] = useState<5 | 10 | 15>(5);
 
   const mut = useMutation({
     mutationFn: (s: 5 | 10 | 15) => genFn({ data: { handle, size: s } }),
+  });
+
+  const completeMut = useMutation({
+    mutationFn: () => markFn(),
+    onSuccess: () => {
+      toast.success("Sheet marked complete — reminders silenced for today.");
+      qc.invalidateQueries({ queryKey: ["sheet-done-today"] });
+    },
   });
 
   if (!handle) {

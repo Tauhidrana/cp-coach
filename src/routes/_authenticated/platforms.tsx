@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Plus, RefreshCw, Trash2, Pencil, ExternalLink, CheckCircle2 } from "lucide-react";
+import { Loader2, Plus, RefreshCw, Trash2, Pencil, ExternalLink } from "lucide-react";
 import {
   listMyPlatforms, connectPlatform, syncPlatform, upsertManualPlatform, disconnectPlatform,
 } from "@/lib/platforms.functions";
@@ -111,7 +111,11 @@ function PlatformCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <h3 className="font-display text-lg font-semibold">{p.name}</h3>
-            {connected && <CheckCircle2 className="size-4 text-success" />}
+            {connected && (
+              <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-success">
+                <span className="size-1.5 rounded-full bg-success animate-pulse" /> live
+              </span>
+            )}
           </div>
           <div className="text-xs text-muted-foreground mt-0.5">
             {connected ? (
@@ -132,9 +136,14 @@ function PlatformCard({
             <Stat label="Max" value={row.max_rating ?? "—"} />
             <Stat label="Solved" value={row.problems_solved} />
           </div>
-          {row.rank_label && (
-            <div className="mt-3 text-xs text-center text-muted-foreground capitalize">{row.rank_label}</div>
-          )}
+          <div className="mt-3 flex items-center justify-between text-[11px] text-muted-foreground">
+            {row.rank_label ? <span className="capitalize">{row.rank_label}</span> : <span />}
+            <span>
+              {row.last_synced_at
+                ? `Synced ${timeAgo(row.last_synced_at)}`
+                : "Not synced yet"}
+            </span>
+          </div>
           <div className="mt-4 flex gap-2">
             {p.apiSupported && !row.is_manual ? (
               <Button size="sm" variant="outline" className="flex-1 border-border/60 bg-white/[0.02]" onClick={() => sync.mutate()} disabled={sync.isPending}>
@@ -286,9 +295,14 @@ function ConnectDialog({
               </Button>
             </form>
 
-            {platform.id === PLATFORMS.leetcode.id && (
+            {platform.id === "leetcode" && (
               <p className="text-[11px] text-muted-foreground mt-2">
                 LeetCode uses an unofficial GraphQL endpoint. Make sure your profile is public.
+              </p>
+            )}
+            {platform.id === "codechef" && (
+              <p className="text-[11px] text-muted-foreground mt-2">
+                CodeChef has no official API. We read your public profile page — make sure it's accessible.
               </p>
             )}
           </>

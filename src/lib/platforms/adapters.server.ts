@@ -242,12 +242,92 @@ async function fetchCodeChef(username: string): Promise<PlatformStats> {
   };
 }
 
+// ---------- HackerRank ----------
+// HackerRank exposes JSON via /rest/hackers/{user}/* endpoints used by their own site.
+// No official API, but the endpoints are public and CORS-open. Adapter is tolerant —
+// fields default to null/0 if the endpoint changes.
+async function fetchHackerRank(username: string): Promise<PlatformStats> {
+  const u = encodeURIComponent(username);
+  const headers = {
+    "User-Agent": UA,
+    Accept: "application/json",
+    Referer: `https://www.hackerrank.com/profile/${u}`,
+  };
+
+  const get = async <T,>(path: string): Promise<T | null> => {
+    try {
+      const res = await fetch(`https://www.hackerrank.com${path}`, { headers });
+      if (!res.ok) return null;
+      return (await res.json()) as T;
+    } catch {
+      return null;
+    }
+  };
+
+  const profile = await get<{ model?: any; status?: boolean }>(`/rest/hackers/${u}/profile`);
+  if (!profile?.model && profile?.status === false) throw new Error("HackerRank user not found");
+  const model = profile?.model ?? {};
+
+  const [scoresRes, badgesRes, submissionsRes, certsRes] = await Promise.all([
+    get<{ models?: Array<{ track?: { name?: string }; practice?: { score?: number; solved?: number } }> }>(
+      `/rest/hackers/${u}/scores_elo`,
+    ),
+    get<{ models?: Array<{ badge_name?: string; stars?: number; level?: number }> }>(
+      `/rest/hackers/${u}/badges`,
+    ),
+    get<{ models?: any[]; total?: number }>(`/rest/hackers/${u}/recent_challenges?limit=10`),
+    get<{ models?: any[] }>(`/rest/hackers/${u}/certificates`),
+  ]);
+
+  const tracks = scoresRes?.models ?? [];
+  const totalScore = tracks.reduce((a, t) => a + (t.practice?.score ?? 0), 0);
+  const problemsSolved = tracks.reduce((a, t) => a + (t.practice?.solved ?? 0), 0);
+
+  const badges = badgesRes?.models ?? [];
+  const totalStars = badges.reduce((a, b) => a + (b.stars ?? 0), 0);
+  const topStars = badges.reduce((a, b) => Math.max(a, b.stars ?? 0), 0);
+
+  const recent = submissionsRes?.models ?? [];
+  const certificates = certsRes?.models ?? [];
+
+  const rating = Math.round(totalScore) || null;
+  const rankLabel = topStars > 0 ? `${topStars}★` : null;
+
+  return {
+    rating,
+    maxRating: rating,
+    rankLabel,
+    problemsSolved,
+    contestCount: 0,
+    raw: {
+      name: model.name ?? null,
+      avatar: model.avatar ?? null,
+      country: model.country ?? null,
+      followers: model.followers_count ?? null,
+      badges: badges.map((b) => ({ name: b.badge_name, stars: b.stars, level: b.level })),
+      totalStars,
+      certificates: certificates.length,
+      recentActivity: recent.slice(0, 5).map((r: any) => ({
+        challenge: r?.name ?? r?.challenge?.name ?? null,
+        track: r?.track_name ?? null,
+        at: r?.created_at ?? null,
+      })),
+      tracks: tracks.map((t) => ({
+        name: t.track?.name,
+        score: t.practice?.score,
+        solved: t.practice?.solved,
+      })),
+    },
+  };
+}
+
 export async function fetchPlatformStats(platform: PlatformId, username: string): Promise<PlatformStats> {
   switch (platform) {
     case "codeforces": return fetchCodeforces(username);
     case "leetcode":   return fetchLeetCode(username);
     case "atcoder":    return fetchAtCoder(username);
     case "codechef":   return fetchCodeChef(username);
+    case "hackerrank": return fetchHackerRank(username);
     default:
       throw new Error(`Platform ${platform} requires manual entry`);
   }

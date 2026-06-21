@@ -128,6 +128,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.to}
                   to={item.to}
+                  preload="intent"
                   className={`flex flex-col items-center gap-1 py-1 text-[10px] ${
                     active ? "text-primary" : "text-muted-foreground"
                   }`}

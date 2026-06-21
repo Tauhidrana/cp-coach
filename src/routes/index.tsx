@@ -7,7 +7,6 @@ import {
   Calendar,
   Target,
   Sparkles,
-  Zap,
   Trophy,
   CheckCircle2,
 } from "lucide-react";

@@ -1,5 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 import {
   ArrowRight,
   BarChart3,

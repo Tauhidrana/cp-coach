@@ -61,7 +61,7 @@ function SheetPage() {
         </div>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3 items-center">
         <Button
           onClick={() => mut.mutate(size)}
           disabled={mut.isPending}
@@ -69,6 +69,18 @@ function SheetPage() {
         >
           {mut.isPending ? <RefreshCw className="size-4 mr-2 animate-spin" /> : <Sparkles className="size-4 mr-2" />}
           Generate sheet
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => completeMut.mutate()}
+          disabled={completeMut.isPending || doneToday?.completed}
+          className="border-border/60"
+        >
+          {doneToday?.completed ? (
+            <><CheckCircle2 className="size-4 mr-2 text-success" /> Completed today</>
+          ) : (
+            <><Check className="size-4 mr-2" /> Mark complete</>
+          )}
         </Button>
         {mut.data ? (
           <span className="text-xs text-muted-foreground self-center">

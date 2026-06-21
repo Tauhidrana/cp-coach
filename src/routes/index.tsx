@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { PLATFORM_LIST } from "@/lib/platforms/registry";
 import { PlatformLogo, FloatingLogos } from "@/components/platform-logo";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -66,11 +67,14 @@ function Landing() {
             <a href="#how" className="hover:text-foreground transition">How it works</a>
             <a href="#why" className="hover:text-foreground transition">Why CP Coach</a>
           </nav>
-          <Link to="/auth">
-            <Button className="bg-gradient-brand hover:opacity-90 text-white border-0 shadow-glow">
-              Get Started
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Link to="/auth">
+              <Button className="bg-gradient-brand hover:opacity-90 text-white border-0 shadow-glow">
+                Get Started
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 

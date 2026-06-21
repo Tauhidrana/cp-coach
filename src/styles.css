@@ -297,3 +297,17 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Hide Lovable badge */
+#lovable-badge {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+[data-testid="lovable-badge"],
+[class*="lovable-badge"],
+[class*="edit-with-lovable"] {
+  display: none !important;
+}

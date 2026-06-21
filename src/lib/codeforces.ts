@@ -60,7 +60,7 @@ const BASE = "https://codeforces.com/api";
 
 async function cfGet<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
-    headers: { "User-Agent": "CPFlow/1.0" },
+    headers: { "User-Agent": "CPCoach/1.0" },
   });
   if (!res.ok) throw new Error(`Codeforces API error: ${res.status}`);
   const json = (await res.json()) as { status: string; comment?: string; result: T };

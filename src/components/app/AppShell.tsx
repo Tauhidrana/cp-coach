@@ -14,6 +14,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/use-auth";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -49,7 +50,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="size-8 rounded-lg bg-gradient-brand grid place-items-center shadow-glow">
             <Zap className="size-4 text-white" />
           </div>
-          <span className="font-display text-lg font-semibold tracking-tight">CP Flow</span>
+          <span className="font-display text-lg font-semibold tracking-tight">CP Coach</span>
         </Link>
         <nav className="flex-1 p-3 space-y-1">
           {navItems.map((item) => {
@@ -79,8 +80,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
         <div className="p-3 border-t border-border/50">
-          <div className="flex items-center gap-3 px-2 py-2">
-            <div className="size-9 rounded-full bg-gradient-brand grid place-items-center text-sm font-semibold">
+          <div className="flex items-center gap-2 px-2 py-2">
+            <div className="size-9 rounded-full bg-gradient-brand grid place-items-center text-sm font-semibold text-white">
               {name.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
@@ -89,6 +90,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 {isGuest ? "Guest session" : user?.email}
               </div>
             </div>
+            <ThemeToggle />
             <Button variant="ghost" size="icon" onClick={onSignOut} aria-label="Sign out">
               <LogOut className="size-4" />
             </Button>
@@ -102,11 +104,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="size-7 rounded-md bg-gradient-brand grid place-items-center">
             <Zap className="size-3.5 text-white" />
           </div>
-          <span className="font-display font-semibold">CP Flow</span>
+          <span className="font-display font-semibold">CP Coach</span>
         </Link>
-        <Button variant="ghost" size="icon" onClick={onSignOut} aria-label="Sign out">
-          <LogOut className="size-4" />
-        </Button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <Button variant="ghost" size="icon" onClick={onSignOut} aria-label="Sign out">
+            <LogOut className="size-4" />
+          </Button>
+        </div>
       </div>
 
       <main className="flex-1 min-w-0 pt-16 lg:pt-0">

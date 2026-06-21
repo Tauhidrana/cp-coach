@@ -3,8 +3,10 @@
 
 import type { PlatformId, PlatformStats } from "./registry";
 
+const UA = "Mozilla/5.0 CPCoach/1.0";
+
 async function jget<T>(url: string): Promise<T> {
-  const res = await fetch(url, { headers: { "User-Agent": "CPFlow/1.0" } });
+  const res = await fetch(url, { headers: { "User-Agent": UA } });
   if (!res.ok) throw new Error(`Upstream ${res.status}`);
   return (await res.json()) as T;
 }
@@ -63,7 +65,7 @@ async function fetchLeetCode(username: string): Promise<PlatformStats> {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "User-Agent": "Mozilla/5.0 CPFlow/1.0",
+      "User-Agent": UA,
       Referer: `https://leetcode.com/${username}/`,
     },
     body: JSON.stringify({ query, variables: { username } }),
@@ -106,7 +108,7 @@ async function fetchLeetCode(username: string): Promise<PlatformStats> {
 async function fetchAtCoder(username: string): Promise<PlatformStats> {
   // Rating history (official AtCoder JSON)
   const historyRes = await fetch(`https://atcoder.jp/users/${encodeURIComponent(username)}/history/json`, {
-    headers: { "User-Agent": "Mozilla/5.0 CPFlow/1.0" },
+    headers: { "User-Agent": UA },
   });
   if (!historyRes.ok) throw new Error(`AtCoder ${historyRes.status}`);
   const history = (await historyRes.json()) as Array<{
@@ -160,11 +162,92 @@ async function fetchAtCoder(username: string): Promise<PlatformStats> {
   };
 }
 
+// ---------- CodeChef ----------
+// CodeChef has no official public API. We scrape the public profile page.
+// The adapter is intentionally tolerant: if a field can't be parsed we leave it null
+// instead of failing the whole sync.
+async function fetchCodeChef(username: string): Promise<PlatformStats> {
+  const url = `https://www.codechef.com/users/${encodeURIComponent(username)}`;
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent": UA,
+      Accept: "text/html,application/xhtml+xml",
+      "Accept-Language": "en-US,en;q=0.9",
+    },
+  });
+  if (res.status === 404) throw new Error("CodeChef user not found");
+  if (!res.ok) throw new Error(`CodeChef ${res.status}`);
+  const html = await res.text();
+
+  // Validate we landed on a real profile (CodeChef returns 200 for unknown users sometimes)
+  if (!/class=["'][^"']*user-details/.test(html) && !/rating-number/.test(html)) {
+    throw new Error("CodeChef profile not accessible (private or invalid)");
+  }
+
+  const pick = (re: RegExp): string | null => {
+    const m = html.match(re);
+    return m ? m[1].trim() : null;
+  };
+  const toInt = (s: string | null) => {
+    if (!s) return null;
+    const n = parseInt(s.replace(/[^\d-]/g, ""), 10);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  // Current rating (visible in the big circle on the profile)
+  const rating = toInt(pick(/<div[^>]*class="rating-number"[^>]*>\s*(\d+)/i));
+
+  // Highest rating: "Highest Rating&nbsp;1234"
+  const maxRating =
+    toInt(pick(/Highest\s+Rating[^0-9]*?(\d{3,4})/i)) ?? rating;
+
+  // Stars: "5★" inside .rating
+  const star =
+    pick(/<span[^>]*class="rating"[^>]*>\s*(\d)\s*★/i) ||
+    pick(/(\d)\s*★/);
+  const rankLabel = star ? `${star}★` : null;
+
+  // Problems solved: page contains "Total Problems Solved: 123"
+  const solved =
+    toInt(pick(/Total\s+Problems\s+Solved\s*:?\s*<\/h3>\s*<h5[^>]*>\s*(\d+)/i)) ??
+    toInt(pick(/Total\s+Problems\s+Solved\s*[:<][^0-9]*?(\d+)/i)) ??
+    0;
+
+  // Contests attended: count of all_rating[] entries embedded in JS
+  let contestCount = 0;
+  const arrMatch = html.match(/all_rating\s*=\s*(\[[\s\S]*?\])\s*;/);
+  if (arrMatch) {
+    try {
+      // Replace trailing commas / single quotes minimally before JSON parse fails — try eval-safe parse
+      const arr = JSON.parse(arrMatch[1].replace(/'/g, '"'));
+      if (Array.isArray(arr)) contestCount = arr.length;
+    } catch {
+      // Fall back to counting "code" entries
+      contestCount = (arrMatch[1].match(/"code"\s*:/g) || []).length;
+    }
+  }
+
+  // Country & global rank (best-effort)
+  const country = pick(/<span[^>]*class="user-country-name"[^>]*>\s*([^<]+)</i);
+  const globalRank = toInt(pick(/Global\s+Rank[\s\S]*?<strong>\s*(\d+)/i));
+  const countryRank = toInt(pick(/Country\s+Rank[\s\S]*?<strong>\s*(\d+)/i));
+
+  return {
+    rating,
+    maxRating,
+    rankLabel,
+    problemsSolved: solved,
+    contestCount,
+    raw: { country, globalRank, countryRank, stars: star },
+  };
+}
+
 export async function fetchPlatformStats(platform: PlatformId, username: string): Promise<PlatformStats> {
   switch (platform) {
     case "codeforces": return fetchCodeforces(username);
     case "leetcode":   return fetchLeetCode(username);
     case "atcoder":    return fetchAtCoder(username);
+    case "codechef":   return fetchCodeChef(username);
     default:
       throw new Error(`Platform ${platform} requires manual entry`);
   }

@@ -65,8 +65,8 @@ export const PLATFORMS: Record<PlatformId, PlatformMeta> = {
     short: "CC",
     color: "#5b4638",
     url: (u) => `https://www.codechef.com/users/${u}`,
-    apiSupported: false,
-    usernameHint: "manually update stats",
+    apiSupported: true,
+    usernameHint: "your CodeChef handle",
   },
   hackerrank: {
     id: "hackerrank",

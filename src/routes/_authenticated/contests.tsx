@@ -10,7 +10,7 @@ import { CardSkeleton } from "@/components/skeletons";
 export const Route = createFileRoute("/_authenticated/contests")({
   head: () => ({
     meta: [
-      { title: "Contests — CP Flow" },
+      { title: "Contests — CP Coach" },
       { name: "description", content: "Upcoming Codeforces contests with countdowns." },
     ],
   }),

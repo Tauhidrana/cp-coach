@@ -3,11 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Plus, RefreshCw, Trash2, Pencil, ExternalLink, CheckCircle2 } from "lucide-react";
+import { Loader2, Plus, RefreshCw, Trash2, Pencil, ExternalLink } from "lucide-react";
 import {
   listMyPlatforms, connectPlatform, syncPlatform, upsertManualPlatform, disconnectPlatform,
 } from "@/lib/platforms.functions";
-import { PLATFORM_LIST, PLATFORMS, type PlatformMeta } from "@/lib/platforms/registry";
+import { PLATFORM_LIST, type PlatformMeta } from "@/lib/platforms/registry";
 import { PlatformLogo } from "@/components/platform-logo";
 import { GlassCard } from "@/components/glass-card";
 import { CardSkeleton } from "@/components/skeletons";
@@ -20,8 +20,8 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/_authenticated/platforms")({
   head: () => ({
     meta: [
-      { title: "Platforms — CP Flow" },
-      { name: "description", content: "Connect Codeforces, LeetCode, AtCoder and more to your CP Flow profile." },
+      { title: "Platforms — CP Coach" },
+      { name: "description", content: "Connect Codeforces, LeetCode, AtCoder and more to your CP Coach profile." },
     ],
   }),
   component: PlatformsPage,
@@ -42,7 +42,7 @@ function PlatformsPage() {
           Connected <span className="text-gradient-brand">Platforms</span>
         </h1>
         <p className="text-muted-foreground mt-2">
-          Connect your competitive programming accounts. CP Flow merges everything into one unified profile and score.
+          Connect your competitive programming accounts. CP Coach merges everything into one unified profile and score.
         </p>
       </div>
 
@@ -111,7 +111,11 @@ function PlatformCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <h3 className="font-display text-lg font-semibold">{p.name}</h3>
-            {connected && <CheckCircle2 className="size-4 text-success" />}
+            {connected && (
+              <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-success">
+                <span className="size-1.5 rounded-full bg-success animate-pulse" /> live
+              </span>
+            )}
           </div>
           <div className="text-xs text-muted-foreground mt-0.5">
             {connected ? (
@@ -132,9 +136,14 @@ function PlatformCard({
             <Stat label="Max" value={row.max_rating ?? "—"} />
             <Stat label="Solved" value={row.problems_solved} />
           </div>
-          {row.rank_label && (
-            <div className="mt-3 text-xs text-center text-muted-foreground capitalize">{row.rank_label}</div>
-          )}
+          <div className="mt-3 flex items-center justify-between text-[11px] text-muted-foreground">
+            {row.rank_label ? <span className="capitalize">{row.rank_label}</span> : <span />}
+            <span>
+              {row.last_synced_at
+                ? `Synced ${timeAgo(row.last_synced_at)}`
+                : "Not synced yet"}
+            </span>
+          </div>
           <div className="mt-4 flex gap-2">
             {p.apiSupported && !row.is_manual ? (
               <Button size="sm" variant="outline" className="flex-1 border-border/60 bg-white/[0.02]" onClick={() => sync.mutate()} disabled={sync.isPending}>
@@ -158,6 +167,17 @@ function PlatformCard({
       )}
     </div>
   );
+}
+
+function timeAgo(iso: string): string {
+  const diffSec = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 1000));
+  if (diffSec < 60) return "just now";
+  const mins = Math.floor(diffSec / 60);
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  return `${days}d ago`;
 }
 
 function Stat({ label, value }: { label: string; value: number | string }) {
@@ -286,9 +306,14 @@ function ConnectDialog({
               </Button>
             </form>
 
-            {platform.id === PLATFORMS.leetcode.id && (
+            {platform.id === "leetcode" && (
               <p className="text-[11px] text-muted-foreground mt-2">
                 LeetCode uses an unofficial GraphQL endpoint. Make sure your profile is public.
+              </p>
+            )}
+            {platform.id === "codechef" && (
+              <p className="text-[11px] text-muted-foreground mt-2">
+                CodeChef has no official API. We read your public profile page — make sure it's accessible.
               </p>
             )}
           </>

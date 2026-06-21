@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/_authenticated/coach")({
   head: () => ({
     meta: [
-      { title: "AI Coach — CP Flow" },
+      { title: "AI Coach — CP Coach" },
       { name: "description", content: "Personalized AI coaching feedback for your Codeforces journey." },
     ],
   }),

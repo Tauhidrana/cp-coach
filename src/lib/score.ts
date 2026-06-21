@@ -1,4 +1,4 @@
-// CP Flow Score — proprietary 0-100 score across all connected platforms.
+// CP Coach Score — proprietary 0-100 score across all connected platforms.
 // Weights: CF 35%, LC 25%, AC 20%, manual platforms together 20%.
 // Consistency bonus from contest cadence.
 

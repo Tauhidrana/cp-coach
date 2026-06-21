@@ -1,4 +1,6 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import {
   Outlet,
   createRootRouteWithContext,
@@ -6,7 +8,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useMemo, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -124,14 +126,47 @@ function RootComponent() {
     return () => data.subscription.unsubscribe();
   }, [queryClient, router]);
 
+  const persister = useMemo(
+    () =>
+      typeof window === "undefined"
+        ? undefined
+        : createSyncStoragePersister({
+            storage: window.localStorage,
+            key: "cp-coach-query-cache",
+            throttleTime: 1000,
+          }),
+    [],
+  );
+
   return (
     <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <Outlet />
-        <ThemedToaster />
-      </QueryClientProvider>
+      {persister ? (
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{
+            persister,
+            maxAge: 1000 * 60 * 30, // 30 min on-disk cache
+            buster: "v1",
+          }}
+        >
+          <Outlet />
+          <ThemedToaster />
+        </PersistQueryClientProvider>
+      ) : (
+        // SSR / no-window fallback — render without persistence
+        <QueryClientFallback queryClient={queryClient}>
+          <Outlet />
+          <ThemedToaster />
+        </QueryClientFallback>
+      )}
     </ThemeProvider>
   );
+}
+
+function QueryClientFallback({ queryClient, children }: { queryClient: QueryClient; children: ReactNode }) {
+  // Lazy import to avoid bundling twice on the client.
+  const { QueryClientProvider } = require("@tanstack/react-query") as typeof import("@tanstack/react-query");
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 
 function ThemedToaster() {

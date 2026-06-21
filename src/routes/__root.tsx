@@ -1,4 +1,4 @@
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import {
@@ -164,8 +164,6 @@ function RootComponent() {
 }
 
 function QueryClientFallback({ queryClient, children }: { queryClient: QueryClient; children: ReactNode }) {
-  // Lazy import to avoid bundling twice on the client.
-  const { QueryClientProvider } = require("@tanstack/react-query") as typeof import("@tanstack/react-query");
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 

@@ -7,10 +7,10 @@ import {
   Calendar,
   Target,
   Sparkles,
-  Zap,
   Trophy,
   CheckCircle2,
 } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
 import { PLATFORM_LIST } from "@/lib/platforms/registry";
 import { PlatformLogo, FloatingLogos } from "@/components/platform-logo";
@@ -57,9 +57,7 @@ function Landing() {
       <header className="relative z-10">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="size-8 rounded-lg bg-gradient-brand grid place-items-center shadow-glow">
-              <Zap className="size-4 text-white" />
-            </div>
+            <BrandLogo className="size-9" />
             <span className="font-display text-lg font-semibold tracking-tight">CP Coach</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">

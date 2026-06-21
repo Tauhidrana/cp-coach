@@ -8,9 +8,9 @@ import {
   Trophy,
   Map,
   LogOut,
-  Zap,
   Plug,
 } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/use-auth";
 import { Button } from "@/components/ui/button";
@@ -47,9 +47,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 shrink-0 border-r border-border/50 bg-sidebar/60 backdrop-blur-xl">
         <Link to="/dashboard" className="flex items-center gap-2 px-6 h-16 border-b border-border/50">
-          <div className="size-8 rounded-lg bg-gradient-brand grid place-items-center shadow-glow">
-            <Zap className="size-4 text-white" />
-          </div>
+          <BrandLogo className="size-9" />
           <span className="font-display text-lg font-semibold tracking-tight">CP Coach</span>
         </Link>
         <LazyMotion features={domAnimation} strict>
@@ -104,9 +102,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 inset-x-0 z-40 h-14 glass-strong flex items-center px-4 justify-between">
         <Link to="/dashboard" className="flex items-center gap-2">
-          <div className="size-7 rounded-md bg-gradient-brand grid place-items-center">
-            <Zap className="size-3.5 text-white" />
-          </div>
+          <BrandLogo className="size-8" />
           <span className="font-display font-semibold">CP Coach</span>
         </Link>
         <div className="flex items-center gap-1">

@@ -48,6 +48,24 @@ function AnimatedNumber({ to }: { to: number }) {
 }
 
 function Landing() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    // Post-OAuth, the broker lands users at origin with tokens in the URL hash.
+    // Give the Supabase client a tick to ingest them, then redirect signed-in users.
+    let cancelled = false;
+    const check = () => {
+      supabase.auth.getSession().then(({ data }) => {
+        if (!cancelled && data.session) navigate({ to: "/dashboard", replace: true });
+      });
+    };
+    check();
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session && (event === "SIGNED_IN" || event === "INITIAL_SESSION")) {
+        if (!cancelled) navigate({ to: "/dashboard", replace: true });
+      }
+    });
+    return () => { cancelled = true; sub.subscription.unsubscribe(); };
+  }, [navigate]);
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Background */}

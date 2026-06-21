@@ -116,6 +116,27 @@ export type Database = {
         }
         Relationships: []
       }
+      solved_problems: {
+        Row: {
+          platform: string
+          problem_key: string
+          solved_at: string
+          user_id: string
+        }
+        Insert: {
+          platform: string
+          problem_key: string
+          solved_at?: string
+          user_id: string
+        }
+        Update: {
+          platform?: string
+          problem_key?: string
+          solved_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_platforms: {
         Row: {
           contest_count: number

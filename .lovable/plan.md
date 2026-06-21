@@ -1,65 +1,76 @@
+# Smart AI Daily Sheet
 
-# CP Coach — Feature Pass: Notifications, Bilingual Coach, Google Avatar, Settings
+Rebuild the Daily Sheet as an adaptive, multi-platform, mentor-style recommender. The current sheet is Codeforces-only with random-ish picks; this replaces it end-to-end.
 
-This is a sizable build. Below is the scope and the technical approach, broken into shippable parts. I'll implement in this order so each part is usable on its own.
+## What changes
 
-## 1. Database (one migration)
+### 1. New server function: `generateSmartSheet`
+Replaces `generateSheet`. Inputs: `size` (5 / 10 / 15) and optional `language` (en/bn).
 
-New tables:
-- `notifications` — `id`, `user_id`, `type` (`practice|contest|coach|weekly_report|achievement`), `title`, `body`, `data jsonb`, `read_at`, `created_at`. RLS: own-rows only, GRANTs for `authenticated` + `service_role`.
-- `user_settings` — `user_id pk`, `language` (`auto|en|bn`), `notif_practice bool`, `notif_contest_reg bool`, `notif_contest_start bool`, `notif_weekly bool`, `notif_achievement bool`, `sound_enabled bool`, `push_subscription jsonb`. RLS own-rows.
-- `daily_sheet_completions` — `user_id`, `date`, `completed_at` (used to suppress practice reminders).
+Pipeline:
+1. **Load context** — pull all connected platforms via `user_platforms`, fetch CF submissions + problemset (cached), read last 7 `daily_sheet_completions` for adaptive signal.
+2. **Determine effective rating tier** — use CF rating if present, else derive a normalized rating from LeetCode/CodeChef. Map to tier: Beginner (0-999) / Pupil (1000-1199) / Specialist (1200-1399) / Expert (1400-1699) / CM (1700+).
+3. **Difficulty mix** — per tier, compute easy/medium/hard split exactly as spec (e.g. Specialist 30/50/20).
+4. **Adaptive offset** — last 3 days completion rate ≥80% → +50 rating shift; ≤30% → −50 shift.
+5. **Topic selection** — 70% weak (lowest-score tags), 20% revision (strong tags last seen >7d ago), 10% challenge (random advanced tag).
+6. **Platform distribution** — default 5: 2 CF + 2 CodeChef + 1 LeetCode. For 10 / 15 scale proportionally. Skip platforms not connected and redistribute.
+7. **Problem pools**:
+   - **Codeforces**: real `problemset.problems` filtered by rating bucket and tag.
+   - **CodeChef**: curated static list (`src/lib/sheet/codechef-pool.ts`) of ~120 well-known practice problems tagged by difficulty band (800-1000 / 1100-1400 / 1500-1800 / 1900+) and topic. Each entry: `{ code, name, url, rating, tags }`.
+   - **LeetCode**: curated static list (`src/lib/sheet/leetcode-pool.ts`) of ~150 top problems by difficulty (Easy/Medium/Hard) and topic.
+   - All pools exclude already-solved sets (CF solved set from submissions; CC/LC tracked in a new `solved_problems` table — see §3).
+8. **AI rationale** — single Gemini call returns JSON array `{ id, reasonEn, reasonBn }` for all picks at once (1 request, not N). Uses user's weak/strong topics + each problem's tags/rating for grounding. Cached per (userId, date, size).
+9. **Output shape**:
+   ```ts
+   {
+     date: string,
+     tier: "Beginner" | ... ,
+     adaptiveShift: number,
+     estimatedMinutes: number,    // sum(per-problem est)
+     focusTopics: string[],
+     distribution: { easy:n, medium:n, hard:n },
+     platformBreakdown: { codeforces:n, codechef:n, leetcode:n },
+     items: Array<{
+       platform, title, url, rating, difficulty, tags,
+       weak: boolean, estMinutes, reasonEn, reasonBn
+     }>,
+     weeklyPlan: Array<{ day, focus }>,
+     ratingGoal: { current, target, problemsRemaining, etaWeeks } | null
+   }
+   ```
 
-## 2. Notification engine
+### 2. Adaptive + weekly plan + rating goal helpers
+- `weeklyPlan` is computed locally (deterministic by day-of-week per spec: Mon Greedy, Tue Binary Search+Math, …, Sun Revision).
+- `ratingGoal` uses `profiles.target_rating` and a heuristic (≈40 quality problems per 100 rating points, scaled by current vs target gap).
 
-- **In-app**: bell icon in `AppShell` top-right with unread badge, dropdown showing recent items, full page at `/notifications` with mark-read / mark-all / delete / filter by type. Realtime via `supabase.channel` on the `notifications` table.
-- **Local scheduling (client-side)**: a `useReminderScheduler` hook that, on app load, schedules `setTimeout`s for 6 PM / 9 PM practice reminders, 24h/2h contest registration, 30m/5m contest start — driven by the user's local clock + their connected contests/bookmarks. It writes rows into `notifications` (so they show in the bell) and, when permission is granted, fires `Notification` Web API for browser push. Reminders auto-cancel if the daily sheet is marked complete or the user registers.
-- **Server cron**: a `pg_cron` job hitting `/api/public/hooks/notifications-tick` every 15 min as a safety net for users not currently online — generates the same rows server-side using each user's connected platforms + saved timezone (stored on `user_settings`).
-- **True web-push (VAPID)**: out of scope for this pass — `Notification` API + in-app bell covers the requirement. I'll note this limitation in the Settings page.
+### 3. New table: `solved_problems`
+Tracks problems marked solved on non-CF platforms (CF auto-solved via submissions).
+Columns: `user_id`, `platform`, `problem_key` (unique per-platform id, e.g. CC code or LC slug), `solved_at`. RLS own-rows.
 
-## 3. Bilingual AI Coach
+The Daily Sheet UI gets a per-problem ✓ checkbox that calls `markProblemSolved`. CF problems read from the live submissions cache; no manual marking needed.
 
-- Add `language` to `user_settings` and a language selector dropdown on `/coach` (Auto / English / বাংলা).
-- `aiCoachAnalysis` and `generateRoadmap` server fns accept `{ language }` and prepend a system instruction: "Respond entirely in Bangla (Bengali script)…" when `bn`. Auto = detect from browser `navigator.language`.
-- Markdown renderer already handles Bangla.
+### 4. UI overhaul (`src/routes/_authenticated/sheet.tsx`)
+- **Today's Goal hero card** — tier badge, estimated time, focus topics, platform distribution chips, adaptive-shift indicator ("difficulty +50 — you crushed yesterday").
+- **Grouped sections** by platform with brand-colored headers and platform logos.
+- **Problem card** — title, rating chip, difficulty (easy/medium/hard color), tags, est-time, ✓ mark solved, expand for AI rationale (EN/BN toggle).
+- **Weekly Plan strip** — 7 day chips with focus, today highlighted.
+- **Rating Goal card** — current → target progress bar with ETA.
+- Skeletons for all sections; framer-motion stagger preserved.
 
-## 4. Google profile integration
+### 5. Cleanup
+- Remove old `generateSheet` once `sheet.tsx` no longer imports it; keep `mark complete` flow (still useful to silence reminders, and is auto-triggered when all items checked).
 
-- Already captured by Supabase Auth in `user_metadata.avatar_url` + `full_name` on Google sign-in — no extra fetch needed; it refreshes on each login.
-- Add a small `<UserAvatar>` component that renders `user_metadata.avatar_url` with a gradient-initials fallback (already partially present in `AppShell`).
-- Use it in: sidebar footer, mobile top bar, `/notifications`, `/settings`, dashboard hero greeting.
+## Technical notes
 
-## 5. Settings page (`/settings`)
+- Curated pools live in `src/lib/sheet/` as pure TS arrays — no scraping at request time, keeps response <500ms.
+- Single AI call for all rationales using `Output.array` schema with bounded enum-free strings to avoid Gemini state-machine limits.
+- Deterministic shuffle (mulberry32 with `userId+date` seed) so the same day always shows the same sheet (until user toggles size).
+- All new server work in `src/lib/cp.functions.ts` (no new route boundary needed).
+- Migration adds `solved_problems` with GRANTs + RLS following project conventions.
 
-Tabs/sections:
-- **Profile** — Google avatar + name + email (read-only).
-- **Language** — Auto / English / বাংলা.
-- **Notifications** — five toggles + sound toggle + "Enable browser notifications" button (calls `Notification.requestPermission`).
-- **Theme** — reuses existing ThemeToggle (Light / Dark / System).
+## Out of scope (explicit)
 
-Add `Settings` to sidebar nav + mobile bottom nav (replacing one of the lower-priority items on mobile to keep 7-column grid manageable, or expand to 8).
+- AtCoder / HackerRank inclusion in the sheet (kept analytics-only this pass — they have no clean rating-tagged problem pool).
+- Virtual contest scheduling for Saturday (weekly plan shows the label only).
 
-## 6. Files to add / edit
-
-**New**
-- `supabase/migrations/<ts>_notifications.sql`
-- `src/lib/notifications.functions.ts` (list, mark read, delete, create)
-- `src/lib/settings.functions.ts` (get/update)
-- `src/hooks/use-settings.ts`, `src/hooks/use-notifications.ts`, `src/hooks/use-reminder-scheduler.ts`
-- `src/components/notification-bell.tsx`, `src/components/user-avatar.tsx`
-- `src/routes/_authenticated/notifications.tsx`
-- `src/routes/_authenticated/settings.tsx`
-- `src/routes/api/public/hooks/notifications-tick.ts`
-
-**Edited**
-- `src/components/app/AppShell.tsx` — add bell + UserAvatar + Settings nav item + mount scheduler.
-- `src/routes/_authenticated/coach.tsx` — language selector + pass to server fn.
-- `src/routes/_authenticated/roadmap.tsx` — same.
-- `src/lib/cp.functions.ts` — accept `language` in `aiCoachAnalysis` + `generateRoadmap` and tweak system prompts.
-- `src/routes/_authenticated/sheet.tsx` — on completion, record in `daily_sheet_completions` so reminders cancel.
-
-## 7. Out of scope for this pass (will call out in the response)
-- True server-pushed Web Push via VAPID/service worker (requires service-worker plumbing). Reminders use in-app + `Notification` API while the tab is open + server-generated entries in the bell otherwise.
-- Email/SMS delivery.
-
-Shall I proceed with the full build as scoped above?
+Approve and I'll ship it.

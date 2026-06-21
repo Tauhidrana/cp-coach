@@ -60,7 +60,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         await router.invalidate();
         reset();
       } finally {
-        setAttempt((a) => a + 1);
+        setAttempt((a: number) => a + 1);
       }
     }, delays[attempt]);
     return () => clearTimeout(t);

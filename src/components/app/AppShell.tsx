@@ -9,12 +9,16 @@ import {
   Map,
   LogOut,
   Plug,
+  Settings as SettingsIcon,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/use-auth";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { NotificationBell } from "@/components/notification-bell";
+import { UserAvatar } from "@/components/user-avatar";
+import { useReminderScheduler } from "@/hooks/use-reminder-scheduler";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -30,6 +34,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { user, isGuest } = useAuth();
+  useReminderScheduler();
 
   const onSignOut = async () => {
     await supabase.auth.signOut();
@@ -51,7 +56,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <span className="font-display text-lg font-semibold tracking-tight">CP Coach</span>
         </Link>
         <LazyMotion features={domAnimation} strict>
-          <nav className="flex-1 p-3 space-y-1">
+          <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
             {navItems.map((item) => {
               const active = pathname.startsWith(item.to);
               const Icon = item.icon;
@@ -78,19 +83,32 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
+            <div className="pt-3 mt-3 border-t border-border/40 space-y-1">
+              <Link
+                to="/settings"
+                preload="intent"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+                  pathname.startsWith("/settings")
+                    ? "text-foreground bg-sidebar-accent"
+                    : "text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/50"
+                }`}
+              >
+                <SettingsIcon className="size-4" />
+                Settings
+              </Link>
+            </div>
           </nav>
         </LazyMotion>
         <div className="p-3 border-t border-border/50">
           <div className="flex items-center gap-2 px-2 py-2">
-            <div className="size-9 rounded-full bg-gradient-brand grid place-items-center text-sm font-semibold text-white">
-              {name.charAt(0).toUpperCase()}
-            </div>
+            <UserAvatar />
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium truncate">{name}</div>
               <div className="text-xs text-muted-foreground truncate">
                 {isGuest ? "Guest session" : user?.email}
               </div>
             </div>
+            <NotificationBell />
             <ThemeToggle />
             <Button variant="ghost" size="icon" onClick={onSignOut} aria-label="Sign out">
               <LogOut className="size-4" />
@@ -106,6 +124,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <span className="font-display font-semibold">CP Coach</span>
         </Link>
         <div className="flex items-center gap-1">
+          <NotificationBell />
+          <Link to="/settings" aria-label="Settings">
+            <Button variant="ghost" size="icon"><SettingsIcon className="size-4" /></Button>
+          </Link>
           <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={onSignOut} aria-label="Sign out">
             <LogOut className="size-4" />

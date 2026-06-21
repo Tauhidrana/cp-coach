@@ -38,6 +38,57 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_sheet_completions: {
+        Row: {
+          completed_at: string
+          date: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          date: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          data: Json | null
+          id: string
+          read_at: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          data?: Json | null
+          id?: string
+          read_at?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          data?: Json | null
+          id?: string
+          read_at?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           codeforces_handle: string | null
@@ -113,6 +164,45 @@ export type Database = {
           updated_at?: string
           user_id?: string
           username?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          language: string
+          notif_achievement: boolean
+          notif_contest_reg: boolean
+          notif_contest_start: boolean
+          notif_practice: boolean
+          notif_weekly: boolean
+          sound_enabled: boolean
+          timezone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          language?: string
+          notif_achievement?: boolean
+          notif_contest_reg?: boolean
+          notif_contest_start?: boolean
+          notif_practice?: boolean
+          notif_weekly?: boolean
+          sound_enabled?: boolean
+          timezone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          language?: string
+          notif_achievement?: boolean
+          notif_contest_reg?: boolean
+          notif_contest_start?: boolean
+          notif_practice?: boolean
+          notif_weekly?: boolean
+          sound_enabled?: boolean
+          timezone?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

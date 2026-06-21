@@ -13,8 +13,10 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedSheetRouteImport } from './routes/_authenticated/sheet'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedRoadmapRouteImport } from './routes/_authenticated/roadmap'
 import { Route as AuthenticatedPlatformsRouteImport } from './routes/_authenticated/platforms'
+import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedContestsRouteImport } from './routes/_authenticated/contests'
 import { Route as AuthenticatedCoachRouteImport } from './routes/_authenticated/coach'
@@ -39,6 +41,11 @@ const AuthenticatedSheetRoute = AuthenticatedSheetRouteImport.update({
   path: '/sheet',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedRoadmapRoute = AuthenticatedRoadmapRouteImport.update({
   id: '/roadmap',
   path: '/roadmap',
@@ -49,6 +56,12 @@ const AuthenticatedPlatformsRoute = AuthenticatedPlatformsRouteImport.update({
   path: '/platforms',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedNotificationsRoute =
+  AuthenticatedNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -77,8 +90,10 @@ export interface FileRoutesByFullPath {
   '/coach': typeof AuthenticatedCoachRoute
   '/contests': typeof AuthenticatedContestsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/notifications': typeof AuthenticatedNotificationsRoute
   '/platforms': typeof AuthenticatedPlatformsRoute
   '/roadmap': typeof AuthenticatedRoadmapRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/sheet': typeof AuthenticatedSheetRoute
 }
 export interface FileRoutesByTo {
@@ -88,8 +103,10 @@ export interface FileRoutesByTo {
   '/coach': typeof AuthenticatedCoachRoute
   '/contests': typeof AuthenticatedContestsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/notifications': typeof AuthenticatedNotificationsRoute
   '/platforms': typeof AuthenticatedPlatformsRoute
   '/roadmap': typeof AuthenticatedRoadmapRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/sheet': typeof AuthenticatedSheetRoute
 }
 export interface FileRoutesById {
@@ -101,8 +118,10 @@ export interface FileRoutesById {
   '/_authenticated/coach': typeof AuthenticatedCoachRoute
   '/_authenticated/contests': typeof AuthenticatedContestsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/platforms': typeof AuthenticatedPlatformsRoute
   '/_authenticated/roadmap': typeof AuthenticatedRoadmapRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/sheet': typeof AuthenticatedSheetRoute
 }
 export interface FileRouteTypes {
@@ -114,8 +133,10 @@ export interface FileRouteTypes {
     | '/coach'
     | '/contests'
     | '/dashboard'
+    | '/notifications'
     | '/platforms'
     | '/roadmap'
+    | '/settings'
     | '/sheet'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -125,8 +146,10 @@ export interface FileRouteTypes {
     | '/coach'
     | '/contests'
     | '/dashboard'
+    | '/notifications'
     | '/platforms'
     | '/roadmap'
+    | '/settings'
     | '/sheet'
   id:
     | '__root__'
@@ -137,8 +160,10 @@ export interface FileRouteTypes {
     | '/_authenticated/coach'
     | '/_authenticated/contests'
     | '/_authenticated/dashboard'
+    | '/_authenticated/notifications'
     | '/_authenticated/platforms'
     | '/_authenticated/roadmap'
+    | '/_authenticated/settings'
     | '/_authenticated/sheet'
   fileRoutesById: FileRoutesById
 }
@@ -178,6 +203,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSheetRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/roadmap': {
       id: '/_authenticated/roadmap'
       path: '/roadmap'
@@ -190,6 +222,13 @@ declare module '@tanstack/react-router' {
       path: '/platforms'
       fullPath: '/platforms'
       preLoaderRoute: typeof AuthenticatedPlatformsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/notifications': {
+      id: '/_authenticated/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
@@ -228,8 +267,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCoachRoute: typeof AuthenticatedCoachRoute
   AuthenticatedContestsRoute: typeof AuthenticatedContestsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedPlatformsRoute: typeof AuthenticatedPlatformsRoute
   AuthenticatedRoadmapRoute: typeof AuthenticatedRoadmapRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSheetRoute: typeof AuthenticatedSheetRoute
 }
 
@@ -238,8 +279,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCoachRoute: AuthenticatedCoachRoute,
   AuthenticatedContestsRoute: AuthenticatedContestsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedPlatformsRoute: AuthenticatedPlatformsRoute,
   AuthenticatedRoadmapRoute: AuthenticatedRoadmapRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSheetRoute: AuthenticatedSheetRoute,
 }
 

@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, Sparkles, RefreshCw } from "lucide-react";
+import { ExternalLink, Sparkles, RefreshCw, Check, CheckCircle2 } from "lucide-react";
 import { generateSheet, getMyProfile } from "@/lib/cp.functions";
+import { isSheetCompletedToday, markSheetCompletedToday } from "@/lib/notifications.functions";
 import { GlassCard } from "@/components/glass-card";
 import { Button } from "@/components/ui/button";
 import { CardSkeleton } from "@/components/skeletons";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/sheet")({
   head: () => ({
@@ -22,12 +24,24 @@ export const Route = createFileRoute("/_authenticated/sheet")({
 function SheetPage() {
   const profileFn = useServerFn(getMyProfile);
   const genFn = useServerFn(generateSheet);
+  const doneFn = useServerFn(isSheetCompletedToday);
+  const markFn = useServerFn(markSheetCompletedToday);
+  const qc = useQueryClient();
   const { data: profile } = useQuery({ queryKey: ["profile"], queryFn: () => profileFn() });
+  const { data: doneToday } = useQuery({ queryKey: ["sheet-done-today"], queryFn: () => doneFn() });
   const handle = profile?.codeforces_handle ?? "";
   const [size, setSize] = useState<5 | 10 | 15>(5);
 
   const mut = useMutation({
     mutationFn: (s: 5 | 10 | 15) => genFn({ data: { handle, size: s } }),
+  });
+
+  const completeMut = useMutation({
+    mutationFn: () => markFn(),
+    onSuccess: () => {
+      toast.success("Sheet marked complete — reminders silenced for today.");
+      qc.invalidateQueries({ queryKey: ["sheet-done-today"] });
+    },
   });
 
   if (!handle) {
@@ -59,7 +73,7 @@ function SheetPage() {
         </div>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3 items-center">
         <Button
           onClick={() => mut.mutate(size)}
           disabled={mut.isPending}
@@ -67,6 +81,18 @@ function SheetPage() {
         >
           {mut.isPending ? <RefreshCw className="size-4 mr-2 animate-spin" /> : <Sparkles className="size-4 mr-2" />}
           Generate sheet
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => completeMut.mutate()}
+          disabled={completeMut.isPending || doneToday?.completed}
+          className="border-border/60"
+        >
+          {doneToday?.completed ? (
+            <><CheckCircle2 className="size-4 mr-2 text-success" /> Completed today</>
+          ) : (
+            <><Check className="size-4 mr-2" /> Mark complete</>
+          )}
         </Button>
         {mut.data ? (
           <span className="text-xs text-muted-foreground self-center">

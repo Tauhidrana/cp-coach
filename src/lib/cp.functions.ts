@@ -120,7 +120,12 @@ function mulberry32(a: number) {
 // ---- AI Coach (Gemini via Lovable AI Gateway) ----
 
 export const aiCoachAnalysis = createServerFn({ method: "POST" })
-  .inputValidator((d: unknown) => z.object({ handle: z.string().min(1) }).parse(d))
+  .inputValidator((d: unknown) =>
+    z.object({
+      handle: z.string().min(1),
+      language: z.enum(["en", "bn"]).optional(),
+    }).parse(d),
+  )
   .handler(async ({ data }) => {
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("AI gateway not configured");
@@ -154,23 +159,30 @@ export const aiCoachAnalysis = createServerFn({ method: "POST" })
     const gateway = createLovableAiGatewayProvider(apiKey);
     const model = gateway("google/gemini-3-flash-preview");
 
+    const lang = data.language === "bn" ? "bn" : "en";
+    const langInstruction =
+      lang === "bn"
+        ? `Write the ENTIRE response in natural, fluent Bangla (বাংলা). Use Bangla script for all section headings and body text. Keep tag names like "dp", "graphs", "binary search" in English inside backticks. Use Bangla numerals only inside narrative text; keep ratings in Western digits.`
+        : `Write the entire response in professional English.`;
+    const headings =
+      lang === "bn"
+        ? `## সারসংক্ষেপ\n## শক্তিশালী দিক\n## দুর্বলতা\n## এই সপ্তাহের ফোকাস\n## পরবর্তী র‍্যাঙ্কের পথ`
+        : `## Overall Assessment\n## Strengths\n## Weaknesses\n## Recommended Focus This Week\n## Path to Next Rank`;
+
     const prompt = `You are an elite Competitive Programming coach for Codeforces.
+${langInstruction}
 Analyze this user's profile JSON and produce a concise, actionable coaching report in markdown.
 
 User profile:
 ${JSON.stringify(summary, null, 2)}
 
-Sections (use ## headings, be brief and specific, no fluff):
-1. **Overall Assessment** — 2-3 sentences on current level.
-2. **Strengths** — 3 bullet points referring to specific tags.
-3. **Weaknesses** — 3 bullet points with concrete improvement actions.
-4. **Recommended Focus This Week** — 3 bullets: topic + suggested rating range.
-5. **Path to Next Rank** — short paragraph with a target rating and milestones.
+Use exactly these five sections (## headings, in this order):
+${headings}
 
-Tone: direct, motivating, like a senior CP grandmaster mentoring a student. Max 350 words.`;
+Be brief and specific, no fluff. Tone: direct, motivating, like a senior CP grandmaster mentoring a student. Max 350 words.`;
 
     const result = await generateText({ model, prompt });
-    return { report: result.text, summary };
+    return { report: result.text, summary, language: lang };
   });
 
 // ---- Roadmap generator ----

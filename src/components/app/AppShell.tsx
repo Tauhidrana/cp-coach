@@ -1,5 +1,5 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import {
   LayoutDashboard,
   LineChart,
@@ -52,33 +52,36 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <span className="font-display text-lg font-semibold tracking-tight">CP Coach</span>
         </Link>
-        <nav className="flex-1 p-3 space-y-1">
-          {navItems.map((item) => {
-            const active = pathname.startsWith(item.to);
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
-                  active
-                    ? "text-foreground bg-sidebar-accent"
-                    : "text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/50"
-                }`}
-              >
-                {active && (
-                  <motion.span
-                    layoutId="active-pill"
-                    className="absolute inset-0 rounded-lg ring-1 ring-primary/30 bg-primary/5"
-                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                  />
-                )}
-                <Icon className="size-4 relative" />
-                <span className="relative">{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+        <LazyMotion features={domAnimation} strict>
+          <nav className="flex-1 p-3 space-y-1">
+            {navItems.map((item) => {
+              const active = pathname.startsWith(item.to);
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  preload="intent"
+                  className={`relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+                    active
+                      ? "text-foreground bg-sidebar-accent"
+                      : "text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/50"
+                  }`}
+                >
+                  {active && (
+                    <m.span
+                      layoutId="active-pill"
+                      className="absolute inset-0 rounded-lg ring-1 ring-primary/30 bg-primary/5"
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    />
+                  )}
+                  <Icon className="size-4 relative" />
+                  <span className="relative">{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </LazyMotion>
         <div className="p-3 border-t border-border/50">
           <div className="flex items-center gap-2 px-2 py-2">
             <div className="size-9 rounded-full bg-gradient-brand grid place-items-center text-sm font-semibold text-white">
@@ -125,6 +128,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.to}
                   to={item.to}
+                  preload="intent"
                   className={`flex flex-col items-center gap-1 py-1 text-[10px] ${
                     active ? "text-primary" : "text-muted-foreground"
                   }`}

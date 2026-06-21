@@ -32,13 +32,6 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-function useAutoRedirectIfSignedIn() {
-  // Auto-route signed-in users (including post-OAuth landing at origin) to the dashboard.
-  if (typeof window === "undefined") return;
-  // Lazy import to keep SSR clean.
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-}
-
 const features = [
   { icon: BarChart3, title: "Cross-Platform Analytics", desc: "One unified view of Codeforces, LeetCode, AtCoder & more." },
   { icon: Target, title: "Unified CP Coach Score", desc: "A single 0-100 rating that captures your true CP strength." },

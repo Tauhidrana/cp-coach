@@ -47,7 +47,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 shrink-0 border-r border-border/50 bg-sidebar/60 backdrop-blur-xl">
         <Link to="/dashboard" className="flex items-center gap-2 px-6 h-16 border-b border-border/50">
-          <BrandLogo className="size-9" />
+          <BrandLogo className="size-12" />
           <span className="font-display text-lg font-semibold tracking-tight">CP Coach</span>
         </Link>
         <LazyMotion features={domAnimation} strict>
@@ -102,7 +102,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 inset-x-0 z-40 h-14 glass-strong flex items-center px-4 justify-between">
         <Link to="/dashboard" className="flex items-center gap-2">
-          <BrandLogo className="size-8" />
+          <BrandLogo className="size-11" />
           <span className="font-display font-semibold">CP Coach</span>
         </Link>
         <div className="flex items-center gap-1">

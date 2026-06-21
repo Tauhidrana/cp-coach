@@ -3,6 +3,7 @@
 <div align="center">
 
 <img src="public/favicon.ico" alt="CP Coach Logo" width="120"/>
+
 ### Practice Smarter. Climb Faster.
 
 **An AI-Powered Competitive Programming Assistant that helps programmers practice with purpose, analyze performance, and improve faster across multiple platforms.**

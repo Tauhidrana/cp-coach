@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 export const Route = createFileRoute("/_authenticated/roadmap")({
   head: () => ({
     meta: [
-      { title: "Roadmap — CP Flow" },
+      { title: "Roadmap — CP Coach" },
       { name: "description", content: "AI-generated learning roadmap from your current to your target rating." },
     ],
   }),

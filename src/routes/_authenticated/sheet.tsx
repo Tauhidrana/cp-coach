@@ -12,7 +12,7 @@ import { CardSkeleton } from "@/components/skeletons";
 export const Route = createFileRoute("/_authenticated/sheet")({
   head: () => ({
     meta: [
-      { title: "Daily Sheet — CP Flow" },
+      { title: "Daily Sheet — CP Coach" },
       { name: "description", content: "Your AI-personalized Codeforces problem sheet for today." },
     ],
   }),

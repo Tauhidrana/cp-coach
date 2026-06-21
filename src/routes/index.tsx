@@ -18,13 +18,13 @@ import { PlatformLogo, FloatingLogos } from "@/components/platform-logo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CP Flow — Practice Smarter. Climb Faster." },
+      { title: "CP Coach — Practice Smarter. Climb Faster." },
       {
         name: "description",
         content:
           "AI-powered Codeforces companion: personalized daily sheets, weak-topic detection, contest tracker, and an AI coach to push your rating higher.",
       },
-      { property: "og:title", content: "CP Flow — Practice Smarter. Climb Faster." },
+      { property: "og:title", content: "CP Coach — Practice Smarter. Climb Faster." },
       { property: "og:description", content: "AI-powered Codeforces training companion." },
     ],
   }),
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/")({
 
 const features = [
   { icon: BarChart3, title: "Cross-Platform Analytics", desc: "One unified view of Codeforces, LeetCode, AtCoder & more." },
-  { icon: Target, title: "Unified CP Flow Score", desc: "A single 0-100 rating that captures your true CP strength." },
+  { icon: Target, title: "Unified CP Coach Score", desc: "A single 0-100 rating that captures your true CP strength." },
   { icon: Calendar, title: "Daily Smart Sheets", desc: "Problems picked for your level and weak topics." },
   { icon: Bot, title: "Cross-Platform AI Coach", desc: "Gemini-powered guidance tuned to every account you connect." },
   { icon: Trophy, title: "Contest Tracker", desc: "Upcoming rounds with countdowns and bookmarks." },
@@ -59,12 +59,12 @@ function Landing() {
             <div className="size-8 rounded-lg bg-gradient-brand grid place-items-center shadow-glow">
               <Zap className="size-4 text-white" />
             </div>
-            <span className="font-display text-lg font-semibold tracking-tight">CP Flow</span>
+            <span className="font-display text-lg font-semibold tracking-tight">CP Coach</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
             <a href="#features" className="hover:text-foreground transition">Features</a>
             <a href="#how" className="hover:text-foreground transition">How it works</a>
-            <a href="#why" className="hover:text-foreground transition">Why CP Flow</a>
+            <a href="#why" className="hover:text-foreground transition">Why CP Coach</a>
           </nav>
           <Link to="/auth">
             <Button className="bg-gradient-brand hover:opacity-90 text-white border-0 shadow-glow">
@@ -119,7 +119,7 @@ function Landing() {
             <div className="rounded-2xl bg-card/80 p-6 md:p-10 text-left">
               <div className="flex items-center justify-between gap-6 mb-6 flex-wrap">
                 <div>
-                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">CP Flow Score</div>
+                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">CP Coach Score</div>
                   <div className="flex items-baseline gap-2 mt-1">
                     <motion.span
                       initial={{ opacity: 0 }}
@@ -261,7 +261,7 @@ function Landing() {
               </h2>
               <p className="mt-4 text-muted-foreground">
                 The average competitive programmer plateaus because they repeat what they're already
-                good at. CP Flow forces deliberate practice on your weakest tags.
+                good at. CP Coach forces deliberate practice on your weakest tags.
               </p>
             </div>
             <ul className="space-y-3">
@@ -288,7 +288,7 @@ function Landing() {
         <h2 className="text-4xl md:text-5xl font-display font-semibold tracking-tight">
           Your next rating <span className="text-gradient-brand">starts now</span>.
         </h2>
-        <p className="mt-4 text-muted-foreground">Join CP Flow and turn practice into a system.</p>
+        <p className="mt-4 text-muted-foreground">Join CP Coach and turn practice into a system.</p>
         <Link to="/auth" className="inline-block mt-8">
           <Button size="lg" className="bg-gradient-brand text-white border-0 shadow-glow hover:opacity-90 h-12 px-8">
             Start practicing <ArrowRight className="ml-2 size-4" />
@@ -297,7 +297,7 @@ function Landing() {
       </section>
 
       <footer className="relative z-10 border-t border-border/40 py-8 text-center text-xs text-muted-foreground">
-        Built for the Codeforces community · CP Flow © {new Date().getFullYear()}
+        Built for the Codeforces community · CP Coach © {new Date().getFullYear()}
       </footer>
     </div>
   );

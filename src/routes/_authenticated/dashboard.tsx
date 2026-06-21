@@ -15,7 +15,7 @@ import { useAuth } from "@/lib/use-auth";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — CP Flow" },
+      { title: "Dashboard — CP Coach" },
       { name: "description", content: "Your unified competitive programming dashboard across every platform." },
     ],
   }),
@@ -54,7 +54,7 @@ function Dashboard() {
         <EmptyState />
       ) : (
         <>
-          {/* Hero: CP Flow Score + totals */}
+          {/* Hero: CP Coach Score + totals */}
           <div className="grid lg:grid-cols-3 gap-4">
             <ScoreCard score={score} className="lg:col-span-2" />
             <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
@@ -106,7 +106,7 @@ function ScoreCard({ score, className }: { score: ReturnType<typeof computeCPFlo
       <div className={`absolute -top-24 -right-24 size-72 rounded-full bg-gradient-to-br ${grad} opacity-25 blur-3xl pointer-events-none`} />
       <div className="relative flex items-center justify-between gap-6 flex-wrap">
         <div>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">CP Flow Score</div>
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">CP Coach Score</div>
           <div className="mt-2 flex items-baseline gap-2">
             <span className={`text-6xl md:text-7xl font-display font-bold bg-gradient-to-br ${grad} bg-clip-text text-transparent tabular-nums`}>
               {score.score}
@@ -241,7 +241,7 @@ function EmptyState() {
       </div>
       <h2 className="mt-5 text-2xl font-display font-semibold">Connect your first platform</h2>
       <p className="text-muted-foreground mt-2 max-w-md mx-auto">
-        Plug in Codeforces, LeetCode or AtCoder to unlock your unified CP Flow Score, daily sheet, and AI coaching.
+        Plug in Codeforces, LeetCode or AtCoder to unlock your unified CP Coach Score, daily sheet, and AI coaching.
       </p>
       <Link to="/platforms">
         <Button className="mt-6 bg-gradient-brand text-white border-0 shadow-glow h-11 px-6">

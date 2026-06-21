@@ -20,8 +20,8 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/_authenticated/platforms")({
   head: () => ({
     meta: [
-      { title: "Platforms — CP Flow" },
-      { name: "description", content: "Connect Codeforces, LeetCode, AtCoder and more to your CP Flow profile." },
+      { title: "Platforms — CP Coach" },
+      { name: "description", content: "Connect Codeforces, LeetCode, AtCoder and more to your CP Coach profile." },
     ],
   }),
   component: PlatformsPage,
@@ -42,7 +42,7 @@ function PlatformsPage() {
           Connected <span className="text-gradient-brand">Platforms</span>
         </h1>
         <p className="text-muted-foreground mt-2">
-          Connect your competitive programming accounts. CP Flow merges everything into one unified profile and score.
+          Connect your competitive programming accounts. CP Coach merges everything into one unified profile and score.
         </p>
       </div>
 

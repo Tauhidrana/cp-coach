@@ -40,7 +40,7 @@ function SheetPage() {
   const qc = useQueryClient();
   const { settings } = useSettings();
   const [size, setSize] = useState<5 | 10 | 15>(5);
-  const [lang, setLang] = useState<"en" | "bn">(() => resolveLanguage(settings?.language));
+  const [lang, setLang] = useState<"en" | "bn">(() => resolveLanguage(settings?.language as "auto" | "en" | "bn" | undefined));
   const [sheet, setSheet] = useState<Sheet | null>(null);
 
   const { data: doneToday } = useQuery({ queryKey: ["sheet-done-today"], queryFn: () => doneFn() });
@@ -157,9 +157,9 @@ function SheetPage() {
           {sheet.ratingGoal ? <RatingGoalCard goal={sheet.ratingGoal} /> : null}
           <WeeklyPlanStrip plan={sheet.weeklyPlan} />
 
-          {(Object.keys(grouped) as Array<keyof typeof grouped>).map((plat) => {
+          {(["codeforces", "codechef", "leetcode"] as const).map((plat) => {
             const list = grouped[plat];
-            if (list.length === 0) return null;
+            if (!list || list.length === 0) return null;
             const meta = PLATFORMS[plat];
             return (
               <section key={plat} className="space-y-3">

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="public/logo.png" alt="CP Coach Logo" width="120"/>
+<img src="public/favicon.ico" alt="CP Coach Logo" width="120"/>
 
 ### Practice Smarter. Climb Faster.
 

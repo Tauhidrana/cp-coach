@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, Sparkles, RefreshCw } from "lucide-react";
+import { ExternalLink, Sparkles, RefreshCw, Check, CheckCircle2 } from "lucide-react";
 import { generateSheet, getMyProfile } from "@/lib/cp.functions";
+import { isSheetCompletedToday, markSheetCompletedToday } from "@/lib/notifications.functions";
 import { GlassCard } from "@/components/glass-card";
 import { Button } from "@/components/ui/button";
 import { CardSkeleton } from "@/components/skeletons";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/sheet")({
   head: () => ({

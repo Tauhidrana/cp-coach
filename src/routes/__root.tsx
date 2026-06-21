@@ -12,6 +12,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider, useTheme } from "@/components/theme-provider";
 
 function NotFoundComponent() {
   return (
@@ -20,7 +21,7 @@ function NotFoundComponent() {
         <h1 className="text-7xl font-bold text-gradient-brand">404</h1>
         <h2 className="mt-4 text-xl font-semibold">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          That route doesn't exist in CP Flow. Head back home.
+          That route doesn't exist in CP Coach. Head back home.
         </p>
         <div className="mt-6">
           <a
@@ -65,22 +66,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CP Flow — Practice Smarter. Climb Faster." },
+      { title: "CP Coach — Practice Smarter. Climb Faster." },
       {
         name: "description",
         content:
-          "AI-powered Codeforces companion. Personalized daily problem sheets, weak-topic detection, contest tracker, and an AI coach to help you climb the rating ladder.",
+          "AI-powered competitive programming coach. Unified profile across Codeforces, CodeChef, LeetCode and AtCoder with personalized daily sheets, analytics, and an AI coach.",
       },
-      { name: "author", content: "CP Flow" },
-      { property: "og:title", content: "CP Flow — Practice Smarter. Climb Faster." },
-      { property: "og:description", content: "CP Ascent is an AI-powered web app that generates personalized competitive programming practice sheets and tracks user progress." },
+      { name: "author", content: "CP Coach" },
+      { property: "og:site_name", content: "CP Coach" },
+      { property: "og:title", content: "CP Coach — Practice Smarter. Climb Faster." },
+      { property: "og:description", content: "Unified competitive programming analytics across every major platform, with an AI coach to plan your climb." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "CP Flow — Practice Smarter. Climb Faster." },
-      { name: "description", content: "CP Ascent is an AI-powered web app that generates personalized competitive programming practice sheets and tracks user progress." },
-      { name: "twitter:description", content: "CP Ascent is an AI-powered web app that generates personalized competitive programming practice sheets and tracks user progress." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4d31f382-c932-45fd-9666-25c1029d51c8/id-preview-2991bd17--edbcb419-f105-4339-adbf-47561453dfde.lovable.app-1781967749272.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4d31f382-c932-45fd-9666-25c1029d51c8/id-preview-2991bd17--edbcb419-f105-4339-adbf-47561453dfde.lovable.app-1781967749272.png" },
+      { name: "twitter:title", content: "CP Coach — Practice Smarter. Climb Faster." },
+      { name: "twitter:description", content: "Unified competitive programming analytics across every major platform, with an AI coach to plan your climb." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -123,9 +122,16 @@ function RootComponent() {
   }, [queryClient, router]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <Toaster theme="dark" />
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <Outlet />
+        <ThemedToaster />
+      </QueryClientProvider>
+    </ThemeProvider>
   );
+}
+
+function ThemedToaster() {
+  const { resolved } = useTheme();
+  return <Toaster theme={resolved} />;
 }

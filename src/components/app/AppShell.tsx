@@ -1,5 +1,5 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import {
   LayoutDashboard,
   LineChart,

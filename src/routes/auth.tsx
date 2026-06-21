@@ -66,9 +66,7 @@ function AuthPage() {
       >
         <div className="glass-strong rounded-3xl p-8 shadow-glow ring-1 ring-primary/15">
           <div className="flex flex-col items-center text-center mb-8">
-            <div className="size-12 rounded-xl bg-gradient-brand grid place-items-center shadow-glow mb-4">
-              <Zap className="size-6 text-white" />
-            </div>
+            <BrandLogo className="size-16 mb-4" />
             <h1 className="text-2xl font-display font-semibold">Welcome to CP Coach</h1>
             <p className="text-sm text-muted-foreground mt-2">
               Sign in to unlock your personalized practice

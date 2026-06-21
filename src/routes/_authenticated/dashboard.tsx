@@ -25,7 +25,13 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 function Dashboard() {
   const { user, isGuest } = useAuth();
   const listFn = useServerFn(listMyPlatforms);
-  const { data: rows, isLoading } = useQuery({ queryKey: ["platforms"], queryFn: () => listFn() });
+  const { data: rows, isLoading } = useQuery({
+    queryKey: ["platforms"],
+    queryFn: () => listFn(),
+    throwOnError: false,
+    retry: 2,
+    retryDelay: (attemptIndex) => [1000, 2000, 5000][attemptIndex] ?? 5000,
+  });
 
   const display =
     (user?.user_metadata?.full_name as string | undefined) ||

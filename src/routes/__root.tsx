@@ -8,7 +8,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -41,17 +41,52 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  const [attempt, setAttempt] = useState(0);
+  const [showFinal, setShowFinal] = useState(false);
+
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
+
+  // Automatic retry with backoff: 1s, 2s, 5s — then show the fallback.
+  useEffect(() => {
+    if (attempt >= 3) {
+      setShowFinal(true);
+      return;
+    }
+    const delays = [1000, 2000, 5000];
+    const t = setTimeout(async () => {
+      try {
+        await router.invalidate();
+        reset();
+      } finally {
+        setAttempt((a: number) => a + 1);
+      }
+    }, delays[attempt]);
+    return () => clearTimeout(t);
+  }, [attempt, router, reset]);
+
+  if (!showFinal) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <div className="size-8 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
+          <p className="text-sm text-muted-foreground">Restoring your session…</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold">Something went sideways</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Try again or head home.</p>
+        <h1 className="text-xl font-semibold">We're reconnecting</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Something interrupted the last request. Your data is safe — try again or head home.
+        </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
-            onClick={() => { router.invalidate(); reset(); }}
+            onClick={() => { setAttempt(0); setShowFinal(false); router.invalidate(); reset(); }}
             className="rounded-md bg-gradient-brand px-4 py-2 text-sm font-medium text-white"
           >
             Try again

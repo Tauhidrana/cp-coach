@@ -73,9 +73,9 @@ export const PLATFORMS: Record<PlatformId, PlatformMeta> = {
     name: "HackerRank",
     short: "HR",
     color: "#2ec866",
-    url: (u) => `https://www.hackerrank.com/${u}`,
-    apiSupported: false,
-    usernameHint: "manually update stats",
+    url: (u) => `https://www.hackerrank.com/profile/${u}`,
+    apiSupported: true,
+    usernameHint: "your HackerRank username",
   },
   gfg: {
     id: "gfg",

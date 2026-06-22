@@ -118,27 +118,30 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Mobile top bar */}
-      <div className="lg:hidden fixed top-0 inset-x-0 z-40 h-14 glass-strong flex items-center px-4 justify-between">
-        <Link to="/dashboard" className="flex items-center gap-2">
-          <BrandLogo className="size-11" />
-          <span className="font-display font-semibold">CP Coach</span>
+      <div className="lg:hidden fixed top-0 inset-x-0 z-40 h-14 glass-strong flex items-center px-3 sm:px-4 justify-between gap-2">
+        <Link to="/dashboard" className="flex items-center gap-2 min-w-0">
+          <BrandLogo className="size-9 sm:size-11 shrink-0" />
+          <span className="font-display font-semibold truncate">CP Coach</span>
         </Link>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
           <NotificationBell />
-          <Link to="/settings" aria-label="Settings">
-            <Button variant="ghost" size="icon"><SettingsIcon className="size-4" /></Button>
+          <Link to="/settings" aria-label="Settings" className="hidden sm:inline-flex">
+            <Button variant="ghost" size="icon" className="h-10 w-10"><SettingsIcon className="size-4" /></Button>
           </Link>
           <ThemeToggle />
-          <Button variant="ghost" size="icon" onClick={onSignOut} aria-label="Sign out">
+          <Button variant="ghost" size="icon" onClick={onSignOut} aria-label="Sign out" className="h-10 w-10">
             <LogOut className="size-4" />
           </Button>
         </div>
       </div>
 
       <main className="flex-1 min-w-0 pt-16 lg:pt-0">
-        {/* Mobile bottom nav */}
-        <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 glass-strong border-t border-border/50">
-          <div className="grid grid-cols-7 gap-1 px-1 py-2">
+        {/* Mobile bottom nav — horizontally scrollable on very small screens */}
+        <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 glass-strong border-t border-border/50 pb-[env(safe-area-inset-bottom)]">
+          <nav
+            className="flex gap-1 px-2 py-2 overflow-x-auto no-scrollbar"
+            aria-label="Primary"
+          >
             {navItems.map((item) => {
               const active = pathname.startsWith(item.to);
               const Icon = item.icon;
@@ -147,18 +150,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   key={item.to}
                   to={item.to}
                   preload="intent"
-                  className={`flex flex-col items-center gap-1 py-1 text-[10px] ${
-                    active ? "text-primary" : "text-muted-foreground"
+                  className={`flex-1 min-w-[56px] flex flex-col items-center gap-0.5 py-1.5 rounded-lg text-[10px] leading-tight ${
+                    active ? "text-primary bg-primary/10" : "text-muted-foreground"
                   }`}
                 >
-                  <Icon className="size-4" />
-                  {item.label.split(" ")[0]}
+                  <Icon className="size-[18px]" />
+                  <span className="truncate max-w-full">{item.label.split(" ")[0]}</span>
                 </Link>
               );
             })}
-          </div>
+          </nav>
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-8 pb-28 lg:pb-12">{children}</div>
+        <div className="max-w-7xl 2xl:max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8 pb-32 lg:pb-12">{children}</div>
       </main>
     </div>
   );

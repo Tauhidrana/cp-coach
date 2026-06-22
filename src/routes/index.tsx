@@ -75,20 +75,20 @@ function Landing() {
 
       {/* Nav */}
       <header className="relative z-10">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <BrandLogo className="size-12" />
-            <span className="font-display text-lg font-semibold tracking-tight">CP Coach</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+          <Link to="/" className="flex items-center gap-2 min-w-0">
+            <BrandLogo className="size-10 sm:size-12 shrink-0" />
+            <span className="font-display text-base sm:text-lg font-semibold tracking-tight truncate">CP Coach</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
             <a href="#features" className="hover:text-foreground transition">Features</a>
             <a href="#how" className="hover:text-foreground transition">How it works</a>
             <a href="#why" className="hover:text-foreground transition">Why CP Coach</a>
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <ThemeToggle />
             <Link to="/auth">
-              <Button className="bg-gradient-brand hover:opacity-90 text-white border-0 shadow-glow">
+              <Button className="bg-gradient-brand hover:opacity-90 text-white border-0 shadow-glow h-10 px-4 sm:px-5">
                 Get Started
               </Button>
             </Link>
@@ -97,32 +97,32 @@ function Landing() {
       </header>
 
       {/* Hero */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-32 text-center">
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 pb-20 sm:pb-32 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-muted-foreground mb-6">
-            <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-            AI-powered Competitive Programming Ecosystem
+          <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-muted-foreground mb-6 max-w-full">
+            <span className="size-1.5 rounded-full bg-primary animate-pulse shrink-0" />
+            <span className="truncate">AI-powered Competitive Programming Ecosystem</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-display font-bold leading-[1.05] tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.05] tracking-tight">
             Practice Smarter.<br />
             <span className="text-gradient-brand">Climb Faster.</span>
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
+          <p className="mt-5 sm:mt-6 max-w-2xl mx-auto text-base sm:text-lg text-muted-foreground px-2">
             Track, analyze and improve across every competitive programming platform — Codeforces,
             LeetCode, AtCoder, CodeChef and more — in one unified profile.
           </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <Link to="/auth">
-              <Button size="lg" className="bg-gradient-brand text-white border-0 shadow-glow hover:opacity-90 h-12 px-7">
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row justify-center gap-3">
+            <Link to="/auth" className="sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto bg-gradient-brand text-white border-0 shadow-glow hover:opacity-90 h-12 px-7">
                 Start free <ArrowRight className="ml-2 size-4" />
               </Button>
             </Link>
-            <a href="#features">
-              <Button size="lg" variant="outline" className="h-12 px-7 border-border/60 bg-white/[0.02]">
+            <a href="#features" className="sm:w-auto">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto h-12 px-7 border-border/60 bg-white/[0.02]">
                 See features
               </Button>
             </a>
@@ -138,7 +138,7 @@ function Landing() {
           className="mt-16 max-w-5xl mx-auto"
         >
           <div className="glass-strong rounded-3xl p-2 shadow-glow ring-1 ring-primary/20">
-            <div className="rounded-2xl bg-card/80 p-6 md:p-10 text-left">
+            <div className="rounded-2xl bg-card/80 p-4 sm:p-6 md:p-10 text-left">
               <div className="flex items-center justify-between gap-6 mb-6 flex-wrap">
                 <div>
                   <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">CP Coach Score</div>
@@ -214,10 +214,10 @@ function Landing() {
       </section>
 
       {/* Features */}
-      <section id="features" className="relative z-10 max-w-7xl mx-auto px-6 py-24">
-        <div className="text-center max-w-2xl mx-auto mb-14">
+      <section id="features" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
           <div className="text-sm text-primary font-medium mb-3">Built for serious climbers</div>
-          <h2 className="text-4xl md:text-5xl font-display font-semibold tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight">
             Everything you need to <span className="text-gradient-brand">level up</span>
           </h2>
         </div>
@@ -245,10 +245,10 @@ function Landing() {
       </section>
 
       {/* How */}
-      <section id="how" className="relative z-10 max-w-5xl mx-auto px-6 py-24">
-        <div className="text-center mb-14">
+      <section id="how" className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        <div className="text-center mb-10 sm:mb-14">
           <div className="text-sm text-primary font-medium mb-3">Three steps</div>
-          <h2 className="text-4xl md:text-5xl font-display font-semibold tracking-tight">From signup to first solve in 60s</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight">From signup to first solve in 60s</h2>
         </div>
         <div className="grid md:grid-cols-3 gap-4">
           {[
@@ -273,11 +273,11 @@ function Landing() {
       </section>
 
       {/* Why */}
-      <section id="why" className="relative z-10 max-w-5xl mx-auto px-6 py-24">
-        <div className="glass-strong rounded-3xl p-10 md:p-14 ring-1 ring-primary/10">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
+      <section id="why" className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        <div className="glass-strong rounded-3xl p-6 sm:p-10 md:p-14 ring-1 ring-primary/10">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-10 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-display font-semibold tracking-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-semibold tracking-tight">
                 Stop solving <span className="line-through text-muted-foreground">random</span> problems.<br />
                 Start solving <span className="text-gradient-brand">the right ones.</span>
               </h2>
@@ -306,8 +306,8 @@ function Landing() {
       </section>
 
       {/* CTA */}
-      <section className="relative z-10 max-w-3xl mx-auto px-6 py-24 text-center">
-        <h2 className="text-4xl md:text-5xl font-display font-semibold tracking-tight">
+      <section className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight">
           Your next rating <span className="text-gradient-brand">starts now</span>.
         </h2>
         <p className="mt-4 text-muted-foreground">Join CP Coach and turn practice into a system.</p>

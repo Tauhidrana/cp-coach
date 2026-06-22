@@ -520,7 +520,7 @@ export function LandingFooter() {
         </motion.div>
 
         <div className="mt-10 border-t border-white/10 pt-5">
-git push origin main          <div className="flex flex-col gap-4 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
+                  <div className="flex flex-col gap-4 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
             <div>© 2026 CP Coach. All rights reserved.</div>
             <div className="text-foreground/80">Practice Smarter. Climb Faster.</div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">

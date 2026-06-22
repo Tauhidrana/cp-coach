@@ -71,13 +71,13 @@ function Dashboard() {
 
           {/* Connected platforms grid */}
           <section>
-            <div className="flex items-end justify-between mb-3">
-              <h2 className="text-xl font-display font-semibold">Connected platforms</h2>
-              <Link to="/platforms" className="text-xs text-primary hover:underline inline-flex items-center gap-1">
+            <div className="flex items-end justify-between mb-3 gap-3">
+              <h2 className="text-lg sm:text-xl font-display font-semibold">Connected platforms</h2>
+              <Link to="/platforms" className="text-xs text-primary hover:underline inline-flex items-center gap-1 shrink-0">
                 Manage <ArrowRight className="size-3" />
               </Link>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {platforms.map((row, i) => {
                 const meta = PLATFORMS[row.platform as PlatformId];
                 if (!meta) return null;

@@ -245,10 +245,10 @@ function Landing() {
       </section>
 
       {/* How */}
-      <section id="how" className="relative z-10 max-w-5xl mx-auto px-6 py-24">
-        <div className="text-center mb-14">
+      <section id="how" className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        <div className="text-center mb-10 sm:mb-14">
           <div className="text-sm text-primary font-medium mb-3">Three steps</div>
-          <h2 className="text-4xl md:text-5xl font-display font-semibold tracking-tight">From signup to first solve in 60s</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight">From signup to first solve in 60s</h2>
         </div>
         <div className="grid md:grid-cols-3 gap-4">
           {[

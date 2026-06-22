@@ -214,10 +214,10 @@ function Landing() {
       </section>
 
       {/* Features */}
-      <section id="features" className="relative z-10 max-w-7xl mx-auto px-6 py-24">
-        <div className="text-center max-w-2xl mx-auto mb-14">
+      <section id="features" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
           <div className="text-sm text-primary font-medium mb-3">Built for serious climbers</div>
-          <h2 className="text-4xl md:text-5xl font-display font-semibold tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight">
             Everything you need to <span className="text-gradient-brand">level up</span>
           </h2>
         </div>

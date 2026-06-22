@@ -75,20 +75,20 @@ function Landing() {
 
       {/* Nav */}
       <header className="relative z-10">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <BrandLogo className="size-12" />
-            <span className="font-display text-lg font-semibold tracking-tight">CP Coach</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+          <Link to="/" className="flex items-center gap-2 min-w-0">
+            <BrandLogo className="size-10 sm:size-12 shrink-0" />
+            <span className="font-display text-base sm:text-lg font-semibold tracking-tight truncate">CP Coach</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
             <a href="#features" className="hover:text-foreground transition">Features</a>
             <a href="#how" className="hover:text-foreground transition">How it works</a>
             <a href="#why" className="hover:text-foreground transition">Why CP Coach</a>
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <ThemeToggle />
             <Link to="/auth">
-              <Button className="bg-gradient-brand hover:opacity-90 text-white border-0 shadow-glow">
+              <Button className="bg-gradient-brand hover:opacity-90 text-white border-0 shadow-glow h-10 px-4 sm:px-5">
                 Get Started
               </Button>
             </Link>
@@ -97,32 +97,32 @@ function Landing() {
       </header>
 
       {/* Hero */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-32 text-center">
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 pb-20 sm:pb-32 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-muted-foreground mb-6">
-            <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-            AI-powered Competitive Programming Ecosystem
+          <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-muted-foreground mb-6 max-w-full">
+            <span className="size-1.5 rounded-full bg-primary animate-pulse shrink-0" />
+            <span className="truncate">AI-powered Competitive Programming Ecosystem</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-display font-bold leading-[1.05] tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.05] tracking-tight">
             Practice Smarter.<br />
             <span className="text-gradient-brand">Climb Faster.</span>
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
+          <p className="mt-5 sm:mt-6 max-w-2xl mx-auto text-base sm:text-lg text-muted-foreground px-2">
             Track, analyze and improve across every competitive programming platform — Codeforces,
             LeetCode, AtCoder, CodeChef and more — in one unified profile.
           </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <Link to="/auth">
-              <Button size="lg" className="bg-gradient-brand text-white border-0 shadow-glow hover:opacity-90 h-12 px-7">
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row justify-center gap-3">
+            <Link to="/auth" className="sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto bg-gradient-brand text-white border-0 shadow-glow hover:opacity-90 h-12 px-7">
                 Start free <ArrowRight className="ml-2 size-4" />
               </Button>
             </Link>
-            <a href="#features">
-              <Button size="lg" variant="outline" className="h-12 px-7 border-border/60 bg-white/[0.02]">
+            <a href="#features" className="sm:w-auto">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto h-12 px-7 border-border/60 bg-white/[0.02]">
                 See features
               </Button>
             </a>

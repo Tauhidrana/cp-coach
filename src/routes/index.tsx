@@ -273,11 +273,11 @@ function Landing() {
       </section>
 
       {/* Why */}
-      <section id="why" className="relative z-10 max-w-5xl mx-auto px-6 py-24">
-        <div className="glass-strong rounded-3xl p-10 md:p-14 ring-1 ring-primary/10">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
+      <section id="why" className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        <div className="glass-strong rounded-3xl p-6 sm:p-10 md:p-14 ring-1 ring-primary/10">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-10 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-display font-semibold tracking-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-semibold tracking-tight">
                 Stop solving <span className="line-through text-muted-foreground">random</span> problems.<br />
                 Start solving <span className="text-gradient-brand">the right ones.</span>
               </h2>

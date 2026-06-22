@@ -145,21 +145,14 @@ function Landing() {
             <span className="size-1.5 rounded-full bg-primary animate-pulse shrink-0" />
             <span className="truncate">AI-powered Competitive Programming Ecosystem</span>
           </div>
-<<<<<<< HEAD
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.05] tracking-tight">
             Practice Smarter.<br />
-=======
-          <h1 className="text-5xl md:text-7xl font-display font-bold leading-[1.05] tracking-tight">
-            Practice Smarter.
-            <br />
->>>>>>> 78f89df (added footer in site)
             <span className="text-gradient-brand">Climb Faster.</span>
           </h1>
           <p className="mt-5 sm:mt-6 max-w-2xl mx-auto text-base sm:text-lg text-muted-foreground px-2">
             Track, analyze and improve across every competitive programming platform — Codeforces,
             LeetCode, AtCoder, CodeChef and more — in one unified profile.
           </p>
-<<<<<<< HEAD
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row justify-center gap-3">
             <Link to="/auth" className="sm:w-auto">
               <Button size="lg" className="w-full sm:w-auto bg-gradient-brand text-white border-0 shadow-glow hover:opacity-90 h-12 px-7">
@@ -168,23 +161,6 @@ function Landing() {
             </Link>
             <a href="#features" className="sm:w-auto">
               <Button size="lg" variant="outline" className="w-full sm:w-auto h-12 px-7 border-border/60 bg-white/[0.02]">
-=======
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <Link to="/auth">
-              <Button
-                size="lg"
-                className="bg-gradient-brand text-white border-0 shadow-glow hover:opacity-90 h-12 px-7"
-              >
-                Start free <ArrowRight className="ml-2 size-4" />
-              </Button>
-            </Link>
-            <a href="#features">
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-12 px-7 border-border/60 bg-white/[0.02]"
-              >
->>>>>>> 78f89df (added footer in site)
                 See features
               </Button>
             </a>
@@ -329,13 +305,7 @@ function Landing() {
       <section id="how" className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <div className="text-center mb-10 sm:mb-14">
           <div className="text-sm text-primary font-medium mb-3">Three steps</div>
-<<<<<<< HEAD
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight">From signup to first solve in 60s</h2>
-=======
-          <h2 className="text-4xl md:text-5xl font-display font-semibold tracking-tight">
-            From signup to first solve in 60s
-          </h2>
->>>>>>> 78f89df (added footer in site)
         </div>
         <div className="grid md:grid-cols-3 gap-4">
           {[
@@ -376,15 +346,8 @@ function Landing() {
         <div className="glass-strong rounded-3xl p-6 sm:p-10 md:p-14 ring-1 ring-primary/10">
           <div className="grid md:grid-cols-2 gap-8 md:gap-10 items-center">
             <div>
-<<<<<<< HEAD
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-semibold tracking-tight">
                 Stop solving <span className="line-through text-muted-foreground">random</span> problems.<br />
-=======
-              <h2 className="text-3xl md:text-4xl font-display font-semibold tracking-tight">
-                Stop solving <span className="line-through text-muted-foreground">random</span>{" "}
-                problems.
-                <br />
->>>>>>> 78f89df (added footer in site)
                 Start solving <span className="text-gradient-brand">the right ones.</span>
               </h2>
               <p className="mt-4 text-muted-foreground">

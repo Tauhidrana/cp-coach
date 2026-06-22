@@ -84,18 +84,9 @@ function Dashboard() {
 
           {/* Connected platforms grid */}
           <section>
-<<<<<<< HEAD
             <div className="flex items-end justify-between mb-3 gap-3">
               <h2 className="text-lg sm:text-xl font-display font-semibold">Connected platforms</h2>
               <Link to="/platforms" className="text-xs text-primary hover:underline inline-flex items-center gap-1 shrink-0">
-=======
-            <div className="flex items-end justify-between mb-3">
-              <h2 className="text-xl font-display font-semibold">Connected platforms</h2>
-              <Link
-                to="/platforms"
-                className="text-xs text-primary hover:underline inline-flex items-center gap-1"
-              >
->>>>>>> 78f89df (added footer in site)
                 Manage <ArrowRight className="size-3" />
               </Link>
             </div>
@@ -171,13 +162,7 @@ function ScoreCard({
             CP Coach Score
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-<<<<<<< HEAD
             <span className={`text-5xl sm:text-6xl md:text-7xl font-display font-bold bg-gradient-to-br ${grad} bg-clip-text text-transparent tabular-nums`}>
-=======
-            <span
-              className={`text-6xl md:text-7xl font-display font-bold bg-gradient-to-br ${grad} bg-clip-text text-transparent tabular-nums`}
-            >
->>>>>>> 78f89df (added footer in site)
               {score.score}
             </span>
             <span className="text-xl text-muted-foreground">/ 100</span>

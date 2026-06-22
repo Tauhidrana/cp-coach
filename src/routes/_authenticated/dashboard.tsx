@@ -114,7 +114,7 @@ function ScoreCard({ score, className }: { score: ReturnType<typeof computeCPFlo
         <div>
           <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">CP Coach Score</div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className={`text-6xl md:text-7xl font-display font-bold bg-gradient-to-br ${grad} bg-clip-text text-transparent tabular-nums`}>
+            <span className={`text-5xl sm:text-6xl md:text-7xl font-display font-bold bg-gradient-to-br ${grad} bg-clip-text text-transparent tabular-nums`}>
               {score.score}
             </span>
             <span className="text-xl text-muted-foreground">/ 100</span>

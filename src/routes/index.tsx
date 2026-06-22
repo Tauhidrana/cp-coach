@@ -138,7 +138,7 @@ function Landing() {
           className="mt-16 max-w-5xl mx-auto"
         >
           <div className="glass-strong rounded-3xl p-2 shadow-glow ring-1 ring-primary/20">
-            <div className="rounded-2xl bg-card/80 p-6 md:p-10 text-left">
+            <div className="rounded-2xl bg-card/80 p-4 sm:p-6 md:p-10 text-left">
               <div className="flex items-center justify-between gap-6 mb-6 flex-wrap">
                 <div>
                   <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">CP Coach Score</div>

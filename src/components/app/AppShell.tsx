@@ -153,19 +153,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   key={item.to}
                   to={item.to}
                   preload="intent"
-                  className={`flex-1 min-w-[56px] flex flex-col items-center gap-0.5 py-1.5 rounded-lg text-[10px] leading-tight ${
+                  className={`flex-1 min-w-14 flex flex-col items-center gap-0.5 py-1.5 rounded-lg text-[10px] leading-tight ${
                     active ? "text-primary bg-primary/10" : "text-muted-foreground"
                   }`}
                 >
-                  <Icon className="size-[18px]" />
+                  <Icon className="size-4.5" />
                   <span className="truncate max-w-full">{item.label.split(" ")[0]}</span>
                 </Link>
               );
             })}
           </nav>
         </div>
-        <div className="max-w-7xl 2xl:max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8 pb-32 lg:pb-12">{children}</div>
-        <div className="max-w-7xl 2xl:max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8 pb-32 lg:pb-12">{children}</div>
+        <div className="max-w-7xl 2xl:max-w-352 mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8 pb-32 lg:pb-12">{children}</div>
       </main>
     </div>
   );

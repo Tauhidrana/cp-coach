@@ -275,6 +275,13 @@
 }
 .animate-pulse-glow { animation: pulse-glow 2.4s ease-in-out infinite; }
 
+/* Hide scrollbars on touch nav strips while keeping scroll behavior */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Prevent horizontal page scroll on small screens */
+html, body { overflow-x: hidden; max-width: 100%; }
+
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }

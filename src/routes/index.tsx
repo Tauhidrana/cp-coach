@@ -306,8 +306,8 @@ function Landing() {
       </section>
 
       {/* CTA */}
-      <section className="relative z-10 max-w-3xl mx-auto px-6 py-24 text-center">
-        <h2 className="text-4xl md:text-5xl font-display font-semibold tracking-tight">
+      <section className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight">
           Your next rating <span className="text-gradient-brand">starts now</span>.
         </h2>
         <p className="mt-4 text-muted-foreground">Join CP Coach and turn practice into a system.</p>

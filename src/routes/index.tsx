@@ -13,6 +13,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
+import { LandingFooter } from "@/components/landing-footer";
 import { Button } from "@/components/ui/button";
 import { PLATFORM_LIST } from "@/lib/platforms/registry";
 import { PlatformLogo, FloatingLogos } from "@/components/platform-logo";
@@ -35,16 +36,44 @@ export const Route = createFileRoute("/")({
 });
 
 const features = [
-  { icon: BarChart3, title: "Cross-Platform Analytics", desc: "One unified view of Codeforces, LeetCode, AtCoder & more." },
-  { icon: Target, title: "Unified CP Coach Score", desc: "A single 0-100 rating that captures your true CP strength." },
-  { icon: Calendar, title: "Daily Smart Sheets", desc: "Problems picked for your level and weak topics." },
-  { icon: Bot, title: "Cross-Platform AI Coach", desc: "Gemini-powered guidance tuned to every account you connect." },
-  { icon: Trophy, title: "Contest Tracker", desc: "Upcoming rounds with countdowns and bookmarks." },
-  { icon: Sparkles, title: "Personal Roadmap", desc: "AI-built path from your current to your target level." },
+  {
+    icon: BarChart3,
+    title: "Cross-Platform Analytics",
+    desc: "One unified view of Codeforces, LeetCode, AtCoder & more.",
+  },
+  {
+    icon: Target,
+    title: "Unified CP Coach Score",
+    desc: "A single 0-100 rating that captures your true CP strength.",
+  },
+  {
+    icon: Calendar,
+    title: "Daily Smart Sheets",
+    desc: "Problems picked for your level and weak topics.",
+  },
+  {
+    icon: Bot,
+    title: "Cross-Platform AI Coach",
+    desc: "Gemini-powered guidance tuned to every account you connect.",
+  },
+  {
+    icon: Trophy,
+    title: "Contest Tracker",
+    desc: "Upcoming rounds with countdowns and bookmarks.",
+  },
+  {
+    icon: Sparkles,
+    title: "Personal Roadmap",
+    desc: "AI-built path from your current to your target level.",
+  },
 ];
 
 function AnimatedNumber({ to }: { to: number }) {
-  return <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{to}</motion.span>;
+  return (
+    <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      {to}
+    </motion.span>
+  );
 }
 
 function Landing() {
@@ -64,7 +93,10 @@ function Landing() {
         if (!cancelled) navigate({ to: "/dashboard", replace: true });
       }
     });
-    return () => { cancelled = true; sub.subscription.unsubscribe(); };
+    return () => {
+      cancelled = true;
+      sub.subscription.unsubscribe();
+    };
   }, [navigate]);
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -81,9 +113,15 @@ function Landing() {
             <span className="font-display text-base sm:text-lg font-semibold tracking-tight truncate">CP Coach</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
-            <a href="#features" className="hover:text-foreground transition">Features</a>
-            <a href="#how" className="hover:text-foreground transition">How it works</a>
-            <a href="#why" className="hover:text-foreground transition">Why CP Coach</a>
+            <a href="#features" className="hover:text-foreground transition">
+              Features
+            </a>
+            <a href="#how" className="hover:text-foreground transition">
+              How it works
+            </a>
+            <a href="#why" className="hover:text-foreground transition">
+              Why CP Coach
+            </a>
           </nav>
           <div className="flex items-center gap-2 shrink-0">
             <ThemeToggle />
@@ -107,14 +145,21 @@ function Landing() {
             <span className="size-1.5 rounded-full bg-primary animate-pulse shrink-0" />
             <span className="truncate">AI-powered Competitive Programming Ecosystem</span>
           </div>
+<<<<<<< HEAD
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.05] tracking-tight">
             Practice Smarter.<br />
+=======
+          <h1 className="text-5xl md:text-7xl font-display font-bold leading-[1.05] tracking-tight">
+            Practice Smarter.
+            <br />
+>>>>>>> 78f89df (added footer in site)
             <span className="text-gradient-brand">Climb Faster.</span>
           </h1>
           <p className="mt-5 sm:mt-6 max-w-2xl mx-auto text-base sm:text-lg text-muted-foreground px-2">
             Track, analyze and improve across every competitive programming platform — Codeforces,
             LeetCode, AtCoder, CodeChef and more — in one unified profile.
           </p>
+<<<<<<< HEAD
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row justify-center gap-3">
             <Link to="/auth" className="sm:w-auto">
               <Button size="lg" className="w-full sm:w-auto bg-gradient-brand text-white border-0 shadow-glow hover:opacity-90 h-12 px-7">
@@ -123,11 +168,30 @@ function Landing() {
             </Link>
             <a href="#features" className="sm:w-auto">
               <Button size="lg" variant="outline" className="w-full sm:w-auto h-12 px-7 border-border/60 bg-white/[0.02]">
+=======
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <Link to="/auth">
+              <Button
+                size="lg"
+                className="bg-gradient-brand text-white border-0 shadow-glow hover:opacity-90 h-12 px-7"
+              >
+                Start free <ArrowRight className="ml-2 size-4" />
+              </Button>
+            </Link>
+            <a href="#features">
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-12 px-7 border-border/60 bg-white/[0.02]"
+              >
+>>>>>>> 78f89df (added footer in site)
                 See features
               </Button>
             </a>
           </div>
-          <div className="mt-6 text-xs text-muted-foreground">No card required • Google or guest sign-in</div>
+          <div className="mt-6 text-xs text-muted-foreground">
+            No card required • Google or guest sign-in
+          </div>
         </motion.div>
 
         {/* Hero mock card */}
@@ -141,7 +205,9 @@ function Landing() {
             <div className="rounded-2xl bg-card/80 p-4 sm:p-6 md:p-10 text-left">
               <div className="flex items-center justify-between gap-6 mb-6 flex-wrap">
                 <div>
-                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">CP Coach Score</div>
+                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    CP Coach Score
+                  </div>
                   <div className="flex items-baseline gap-2 mt-1">
                     <motion.span
                       initial={{ opacity: 0 }}
@@ -155,7 +221,9 @@ function Landing() {
                   </div>
                 </div>
                 <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="px-2 py-1 rounded-md bg-success/10 text-success">+7 this month</span>
+                  <span className="px-2 py-1 rounded-md bg-success/10 text-success">
+                    +7 this month
+                  </span>
                 </div>
               </div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -172,19 +240,30 @@ function Landing() {
                     transition={{ delay: 0.4 + i * 0.08 }}
                     className="rounded-xl border border-border/60 bg-card/40 p-4 relative overflow-hidden"
                   >
-                    <div className="absolute -top-8 -right-8 size-20 rounded-full opacity-20 blur-xl" style={{ background: row.p.color }} />
+                    <div
+                      className="absolute -top-8 -right-8 size-20 rounded-full opacity-20 blur-xl"
+                      style={{ background: row.p.color }}
+                    />
                     <div className="relative flex items-center gap-2">
                       <PlatformLogo p={row.p} size={28} />
                       <div className="text-xs text-muted-foreground truncate">@{row.handle}</div>
                     </div>
                     <div className="relative mt-3 grid grid-cols-2 gap-2 text-center">
                       <div>
-                        <div className="text-lg font-display font-semibold tabular-nums">{row.rating}</div>
-                        <div className="text-[9px] uppercase text-muted-foreground tracking-wider">Rating</div>
+                        <div className="text-lg font-display font-semibold tabular-nums">
+                          {row.rating}
+                        </div>
+                        <div className="text-[9px] uppercase text-muted-foreground tracking-wider">
+                          Rating
+                        </div>
                       </div>
                       <div>
-                        <div className="text-lg font-display font-semibold tabular-nums">{row.solved}</div>
-                        <div className="text-[9px] uppercase text-muted-foreground tracking-wider">Solved</div>
+                        <div className="text-lg font-display font-semibold tabular-nums">
+                          {row.solved}
+                        </div>
+                        <div className="text-[9px] uppercase text-muted-foreground tracking-wider">
+                          Solved
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -201,7 +280,9 @@ function Landing() {
           transition={{ delay: 0.8 }}
           className="mt-14"
         >
-          <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-5">Works with</div>
+          <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-5">
+            Works with
+          </div>
           <div className="flex flex-wrap items-center justify-center gap-3">
             {PLATFORM_LIST.map((p) => (
               <div key={p.id} className="glass rounded-xl px-3 py-2 flex items-center gap-2">
@@ -248,13 +329,31 @@ function Landing() {
       <section id="how" className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <div className="text-center mb-10 sm:mb-14">
           <div className="text-sm text-primary font-medium mb-3">Three steps</div>
+<<<<<<< HEAD
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight">From signup to first solve in 60s</h2>
+=======
+          <h2 className="text-4xl md:text-5xl font-display font-semibold tracking-tight">
+            From signup to first solve in 60s
+          </h2>
+>>>>>>> 78f89df (added footer in site)
         </div>
         <div className="grid md:grid-cols-3 gap-4">
           {[
-            { n: "01", t: "Connect handle", d: "Drop your Codeforces handle. We pull your full submission history." },
-            { n: "02", t: "Get your analysis", d: "Strong & weak tags surface instantly with deep charts." },
-            { n: "03", t: "Solve today's sheet", d: "AI picks problems for your rating and gaps — no doom-scrolling." },
+            {
+              n: "01",
+              t: "Connect handle",
+              d: "Drop your Codeforces handle. We pull your full submission history.",
+            },
+            {
+              n: "02",
+              t: "Get your analysis",
+              d: "Strong & weak tags surface instantly with deep charts.",
+            },
+            {
+              n: "03",
+              t: "Solve today's sheet",
+              d: "AI picks problems for your rating and gaps — no doom-scrolling.",
+            },
           ].map((s, i) => (
             <motion.div
               key={s.n}
@@ -277,8 +376,15 @@ function Landing() {
         <div className="glass-strong rounded-3xl p-6 sm:p-10 md:p-14 ring-1 ring-primary/10">
           <div className="grid md:grid-cols-2 gap-8 md:gap-10 items-center">
             <div>
+<<<<<<< HEAD
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-semibold tracking-tight">
                 Stop solving <span className="line-through text-muted-foreground">random</span> problems.<br />
+=======
+              <h2 className="text-3xl md:text-4xl font-display font-semibold tracking-tight">
+                Stop solving <span className="line-through text-muted-foreground">random</span>{" "}
+                problems.
+                <br />
+>>>>>>> 78f89df (added footer in site)
                 Start solving <span className="text-gradient-brand">the right ones.</span>
               </h2>
               <p className="mt-4 text-muted-foreground">
@@ -312,15 +418,15 @@ function Landing() {
         </h2>
         <p className="mt-4 text-muted-foreground">Join CP Coach and turn practice into a system.</p>
         <Link to="/auth" className="inline-block mt-8">
-          <Button size="lg" className="bg-gradient-brand text-white border-0 shadow-glow hover:opacity-90 h-12 px-8">
+          <Button
+            size="lg"
+            className="bg-gradient-brand text-white border-0 shadow-glow hover:opacity-90 h-12 px-8"
+          >
             Start practicing <ArrowRight className="ml-2 size-4" />
           </Button>
         </Link>
       </section>
-
-      <footer className="relative z-10 border-t border-border/40 py-8 text-center text-xs text-muted-foreground">
-        Built for the Codeforces community · CP Coach © {new Date().getFullYear()}
-      </footer>
+      <LandingFooter />
     </div>
   );
 }

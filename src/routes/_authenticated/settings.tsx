@@ -14,7 +14,10 @@ export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
       { title: "Settings — CP Coach" },
-      { name: "description", content: "Customize your CP Coach language, notifications, and theme." },
+      {
+        name: "description",
+        content: "Customize your CP Coach language, notifications, and theme.",
+      },
     ],
   }),
   component: SettingsPage,
@@ -73,7 +76,9 @@ function SettingsPage() {
           <UserAvatar className="size-16" />
           <div className="min-w-0">
             <div className="text-base font-medium truncate">{name}</div>
-            <div className="text-sm text-muted-foreground truncate">{isGuest ? "Guest session" : user?.email}</div>
+            <div className="text-sm text-muted-foreground truncate">
+              {isGuest ? "Guest session" : user?.email}
+            </div>
             <div className="text-xs text-muted-foreground mt-1">
               {meta.avatar_url ? "Synced from Google" : "Using gradient avatar fallback"}
             </div>
@@ -87,7 +92,9 @@ function SettingsPage() {
           <Globe className="size-4 text-primary" />
           <h2 className="font-display font-semibold">Language</h2>
         </div>
-        <p className="text-sm text-muted-foreground mb-4">Language used for AI Coach replies, reports, roadmaps, and tips.</p>
+        <p className="text-sm text-muted-foreground mb-4">
+          Language used for AI Coach replies, reports, roadmaps, and tips.
+        </p>
         <div className="flex flex-wrap gap-2">
           {LANGS.map((l) => (
             <button
@@ -191,10 +198,17 @@ function SettingsPage() {
 }
 
 function ToggleRow({
-  label, description, checked, onChange, icon,
+  label,
+  description,
+  checked,
+  onChange,
+  icon,
 }: {
-  label: string; description: string; checked: boolean;
-  onChange: (v: boolean) => void; icon?: React.ReactNode;
+  label: string;
+  description: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  icon?: React.ReactNode;
 }) {
   return (
     <div className="flex items-start justify-between gap-4 py-3">

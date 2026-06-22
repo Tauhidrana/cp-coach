@@ -56,8 +56,14 @@ function NotificationsPage() {
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["notifications"] });
   const allMut = useMutation({ mutationFn: () => allFn(), onSuccess: invalidate });
-  const readMut = useMutation({ mutationFn: (id: string) => readFn({ data: { id } }), onSuccess: invalidate });
-  const delMut = useMutation({ mutationFn: (id: string) => delFn({ data: { id } }), onSuccess: invalidate });
+  const readMut = useMutation({
+    mutationFn: (id: string) => readFn({ data: { id } }),
+    onSuccess: invalidate,
+  });
+  const delMut = useMutation({
+    mutationFn: (id: string) => delFn({ data: { id } }),
+    onSuccess: invalidate,
+  });
 
   const filtered = filter === "all" ? items : items.filter((i) => i.type === filter);
 
@@ -108,7 +114,9 @@ function NotificationsPage() {
               <Bell className="size-6" />
             </div>
             <h3 className="font-display text-lg font-semibold">Nothing here yet</h3>
-            <p className="text-sm text-muted-foreground mt-1">When something needs your attention, you'll see it here.</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              When something needs your attention, you'll see it here.
+            </p>
           </div>
         </GlassCard>
       ) : (
@@ -134,15 +142,27 @@ function NotificationsPage() {
                       {!n.read_at && <span className="size-1.5 rounded-full bg-primary shrink-0" />}
                     </div>
                     {n.body && <p className="text-sm text-muted-foreground mt-0.5">{n.body}</p>}
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-2">{timeAgo(n.created_at)}</div>
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-2">
+                      {timeAgo(n.created_at)}
+                    </div>
                   </div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
                     {!n.read_at && (
-                      <Button variant="ghost" size="icon" onClick={() => readMut.mutate(n.id)} aria-label="Mark read">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => readMut.mutate(n.id)}
+                        aria-label="Mark read"
+                      >
                         <Check className="size-4" />
                       </Button>
                     )}
-                    <Button variant="ghost" size="icon" onClick={() => delMut.mutate(n.id)} aria-label="Delete">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => delMut.mutate(n.id)}
+                      aria-label="Delete"
+                    >
                       <Trash2 className="size-4" />
                     </Button>
                   </div>

@@ -15,7 +15,7 @@ export interface PlatformRow {
 const WEIGHTS: Record<string, number> = {
   codeforces: 0.35,
   leetcode: 0.25,
-  atcoder: 0.20,
+  atcoder: 0.2,
   codechef: 0.05,
   hackerrank: 0.05,
   gfg: 0.05,
@@ -26,18 +26,25 @@ const WEIGHTS: Record<string, number> = {
 function normalizeRating(p: string, rating: number | null): number {
   if (!rating || rating <= 0) return 0;
   switch (p) {
-    case "codeforces": return clamp(rating / 3000);
-    case "leetcode":   return clamp((rating - 1300) / (2700 - 1300));
-    case "atcoder":    return clamp(rating / 2800);
-    case "codechef":   return clamp(rating / 2500); // CodeChef stars: 2500 = 7★
-    default:           return clamp(rating / 2500);
+    case "codeforces":
+      return clamp(rating / 3000);
+    case "leetcode":
+      return clamp((rating - 1300) / (2700 - 1300));
+    case "atcoder":
+      return clamp(rating / 2800);
+    case "codechef":
+      return clamp(rating / 2500); // CodeChef stars: 2500 = 7★
+    default:
+      return clamp(rating / 2500);
   }
 }
 
-function clamp(x: number) { return Math.max(0, Math.min(1, x)); }
+function clamp(x: number) {
+  return Math.max(0, Math.min(1, x));
+}
 
 export interface CPFlowScore {
-  score: number;       // 0..100
+  score: number; // 0..100
   tier: "Beginner" | "Intermediate" | "Advanced" | "Expert";
   breakdown: { platform: string; weight: number; contribution: number }[];
   totalSolved: number;
@@ -64,7 +71,7 @@ export function computeCPFlowScore(rows: PlatformRow[]): CPFlowScore {
   // Volume + consistency bonus (up to +0.15)
   const totalSolved = rows.reduce((a, r) => a + (r.problems_solved || 0), 0);
   const totalContests = rows.reduce((a, r) => a + (r.contest_count || 0), 0);
-  const volumeBonus = clamp(totalSolved / 1500) * 0.10;
+  const volumeBonus = clamp(totalSolved / 1500) * 0.1;
   const contestBonus = clamp(totalContests / 60) * 0.05;
 
   const score = Math.round(Math.min(1, base + volumeBonus + contestBonus) * 100);
@@ -80,10 +87,14 @@ export function computeCPFlowScore(rows: PlatformRow[]): CPFlowScore {
 
 export function tierGradient(tier: CPFlowScore["tier"]) {
   switch (tier) {
-    case "Expert":       return "from-fuchsia-400 via-purple-400 to-blue-400";
-    case "Advanced":     return "from-purple-400 to-blue-400";
-    case "Intermediate": return "from-blue-400 to-cyan-400";
-    default:             return "from-cyan-400 to-emerald-400";
+    case "Expert":
+      return "from-fuchsia-400 via-purple-400 to-blue-400";
+    case "Advanced":
+      return "from-purple-400 to-blue-400";
+    case "Intermediate":
+      return "from-blue-400 to-cyan-400";
+    default:
+      return "from-cyan-400 to-emerald-400";
   }
 }
 

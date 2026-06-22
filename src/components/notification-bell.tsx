@@ -55,7 +55,9 @@ export function NotificationBell() {
             {unread > 0 && (
               <motion.span
                 key="badge"
-                initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0 }}
                 className="absolute -top-0.5 -right-0.5 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-primary text-[10px] font-semibold text-primary-foreground grid place-items-center ring-2 ring-background"
               >
                 {unread > 9 ? "9+" : unread}
@@ -99,8 +101,14 @@ export function NotificationBell() {
                       <span className="truncate">{n.title}</span>
                       {!n.read_at && <span className="size-1.5 rounded-full bg-primary shrink-0" />}
                     </div>
-                    {n.body && <div className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{n.body}</div>}
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1">{timeAgo(n.created_at)}</div>
+                    {n.body && (
+                      <div className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
+                        {n.body}
+                      </div>
+                    )}
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1">
+                      {timeAgo(n.created_at)}
+                    </div>
                   </div>
                 </button>
               );

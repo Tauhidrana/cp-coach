@@ -5,6 +5,75 @@ import type { PlatformId, PlatformStats } from "./registry";
 
 const UA = "Mozilla/5.0 CPCoach/1.0";
 
+type CodeforcesUser = {
+  rating?: number;
+  maxRating?: number;
+  rank?: string;
+  titlePhoto?: string;
+  avatar?: string;
+  contribution?: number;
+  friendOfCount?: number;
+  country?: string;
+};
+
+type CodeforcesSubmission = {
+  verdict?: string;
+  problem?: {
+    contestId?: number;
+    index?: string;
+  };
+};
+
+type LeetCodeSubmissionStat = {
+  difficulty?: string;
+  count?: number;
+};
+
+type LeetCodeGraphqlResponse = {
+  data?: {
+    matchedUser?: {
+      profile?: {
+        ranking?: number;
+        countryName?: string;
+      };
+      submitStatsGlobal?: {
+        acSubmissionNum?: LeetCodeSubmissionStat[];
+      };
+    };
+    userContestRanking?: {
+      attendedContestsCount?: number;
+      rating?: number;
+      globalRanking?: number;
+      topPercentage?: number;
+    };
+  };
+};
+
+type HackerRankProfile = {
+  name?: string;
+  avatar?: string;
+  country?: string;
+  followers_count?: number;
+};
+
+type HackerRankTrack = {
+  track?: { name?: string };
+  practice?: { score?: number; solved?: number };
+};
+
+type HackerRankBadge = {
+  badge_name?: string;
+  stars?: number;
+  level?: number;
+};
+
+type HackerRankRecentChallenge = {
+  name?: string;
+  challenge?: { name?: string };
+  track_name?: string;
+  created_at?: string;
+};
+
 async function jget<T>(url: string): Promise<T> {
   const res = await fetch(url, { headers: { "User-Agent": UA } });
   if (!res.ok) throw new Error(`Upstream ${res.status}`);
@@ -14,21 +83,25 @@ async function jget<T>(url: string): Promise<T> {
 // ---------- Codeforces ----------
 async function fetchCodeforces(handle: string): Promise<PlatformStats> {
   const u = encodeURIComponent(handle);
-  const userRes = await jget<{ status: string; result: any[]; comment?: string }>(
+  const userRes = await jget<{ status: string; result: CodeforcesUser[]; comment?: string }>(
     `https://codeforces.com/api/user.info?handles=${u}`,
   );
   if (userRes.status !== "OK") throw new Error(userRes.comment || "Codeforces error");
   const user = userRes.result[0];
 
   const [statusRes, ratingRes] = await Promise.all([
-    jget<{ status: string; result: any[] }>(
+    jget<{ status: string; result: CodeforcesSubmission[] }>(
       `https://codeforces.com/api/user.status?handle=${u}&from=1&count=3000`,
     ),
-    jget<{ status: string; result: any[] }>(`https://codeforces.com/api/user.rating?handle=${u}`),
+    jget<{ status: string; result: unknown[] }>(
+      `https://codeforces.com/api/user.rating?handle=${u}`,
+    ),
   ]);
   const solved = new Set<string>();
   for (const s of statusRes.result) {
-    if (s.verdict === "OK") solved.add(`${s.problem.contestId ?? "x"}-${s.problem.index}`);
+    if (s.verdict === "OK" && s.problem) {
+      solved.add(`${s.problem.contestId ?? "x"}-${s.problem.index ?? "?"}`);
+    }
   }
   return {
     rating: user.rating ?? null,
@@ -71,11 +144,11 @@ async function fetchLeetCode(username: string): Promise<PlatformStats> {
     body: JSON.stringify({ query, variables: { username } }),
   });
   if (!res.ok) throw new Error(`LeetCode ${res.status}`);
-  const json = (await res.json()) as any;
+  const json = (await res.json()) as LeetCodeGraphqlResponse;
   const user = json?.data?.matchedUser;
   if (!user) throw new Error("LeetCode user not found");
   const contest = json?.data?.userContestRanking;
-  const all = (user.submitStatsGlobal?.acSubmissionNum ?? []).find((x: any) => x.difficulty === "All");
+  const all = (user.submitStatsGlobal?.acSubmissionNum ?? []).find((x) => x.difficulty === "All");
   const solved = all?.count ?? 0;
   const rating = contest?.rating ? Math.round(contest.rating) : null;
 
@@ -107,9 +180,12 @@ async function fetchLeetCode(username: string): Promise<PlatformStats> {
 // ---------- AtCoder ----------
 async function fetchAtCoder(username: string): Promise<PlatformStats> {
   // Rating history (official AtCoder JSON)
-  const historyRes = await fetch(`https://atcoder.jp/users/${encodeURIComponent(username)}/history/json`, {
-    headers: { "User-Agent": UA },
-  });
+  const historyRes = await fetch(
+    `https://atcoder.jp/users/${encodeURIComponent(username)}/history/json`,
+    {
+      headers: { "User-Agent": UA },
+    },
+  );
   if (!historyRes.ok) throw new Error(`AtCoder ${historyRes.status}`);
   const history = (await historyRes.json()) as Array<{
     NewRating: number;
@@ -198,13 +274,10 @@ async function fetchCodeChef(username: string): Promise<PlatformStats> {
   const rating = toInt(pick(/<div[^>]*class="rating-number"[^>]*>\s*(\d+)/i));
 
   // Highest rating: "Highest Rating&nbsp;1234"
-  const maxRating =
-    toInt(pick(/Highest\s+Rating[^0-9]*?(\d{3,4})/i)) ?? rating;
+  const maxRating = toInt(pick(/Highest\s+Rating[^0-9]*?(\d{3,4})/i)) ?? rating;
 
   // Stars: "5★" inside .rating
-  const star =
-    pick(/<span[^>]*class="rating"[^>]*>\s*(\d)\s*★/i) ||
-    pick(/(\d)\s*★/);
+  const star = pick(/<span[^>]*class="rating"[^>]*>\s*(\d)\s*★/i) || pick(/(\d)\s*★/);
   const rankLabel = star ? `${star}★` : null;
 
   // Problems solved: page contains "Total Problems Solved: 123"
@@ -254,7 +327,7 @@ async function fetchHackerRank(username: string): Promise<PlatformStats> {
     Referer: `https://www.hackerrank.com/profile/${u}`,
   };
 
-  const get = async <T,>(path: string): Promise<T | null> => {
+  const get = async <T>(path: string): Promise<T | null> => {
     try {
       const res = await fetch(`https://www.hackerrank.com${path}`, { headers });
       if (!res.ok) return null;
@@ -264,19 +337,19 @@ async function fetchHackerRank(username: string): Promise<PlatformStats> {
     }
   };
 
-  const profile = await get<{ model?: any; status?: boolean }>(`/rest/hackers/${u}/profile`);
+  const profile = await get<{ model?: HackerRankProfile; status?: boolean }>(
+    `/rest/hackers/${u}/profile`,
+  );
   if (!profile?.model && profile?.status === false) throw new Error("HackerRank user not found");
   const model = profile?.model ?? {};
 
   const [scoresRes, badgesRes, submissionsRes, certsRes] = await Promise.all([
-    get<{ models?: Array<{ track?: { name?: string }; practice?: { score?: number; solved?: number } }> }>(
-      `/rest/hackers/${u}/scores_elo`,
+    get<{ models?: HackerRankTrack[] }>(`/rest/hackers/${u}/scores_elo`),
+    get<{ models?: HackerRankBadge[] }>(`/rest/hackers/${u}/badges`),
+    get<{ models?: HackerRankRecentChallenge[]; total?: number }>(
+      `/rest/hackers/${u}/recent_challenges?limit=10`,
     ),
-    get<{ models?: Array<{ badge_name?: string; stars?: number; level?: number }> }>(
-      `/rest/hackers/${u}/badges`,
-    ),
-    get<{ models?: any[]; total?: number }>(`/rest/hackers/${u}/recent_challenges?limit=10`),
-    get<{ models?: any[] }>(`/rest/hackers/${u}/certificates`),
+    get<{ models?: unknown[] }>(`/rest/hackers/${u}/certificates`),
   ]);
 
   const tracks = scoresRes?.models ?? [];
@@ -307,7 +380,7 @@ async function fetchHackerRank(username: string): Promise<PlatformStats> {
       badges: badges.map((b) => ({ name: b.badge_name, stars: b.stars, level: b.level })),
       totalStars,
       certificates: certificates.length,
-      recentActivity: recent.slice(0, 5).map((r: any) => ({
+      recentActivity: recent.slice(0, 5).map((r) => ({
         challenge: r?.name ?? r?.challenge?.name ?? null,
         track: r?.track_name ?? null,
         at: r?.created_at ?? null,
@@ -321,13 +394,21 @@ async function fetchHackerRank(username: string): Promise<PlatformStats> {
   };
 }
 
-export async function fetchPlatformStats(platform: PlatformId, username: string): Promise<PlatformStats> {
+export async function fetchPlatformStats(
+  platform: PlatformId,
+  username: string,
+): Promise<PlatformStats> {
   switch (platform) {
-    case "codeforces": return fetchCodeforces(username);
-    case "leetcode":   return fetchLeetCode(username);
-    case "atcoder":    return fetchAtCoder(username);
-    case "codechef":   return fetchCodeChef(username);
-    case "hackerrank": return fetchHackerRank(username);
+    case "codeforces":
+      return fetchCodeforces(username);
+    case "leetcode":
+      return fetchLeetCode(username);
+    case "atcoder":
+      return fetchAtCoder(username);
+    case "codechef":
+      return fetchCodeChef(username);
+    case "hackerrank":
+      return fetchHackerRank(username);
     default:
       throw new Error(`Platform ${platform} requires manual entry`);
   }

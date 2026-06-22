@@ -5,7 +5,11 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Plus, RefreshCw, Trash2, Pencil, ExternalLink } from "lucide-react";
 import {
-  listMyPlatforms, connectPlatform, syncPlatform, upsertManualPlatform, disconnectPlatform,
+  listMyPlatforms,
+  connectPlatform,
+  syncPlatform,
+  upsertManualPlatform,
+  disconnectPlatform,
 } from "@/lib/platforms.functions";
 import { PLATFORM_LIST, type PlatformMeta } from "@/lib/platforms/registry";
 import { PlatformLogo } from "@/components/platform-logo";
@@ -14,14 +18,23 @@ import { CardSkeleton } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/platforms")({
   head: () => ({
     meta: [
       { title: "Platforms — CP Coach" },
-      { name: "description", content: "Connect Codeforces, LeetCode, AtCoder and more to your CP Coach profile." },
+      {
+        name: "description",
+        content: "Connect Codeforces, LeetCode, AtCoder and more to your CP Coach profile.",
+      },
     ],
   }),
   component: PlatformsPage,
@@ -42,13 +55,16 @@ function PlatformsPage() {
           Connected <span className="text-gradient-brand">Platforms</span>
         </h1>
         <p className="text-muted-foreground mt-2">
-          Connect your competitive programming accounts. CP Coach merges everything into one unified profile and score.
+          Connect your competitive programming accounts. CP Coach merges everything into one unified
+          profile and score.
         </p>
       </div>
 
       {isLoading ? (
         <div className="grid md:grid-cols-2 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />)}
+          {Array.from({ length: 4 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -61,7 +77,12 @@ function PlatformsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
               >
-                <PlatformCard p={p} row={row} onEdit={() => setOpen(p)} onChanged={() => qc.invalidateQueries({ queryKey: ["platforms"] })} />
+                <PlatformCard
+                  p={p}
+                  row={row}
+                  onEdit={() => setOpen(p)}
+                  onChanged={() => qc.invalidateQueries({ queryKey: ["platforms"] })}
+                />
               </motion.div>
             );
           })}
@@ -79,10 +100,23 @@ function PlatformsPage() {
 }
 
 function PlatformCard({
-  p, row, onEdit, onChanged,
+  p,
+  row,
+  onEdit,
+  onChanged,
 }: {
   p: PlatformMeta;
-  row?: { platform: string; username: string; rating: number | null; max_rating: number | null; rank_label: string | null; problems_solved: number; contest_count: number; is_manual: boolean; last_synced_at: string | null };
+  row?: {
+    platform: string;
+    username: string;
+    rating: number | null;
+    max_rating: number | null;
+    rank_label: string | null;
+    problems_solved: number;
+    contest_count: number;
+    is_manual: boolean;
+    last_synced_at: string | null;
+  };
   onEdit: () => void;
   onChanged: () => void;
 }) {
@@ -91,12 +125,19 @@ function PlatformCard({
   const disconnectFn = useServerFn(disconnectPlatform);
   const sync = useMutation({
     mutationFn: () => syncFn({ data: { platform: p.id } }),
-    onSuccess: () => { toast.success(`${p.name} synced`); onChanged(); },
+    onSuccess: () => {
+      toast.success(`${p.name} synced`);
+      onChanged();
+    },
     onError: (e: Error) => toast.error(e.message),
   });
   const disc = useMutation({
     mutationFn: () => disconnectFn({ data: { platform: p.id } }),
-    onSuccess: () => { toast.success(`${p.name} disconnected`); onChanged(); qc.invalidateQueries({ queryKey: ["cf"] }); },
+    onSuccess: () => {
+      toast.success(`${p.name} disconnected`);
+      onChanged();
+      qc.invalidateQueries({ queryKey: ["cf"] });
+    },
   });
 
   const connected = !!row;
@@ -119,11 +160,18 @@ function PlatformCard({
           </div>
           <div className="text-xs text-muted-foreground mt-0.5">
             {connected ? (
-              <a href={p.url(row.username)} target="_blank" rel="noreferrer" className="hover:text-foreground inline-flex items-center gap-1">
+              <a
+                href={p.url(row.username)}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-foreground inline-flex items-center gap-1"
+              >
                 @{row.username} <ExternalLink className="size-3" />
               </a>
+            ) : p.apiSupported ? (
+              "Live API sync"
             ) : (
-              p.apiSupported ? "Live API sync" : "Manual entry"
+              "Manual entry"
             )}
           </div>
         </div>
@@ -139,29 +187,52 @@ function PlatformCard({
           <div className="mt-3 flex items-center justify-between text-[11px] text-muted-foreground">
             {row.rank_label ? <span className="capitalize">{row.rank_label}</span> : <span />}
             <span>
-              {row.last_synced_at
-                ? `Synced ${timeAgo(row.last_synced_at)}`
-                : "Not synced yet"}
+              {row.last_synced_at ? `Synced ${timeAgo(row.last_synced_at)}` : "Not synced yet"}
             </span>
           </div>
           <div className="mt-4 flex gap-2">
             {p.apiSupported && !row.is_manual ? (
-              <Button size="sm" variant="outline" className="flex-1 border-border/60 bg-white/[0.02]" onClick={() => sync.mutate()} disabled={sync.isPending}>
-                {sync.isPending ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <RefreshCw className="size-3.5 mr-1.5" />}
+              <Button
+                size="sm"
+                variant="outline"
+                className="flex-1 border-border/60 bg-white/[0.02]"
+                onClick={() => sync.mutate()}
+                disabled={sync.isPending}
+              >
+                {sync.isPending ? (
+                  <Loader2 className="size-3.5 mr-1.5 animate-spin" />
+                ) : (
+                  <RefreshCw className="size-3.5 mr-1.5" />
+                )}
                 Sync
               </Button>
             ) : (
-              <Button size="sm" variant="outline" className="flex-1 border-border/60 bg-white/[0.02]" onClick={onEdit}>
+              <Button
+                size="sm"
+                variant="outline"
+                className="flex-1 border-border/60 bg-white/[0.02]"
+                onClick={onEdit}
+              >
                 <Pencil className="size-3.5 mr-1.5" /> Edit
               </Button>
             )}
-            <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-destructive" onClick={() => disc.mutate()} disabled={disc.isPending} aria-label="Disconnect">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-muted-foreground hover:text-destructive"
+              onClick={() => disc.mutate()}
+              disabled={disc.isPending}
+              aria-label="Disconnect"
+            >
               <Trash2 className="size-3.5" />
             </Button>
           </div>
         </>
       ) : (
-        <Button onClick={onEdit} className="mt-5 w-full bg-gradient-brand text-white border-0 shadow-glow">
+        <Button
+          onClick={onEdit}
+          className="mt-5 w-full bg-gradient-brand text-white border-0 shadow-glow"
+        >
           <Plus className="size-4 mr-1.5" /> Connect
         </Button>
       )}
@@ -184,16 +255,28 @@ function Stat({ label, value }: { label: string; value: number | string }) {
   return (
     <div className="rounded-lg bg-white/[0.03] border border-white/[0.05] py-2">
       <div className="text-base font-display font-semibold tabular-nums">{value}</div>
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">{label}</div>
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
+        {label}
+      </div>
     </div>
   );
 }
 
 function ConnectDialog({
-  platform, existing, onClose, onSaved,
+  platform,
+  existing,
+  onClose,
+  onSaved,
 }: {
   platform: PlatformMeta | null;
-  existing?: { username: string; rating: number | null; max_rating: number | null; rank_label: string | null; problems_solved: number; contest_count: number };
+  existing?: {
+    username: string;
+    rating: number | null;
+    max_rating: number | null;
+    rank_label: string | null;
+    problems_solved: number;
+    contest_count: number;
+  };
   onClose: () => void;
   onSaved: () => void;
 }) {
@@ -230,7 +313,11 @@ function ConnectDialog({
         });
       }
     },
-    onSuccess: () => { toast.success(`${platform?.name} connected`); onSaved(); onClose(); },
+    onSuccess: () => {
+      toast.success(`${platform?.name} connected`);
+      onSaved();
+      onClose();
+    },
     onError: (e: Error) => toast.error(e.message),
   });
 
@@ -243,7 +330,9 @@ function ConnectDialog({
               <div className="flex items-center gap-3 mb-2">
                 <PlatformLogo p={platform} size={40} />
                 <div>
-                  <DialogTitle className="font-display">{existing ? "Edit" : "Connect"} {platform.name}</DialogTitle>
+                  <DialogTitle className="font-display">
+                    {existing ? "Edit" : "Connect"} {platform.name}
+                  </DialogTitle>
                   <DialogDescription className="text-xs">
                     {platform.apiSupported
                       ? "We'll fetch your live profile data automatically."
@@ -254,7 +343,10 @@ function ConnectDialog({
             </DialogHeader>
 
             <form
-              onSubmit={(e) => { e.preventDefault(); mut.mutate(); }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                mut.mutate();
+              }}
               className="space-y-3"
             >
               <div>
@@ -271,36 +363,68 @@ function ConnectDialog({
 
               {!platform.apiSupported && (
                 <AnimatePresence>
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="space-y-3"
+                  >
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <Label>Rating</Label>
-                        <Input type="number" value={rating} onChange={(e) => setRating(e.target.value)} className="bg-white/[0.03] border-border/60 mt-1.5" />
+                        <Input
+                          type="number"
+                          value={rating}
+                          onChange={(e) => setRating(e.target.value)}
+                          className="bg-white/[0.03] border-border/60 mt-1.5"
+                        />
                       </div>
                       <div>
                         <Label>Max rating</Label>
-                        <Input type="number" value={maxRating} onChange={(e) => setMaxRating(e.target.value)} className="bg-white/[0.03] border-border/60 mt-1.5" />
+                        <Input
+                          type="number"
+                          value={maxRating}
+                          onChange={(e) => setMaxRating(e.target.value)}
+                          className="bg-white/[0.03] border-border/60 mt-1.5"
+                        />
                       </div>
                     </div>
                     <div>
                       <Label>Rank (e.g. "5 Star", "Knight")</Label>
-                      <Input value={rankLabel} onChange={(e) => setRankLabel(e.target.value)} className="bg-white/[0.03] border-border/60 mt-1.5" />
+                      <Input
+                        value={rankLabel}
+                        onChange={(e) => setRankLabel(e.target.value)}
+                        className="bg-white/[0.03] border-border/60 mt-1.5"
+                      />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <Label>Problems solved</Label>
-                        <Input type="number" value={solved} onChange={(e) => setSolved(e.target.value)} className="bg-white/[0.03] border-border/60 mt-1.5" />
+                        <Input
+                          type="number"
+                          value={solved}
+                          onChange={(e) => setSolved(e.target.value)}
+                          className="bg-white/[0.03] border-border/60 mt-1.5"
+                        />
                       </div>
                       <div>
                         <Label>Contests</Label>
-                        <Input type="number" value={contests} onChange={(e) => setContests(e.target.value)} className="bg-white/[0.03] border-border/60 mt-1.5" />
+                        <Input
+                          type="number"
+                          value={contests}
+                          onChange={(e) => setContests(e.target.value)}
+                          className="bg-white/[0.03] border-border/60 mt-1.5"
+                        />
                       </div>
                     </div>
                   </motion.div>
                 </AnimatePresence>
               )}
 
-              <Button type="submit" disabled={mut.isPending || !username.trim()} className="w-full bg-gradient-brand text-white border-0 shadow-glow">
+              <Button
+                type="submit"
+                disabled={mut.isPending || !username.trim()}
+                className="w-full bg-gradient-brand text-white border-0 shadow-glow"
+              >
                 {mut.isPending ? <Loader2 className="size-4 mr-2 animate-spin" /> : null}
                 {existing ? "Save changes" : platform.apiSupported ? "Connect & sync" : "Save"}
               </Button>
@@ -313,7 +437,8 @@ function ConnectDialog({
             )}
             {platform.id === "codechef" && (
               <p className="text-[11px] text-muted-foreground mt-2">
-                CodeChef has no official API. We read your public profile page — make sure it's accessible.
+                CodeChef has no official API. We read your public profile page — make sure it's
+                accessible.
               </p>
             )}
           </>

@@ -74,11 +74,14 @@ export const cf = {
   userRating: (handle: string) =>
     cfGet<CFRatingChange[]>(`/user.rating?handle=${encodeURIComponent(handle)}`),
   userStatus: (handle: string, count = 2000) =>
-    cfGet<CFSubmission[]>(`/user.status?handle=${encodeURIComponent(handle)}&from=1&count=${count}`),
-  problemset: () =>
-    cfGet<{ problems: CFProblem[]; problemStatistics: { contestId: number; index: string; solvedCount: number }[] }>(
-      `/problemset.problems`,
+    cfGet<CFSubmission[]>(
+      `/user.status?handle=${encodeURIComponent(handle)}&from=1&count=${count}`,
     ),
+  problemset: () =>
+    cfGet<{
+      problems: CFProblem[];
+      problemStatistics: { contestId: number; index: string; solvedCount: number }[];
+    }>(`/problemset.problems`),
   contestList: () => cfGet<CFContest[]>(`/contest.list?gym=false`),
 };
 
@@ -118,7 +121,10 @@ export interface TopicStat {
 
 export function analyzeSubmissions(subs: CFSubmission[], userRating: number) {
   const solved = new Set<string>();
-  const solvedByTag = new Map<string, { solved: Set<string>; attempted: Set<string>; ratings: number[] }>();
+  const solvedByTag = new Map<
+    string,
+    { solved: Set<string>; attempted: Set<string>; ratings: number[] }
+  >();
   for (const tag of TOPIC_TAGS) {
     solvedByTag.set(tag, { solved: new Set(), attempted: new Set(), ratings: [] });
   }
@@ -149,7 +155,9 @@ export function analyzeSubmissions(subs: CFSubmission[], userRating: number) {
   for (const [tag, e] of solvedByTag) {
     const solvedN = e.solved.size;
     const attempted = e.attempted.size;
-    const avgRating = e.ratings.length ? e.ratings.reduce((a, b) => a + b, 0) / e.ratings.length : 0;
+    const avgRating = e.ratings.length
+      ? e.ratings.reduce((a, b) => a + b, 0) / e.ratings.length
+      : 0;
     const accuracy = attempted ? solvedN / attempted : 0;
     // strength score: volume + avg rating vs user rating
     const volumeScore = Math.min(1, solvedN / 30); // 30+ solved = max volume

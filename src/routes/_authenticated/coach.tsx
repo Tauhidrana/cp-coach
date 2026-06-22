@@ -14,7 +14,10 @@ export const Route = createFileRoute("/_authenticated/coach")({
   head: () => ({
     meta: [
       { title: "AI Coach — CP Coach" },
-      { name: "description", content: "Personalized AI coaching feedback for your Codeforces journey." },
+      {
+        name: "description",
+        content: "Personalized AI coaching feedback for your Codeforces journey.",
+      },
     ],
   }),
   component: CoachPage,
@@ -43,7 +46,9 @@ function CoachPage() {
     return (
       <GlassCard>
         <p className="text-sm text-muted-foreground">Connect your Codeforces handle first.</p>
-        <Link to="/dashboard"><Button className="mt-4 bg-gradient-brand text-white border-0">Go to dashboard</Button></Link>
+        <Link to="/dashboard">
+          <Button className="mt-4 bg-gradient-brand text-white border-0">Go to dashboard</Button>
+        </Link>
       </GlassCard>
     );
   }
@@ -63,7 +68,9 @@ function CoachPage() {
               <Sparkles className="size-3" /> Gemini-powered
             </span>
           </h1>
-          <p className="text-muted-foreground mt-1">A grandmaster-tier perspective on your progress.</p>
+          <p className="text-muted-foreground mt-1">
+            A grandmaster-tier perspective on your progress.
+          </p>
         </div>
         <div className="flex items-center gap-2 glass rounded-xl p-1">
           <Languages className="size-3.5 text-muted-foreground ml-2" />
@@ -72,7 +79,9 @@ function CoachPage() {
               key={l.id}
               onClick={() => setPref(l.id)}
               className={`px-3 py-1.5 text-xs rounded-lg transition ${
-                pref === l.id ? "bg-gradient-brand text-white shadow-glow" : "text-muted-foreground hover:text-foreground"
+                pref === l.id
+                  ? "bg-gradient-brand text-white shadow-glow"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {l.label}
@@ -90,7 +99,8 @@ function CoachPage() {
           <div className="flex-1">
             <h3 className="font-display text-lg font-semibold">Run a coaching session</h3>
             <p className="text-sm text-muted-foreground">
-              We'll analyze your topics, contests, and rating velocity, then return an actionable plan
+              We'll analyze your topics, contests, and rating velocity, then return an actionable
+              plan
               {language === "bn" ? " in বাংলা" : ""}.
             </p>
           </div>
@@ -99,7 +109,11 @@ function CoachPage() {
             disabled={mut.isPending}
             className="bg-gradient-brand text-white border-0 shadow-glow shrink-0"
           >
-            {mut.isPending ? <Loader2 className="size-4 mr-2 animate-spin" /> : <Sparkles className="size-4 mr-2" />}
+            {mut.isPending ? (
+              <Loader2 className="size-4 mr-2 animate-spin" />
+            ) : (
+              <Sparkles className="size-4 mr-2" />
+            )}
             Analyze me
           </Button>
         </div>
@@ -113,7 +127,10 @@ function CoachPage() {
           </div>
           <div className="mt-4 space-y-2.5">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className={`skeleton h-3 ${i % 3 === 0 ? "w-2/3" : i % 3 === 1 ? "w-5/6" : "w-3/4"}`} />
+              <div
+                key={i}
+                className={`skeleton h-3 ${i % 3 === 0 ? "w-2/3" : i % 3 === 1 ? "w-5/6" : "w-3/4"}`}
+              />
             ))}
           </div>
         </GlassCard>
@@ -134,7 +151,9 @@ function CoachPage() {
 
       {mut.error && (
         <GlassCard>
-          <p className="text-sm text-destructive">AI coach is unavailable right now. Try again in a moment.</p>
+          <p className="text-sm text-destructive">
+            AI coach is unavailable right now. Try again in a moment.
+          </p>
         </GlassCard>
       )}
     </div>

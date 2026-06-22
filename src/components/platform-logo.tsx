@@ -3,10 +3,21 @@ import { cn } from "@/lib/utils";
 import type { PlatformMeta } from "@/lib/platforms/registry";
 
 /** Inline brand-ish glyph per platform — keeps things crisp & dependency-free. */
-export function PlatformLogo({ p, size = 36, className }: { p: PlatformMeta; size?: number; className?: string }) {
+export function PlatformLogo({
+  p,
+  size = 36,
+  className,
+}: {
+  p: PlatformMeta;
+  size?: number;
+  className?: string;
+}) {
   return (
     <div
-      className={cn("grid place-items-center rounded-xl font-display font-bold tracking-tight select-none", className)}
+      className={cn(
+        "grid place-items-center rounded-xl font-display font-bold tracking-tight select-none",
+        className,
+      )}
       style={{
         width: size,
         height: size,
@@ -39,7 +50,12 @@ export function FloatingLogos({ platforms }: { platforms: PlatformMeta[] }) {
           >
             <motion.div
               animate={{ y: [0, -10, 0], rotate: [0, 4, 0] }}
-              transition={{ duration: 6 + (i % 4), repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
+              transition={{
+                duration: 6 + (i % 4),
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 0.4,
+              }}
             >
               <PlatformLogo p={p} size={size} />
             </motion.div>

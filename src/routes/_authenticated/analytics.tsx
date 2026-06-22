@@ -2,8 +2,19 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
-  Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer,
-  Tooltip, XAxis, YAxis,
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 import { getCFProfile, getMyProfile } from "@/lib/cp.functions";
 import { GlassCard } from "@/components/glass-card";
@@ -15,13 +26,25 @@ export const Route = createFileRoute("/_authenticated/analytics")({
   head: () => ({
     meta: [
       { title: "Analytics — CP Coach" },
-      { name: "description", content: "Deep dive into your Codeforces rating, topics and activity." },
+      {
+        name: "description",
+        content: "Deep dive into your Codeforces rating, topics and activity.",
+      },
     ],
   }),
   component: AnalyticsPage,
 });
 
-const CHART_COLORS = ["#a78bfa", "#60a5fa", "#22d3ee", "#34d399", "#fbbf24", "#f472b6", "#fb7185", "#a3e635"];
+const CHART_COLORS = [
+  "#a78bfa",
+  "#60a5fa",
+  "#22d3ee",
+  "#34d399",
+  "#fbbf24",
+  "#f472b6",
+  "#fb7185",
+  "#a3e635",
+];
 
 function AnalyticsPage() {
   const profileFn = useServerFn(getMyProfile);
@@ -30,14 +53,20 @@ function AnalyticsPage() {
   const { data: profile } = useQuery({ queryKey: ["profile"], queryFn: () => profileFn() });
   const handle = profile?.codeforces_handle ?? "";
   const { data: cf, isLoading } = useQuery({
-    queryKey: ["cf", handle], queryFn: () => cfFn({ data: { handle } }), enabled: !!handle,
+    queryKey: ["cf", handle],
+    queryFn: () => cfFn({ data: { handle } }),
+    enabled: !!handle,
   });
 
   if (!handle) {
     return (
       <GlassCard>
-        <p className="text-sm text-muted-foreground">Connect your Codeforces handle on the Dashboard to see analytics.</p>
-        <Link to="/dashboard"><Button className="mt-4 bg-gradient-brand text-white border-0">Go to dashboard</Button></Link>
+        <p className="text-sm text-muted-foreground">
+          Connect your Codeforces handle on the Dashboard to see analytics.
+        </p>
+        <Link to="/dashboard">
+          <Button className="mt-4 bg-gradient-brand text-white border-0">Go to dashboard</Button>
+        </Link>
       </GlassCard>
     );
   }
@@ -46,31 +75,49 @@ function AnalyticsPage() {
     return (
       <div className="space-y-4">
         <div className="grid lg:grid-cols-2 gap-4">
-          <ChartSkeleton /><ChartSkeleton />
+          <ChartSkeleton />
+          <ChartSkeleton />
         </div>
         <div className="grid lg:grid-cols-2 gap-4">
-          <ChartSkeleton /><ChartSkeleton />
+          <ChartSkeleton />
+          <ChartSkeleton />
         </div>
       </div>
     );
   }
 
   const ratingSeries = cf.ratingHistory.map((r) => ({
-    name: new Date(r.ratingUpdateTimeSeconds * 1000).toLocaleDateString("en", { month: "short", day: "numeric" }),
+    name: new Date(r.ratingUpdateTimeSeconds * 1000).toLocaleDateString("en", {
+      month: "short",
+      day: "numeric",
+    }),
     rating: r.newRating,
   }));
 
-  const ratingHistogram = cf.analysis.ratingDistribution.map(([rating, count]) => ({ rating, count }));
-  const topTopics = cf.analysis.topics.filter((t) => t.solved > 0).slice(0, 8).map((t) => ({ name: t.tag, value: t.solved }));
+  const ratingHistogram = cf.analysis.ratingDistribution.map(([rating, count]) => ({
+    rating,
+    count,
+  }));
+  const topTopics = cf.analysis.topics
+    .filter((t) => t.solved > 0)
+    .slice(0, 8)
+    .map((t) => ({ name: t.tag, value: t.solved }));
   const strong = cf.analysis.topics.slice(0, 6);
-  const weak = cf.analysis.topics.slice().sort((a, b) => a.score - b.score).slice(0, 6);
-  const monthly = cf.analysis.submissionsByMonth.slice(-12).map(([m, c]) => ({ name: m, count: c }));
+  const weak = cf.analysis.topics
+    .slice()
+    .sort((a, b) => a.score - b.score)
+    .slice(0, 6);
+  const monthly = cf.analysis.submissionsByMonth
+    .slice(-12)
+    .map(([m, c]) => ({ name: m, count: c }));
 
   return (
     <div className="space-y-6">
       <header>
         <h1 className="text-3xl font-display font-semibold">Analytics</h1>
-        <p className="text-muted-foreground mt-1">Performance breakdown for <span className="font-mono">@{handle}</span></p>
+        <p className="text-muted-foreground mt-1">
+          Performance breakdown for <span className="font-mono">@{handle}</span>
+        </p>
       </header>
 
       <div className="grid lg:grid-cols-2 gap-4">
@@ -86,10 +133,27 @@ function AnalyticsPage() {
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11 }} interval="preserveStartEnd" />
+                <XAxis
+                  dataKey="name"
+                  stroke="rgba(255,255,255,0.4)"
+                  tick={{ fontSize: 11 }}
+                  interval="preserveStartEnd"
+                />
                 <YAxis stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11 }} />
-                <Tooltip contentStyle={{ background: "rgba(20,20,30,0.95)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12 }} />
-                <Area type="monotone" dataKey="rating" stroke="#a78bfa" strokeWidth={2} fill="url(#ratingGrad)" />
+                <Tooltip
+                  contentStyle={{
+                    background: "rgba(20,20,30,0.95)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: 12,
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="rating"
+                  stroke="#a78bfa"
+                  strokeWidth={2}
+                  fill="url(#ratingGrad)"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -103,9 +167,17 @@ function AnalyticsPage() {
                 <CartesianGrid stroke="rgba(255,255,255,0.05)" />
                 <XAxis dataKey="rating" stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11 }} />
                 <YAxis stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11 }} />
-                <Tooltip contentStyle={{ background: "rgba(20,20,30,0.95)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12 }} />
+                <Tooltip
+                  contentStyle={{
+                    background: "rgba(20,20,30,0.95)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: 12,
+                  }}
+                />
                 <Bar dataKey="count" radius={[6, 6, 0, 0]}>
-                  {ratingHistogram.map((_, i) => (<Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />))}
+                  {ratingHistogram.map((_, i) => (
+                    <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                  ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -119,10 +191,29 @@ function AnalyticsPage() {
           <div className="h-72 mt-2">
             <ResponsiveContainer>
               <PieChart>
-                <Pie data={topTopics} dataKey="value" nameKey="name" innerRadius={50} outerRadius={90} paddingAngle={2}>
-                  {topTopics.map((_, i) => (<Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} stroke="rgba(0,0,0,0.4)" />))}
+                <Pie
+                  data={topTopics}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={50}
+                  outerRadius={90}
+                  paddingAngle={2}
+                >
+                  {topTopics.map((_, i) => (
+                    <Cell
+                      key={i}
+                      fill={CHART_COLORS[i % CHART_COLORS.length]}
+                      stroke="rgba(0,0,0,0.4)"
+                    />
+                  ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: "rgba(20,20,30,0.95)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12 }} />
+                <Tooltip
+                  contentStyle={{
+                    background: "rgba(20,20,30,0.95)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: 12,
+                  }}
+                />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
               </PieChart>
             </ResponsiveContainer>
@@ -137,7 +228,13 @@ function AnalyticsPage() {
                 <CartesianGrid stroke="rgba(255,255,255,0.05)" />
                 <XAxis dataKey="name" stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 10 }} />
                 <YAxis stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11 }} />
-                <Tooltip contentStyle={{ background: "rgba(20,20,30,0.95)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12 }} />
+                <Tooltip
+                  contentStyle={{
+                    background: "rgba(20,20,30,0.95)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: 12,
+                  }}
+                />
                 <Bar dataKey="count" fill="#60a5fa" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -162,7 +259,15 @@ function ChartTitle({ children }: { children: React.ReactNode }) {
   return <div className="text-sm font-medium text-muted-foreground">{children}</div>;
 }
 
-function TopicList({ title, topics, positive = false }: { title: string; topics: { tag: string; solved: number; score: number; avgRating: number }[]; positive?: boolean }) {
+function TopicList({
+  title,
+  topics,
+  positive = false,
+}: {
+  title: string;
+  topics: { tag: string; solved: number; score: number; avgRating: number }[];
+  positive?: boolean;
+}) {
   return (
     <GlassCard>
       <ChartTitle>{title}</ChartTitle>
@@ -181,7 +286,9 @@ function TopicList({ title, topics, positive = false }: { title: string; topics:
                 }}
               />
             </div>
-            <span className="text-xs tabular-nums text-muted-foreground w-16 text-right">{t.solved} · {t.score}%</span>
+            <span className="text-xs tabular-nums text-muted-foreground w-16 text-right">
+              {t.solved} · {t.score}%
+            </span>
           </li>
         ))}
       </ul>

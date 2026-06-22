@@ -55,7 +55,8 @@
 }
 
 /* ===== DARK (default) ===== */
-:root, .dark {
+:root,
+.dark {
   --radius: 0.75rem;
 
   --background: oklch(0.13 0.02 270);
@@ -105,9 +106,10 @@
   --sidebar-ring: oklch(0.7 0.2 280);
 
   --gradient-primary: linear-gradient(135deg, oklch(0.7 0.22 285), oklch(0.68 0.2 245));
-  --gradient-mesh: radial-gradient(at 20% 0%, oklch(0.7 0.22 285 / 0.35) 0px, transparent 50%),
-                   radial-gradient(at 80% 10%, oklch(0.68 0.2 245 / 0.3) 0px, transparent 50%),
-                   radial-gradient(at 50% 100%, oklch(0.7 0.2 320 / 0.2) 0px, transparent 50%);
+  --gradient-mesh:
+    radial-gradient(at 20% 0%, oklch(0.7 0.22 285 / 0.35) 0px, transparent 50%),
+    radial-gradient(at 80% 10%, oklch(0.68 0.2 245 / 0.3) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, oklch(0.7 0.2 320 / 0.2) 0px, transparent 50%);
   --shadow-glow: 0 0 60px -10px oklch(0.7 0.22 285 / 0.5);
   --shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.05) inset, 0 8px 24px -12px oklch(0 0 0 / 0.5);
 
@@ -168,9 +170,10 @@
   --sidebar-ring: oklch(0.55 0.22 280);
 
   --gradient-primary: linear-gradient(135deg, oklch(0.6 0.22 285), oklch(0.58 0.2 245));
-  --gradient-mesh: radial-gradient(at 20% 0%, oklch(0.7 0.18 285 / 0.18) 0px, transparent 50%),
-                   radial-gradient(at 80% 10%, oklch(0.7 0.16 245 / 0.16) 0px, transparent 50%),
-                   radial-gradient(at 50% 100%, oklch(0.75 0.16 320 / 0.12) 0px, transparent 50%);
+  --gradient-mesh:
+    radial-gradient(at 20% 0%, oklch(0.7 0.18 285 / 0.18) 0px, transparent 50%),
+    radial-gradient(at 80% 10%, oklch(0.7 0.16 245 / 0.16) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, oklch(0.75 0.16 320 / 0.12) 0px, transparent 50%);
   --shadow-glow: 0 0 60px -10px oklch(0.55 0.22 285 / 0.35);
   --shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.6) inset, 0 8px 24px -16px oklch(0 0 0 / 0.15);
 
@@ -186,12 +189,17 @@
   html {
     color-scheme: dark;
   }
-  html.light { color-scheme: light; }
+  html.light {
+    color-scheme: light;
+  }
   * {
     border-color: var(--color-border);
   }
-  html, body {
-    transition: background-color 300ms ease, color 300ms ease;
+  html,
+  body {
+    transition:
+      background-color 300ms ease,
+      color 300ms ease;
   }
   body {
     background-color: var(--color-background);
@@ -205,10 +213,13 @@
   }
   .light body {
     background-image:
-      radial-gradient(at 15% -10%, oklch(0.7 0.22 285 / 0.10) 0, transparent 50%),
+      radial-gradient(at 15% -10%, oklch(0.7 0.22 285 / 0.1) 0, transparent 50%),
       radial-gradient(at 85% 0%, oklch(0.68 0.2 245 / 0.08) 0, transparent 50%);
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
@@ -258,7 +269,9 @@
     box-shadow: var(--shadow-glow);
   }
   .ring-brand {
-    box-shadow: 0 0 0 1px oklch(0.7 0.22 285 / 0.4), 0 0 30px -8px oklch(0.7 0.22 285 / 0.4);
+    box-shadow:
+      0 0 0 1px oklch(0.7 0.22 285 / 0.4),
+      0 0 30px -8px oklch(0.7 0.22 285 / 0.4);
   }
   .grid-bg {
     background-image:
@@ -270,10 +283,17 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 oklch(0.7 0.22 285 / 0.5); }
-  50% { box-shadow: 0 0 40px 6px oklch(0.7 0.22 285 / 0.0); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 oklch(0.7 0.22 285 / 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px 6px oklch(0.7 0.22 285 / 0);
+  }
 }
-.animate-pulse-glow { animation: pulse-glow 2.4s ease-in-out infinite; }
+.animate-pulse-glow {
+  animation: pulse-glow 2.4s ease-in-out infinite;
+}
 
 /* Hide scrollbars on touch nav strips while keeping scroll behavior */
 .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
@@ -283,21 +303,29 @@
 html, body { overflow-x: hidden; max-width: 100%; }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 .skeleton {
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+    90deg,
     var(--skeleton-a) 0%,
     var(--skeleton-b) 50%,
-    var(--skeleton-a) 100%);
+    var(--skeleton-a) 100%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.6s linear infinite;
   border-radius: var(--radius-md);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

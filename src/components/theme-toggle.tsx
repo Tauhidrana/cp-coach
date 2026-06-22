@@ -2,7 +2,10 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme, type ThemeMode } from "./theme-provider";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 export function ThemeToggle({ compact = false }: { compact?: boolean }) {
@@ -11,7 +14,12 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size={compact ? "icon" : "icon"} aria-label="Toggle theme" className="relative">
+        <Button
+          variant="ghost"
+          size={compact ? "icon" : "icon"}
+          aria-label="Toggle theme"
+          className="relative"
+        >
           <Icon className="size-4 transition-transform duration-300" />
         </Button>
       </DropdownMenuTrigger>

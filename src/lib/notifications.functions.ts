@@ -81,7 +81,11 @@ export const deleteNotification = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ context, data }) => {
-    await context.supabase.from("notifications").delete().eq("id", data.id).eq("user_id", context.userId);
+    await context.supabase
+      .from("notifications")
+      .delete()
+      .eq("id", data.id)
+      .eq("user_id", context.userId);
     return { ok: true };
   });
 

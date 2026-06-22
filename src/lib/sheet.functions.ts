@@ -40,12 +40,40 @@ async function cached<T>(key: string, ttlMs: number, fetcher: () => Promise<T>):
 }
 
 // ---- tier mapping ----
-function tierOf(rating: number): { name: string; mix: Record<Difficulty, number>; focus: string[] } {
-  if (rating < 1000) return { name: "Beginner", mix: { easy: 0.6, medium: 0.3, hard: 0.1 }, focus: ["implementation", "math", "greedy"] };
-  if (rating < 1200) return { name: "Pupil", mix: { easy: 0.5, medium: 0.4, hard: 0.1 }, focus: ["implementation", "greedy", "binary search", "math"] };
-  if (rating < 1400) return { name: "Specialist", mix: { easy: 0.3, medium: 0.5, hard: 0.2 }, focus: ["greedy", "binary search", "constructive algorithms", "sortings", "graphs"] };
-  if (rating < 1700) return { name: "Expert", mix: { easy: 0.2, medium: 0.5, hard: 0.3 }, focus: ["dp", "graphs", "trees", "two pointers", "bitmasks"] };
-  return { name: "Candidate Master", mix: { easy: 0.1, medium: 0.4, hard: 0.5 }, focus: ["dp", "graphs", "data structures", "dsu", "math", "constructive algorithms"] };
+function tierOf(rating: number): {
+  name: string;
+  mix: Record<Difficulty, number>;
+  focus: string[];
+} {
+  if (rating < 1000)
+    return {
+      name: "Beginner",
+      mix: { easy: 0.6, medium: 0.3, hard: 0.1 },
+      focus: ["implementation", "math", "greedy"],
+    };
+  if (rating < 1200)
+    return {
+      name: "Pupil",
+      mix: { easy: 0.5, medium: 0.4, hard: 0.1 },
+      focus: ["implementation", "greedy", "binary search", "math"],
+    };
+  if (rating < 1400)
+    return {
+      name: "Specialist",
+      mix: { easy: 0.3, medium: 0.5, hard: 0.2 },
+      focus: ["greedy", "binary search", "constructive algorithms", "sortings", "graphs"],
+    };
+  if (rating < 1700)
+    return {
+      name: "Expert",
+      mix: { easy: 0.2, medium: 0.5, hard: 0.3 },
+      focus: ["dp", "graphs", "trees", "two pointers", "bitmasks"],
+    };
+  return {
+    name: "Candidate Master",
+    mix: { easy: 0.1, medium: 0.4, hard: 0.5 },
+    focus: ["dp", "graphs", "data structures", "dsu", "math", "constructive algorithms"],
+  };
 }
 
 function mulberry32(a: number) {
@@ -156,7 +184,10 @@ Rules:
 - If "weak":true, mention it targets a weakness; otherwise mention reinforcement, revision, or stretch.`;
 
     const result = await generateText({ model, prompt });
-    const cleaned = result.text.replace(/^```json\s*/i, "").replace(/```\s*$/g, "").trim();
+    const cleaned = result.text
+      .replace(/^```json\s*/i, "")
+      .replace(/```\s*$/g, "")
+      .trim();
     const parsed = JSON.parse(cleaned) as Array<{ i: number; en: string; bn: string }>;
     const out = new Map<string, { en: string; bn: string }>();
     for (const r of parsed) {
@@ -195,38 +226,48 @@ function ratingGoal(current: number, target: number | null) {
 export const generateSmartSheet = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({
-      size: z.union([z.literal(5), z.literal(10), z.literal(15)]),
-      language: z.enum(["en", "bn"]).optional(),
-    }).parse(d),
+    z
+      .object({
+        size: z.union([z.literal(5), z.literal(10), z.literal(15)]),
+        language: z.enum(["en", "bn"]).optional(),
+      })
+      .parse(d),
   )
   .handler(async ({ context, data }) => {
     // 1. Load user platforms + completions
-    const [{ data: platforms }, { data: completions }, { data: solvedRows }, { data: profile }] = await Promise.all([
-      context.supabase
-        .from("user_platforms")
-        .select("platform, username, rating, max_rating")
-        .eq("user_id", context.userId),
-      context.supabase
-        .from("daily_sheet_completions")
-        .select("date")
-        .eq("user_id", context.userId)
-        .order("date", { ascending: false })
-        .limit(7),
-      context.supabase
-        .from("solved_problems")
-        .select("platform, problem_key")
-        .eq("user_id", context.userId),
-      context.supabase
-        .from("profiles")
-        .select("target_rating")
-        .eq("id", context.userId)
-        .maybeSingle(),
-    ]);
+    const [{ data: platforms }, { data: completions }, { data: solvedRows }, { data: profile }] =
+      await Promise.all([
+        context.supabase
+          .from("user_platforms")
+          .select("platform, username, rating, max_rating")
+          .eq("user_id", context.userId),
+        context.supabase
+          .from("daily_sheet_completions")
+          .select("date")
+          .eq("user_id", context.userId)
+          .order("date", { ascending: false })
+          .limit(7),
+        context.supabase
+          .from("solved_problems")
+          .select("platform, problem_key")
+          .eq("user_id", context.userId),
+        context.supabase
+          .from("profiles")
+          .select("target_rating")
+          .eq("id", context.userId)
+          .maybeSingle(),
+      ]);
 
-    const platformMap = new Map<string, { username: string; rating: number | null; maxRating: number | null }>();
+    const platformMap = new Map<
+      string,
+      { username: string; rating: number | null; maxRating: number | null }
+    >();
     for (const p of platforms ?? []) {
-      platformMap.set(p.platform, { username: p.username, rating: p.rating, maxRating: p.max_rating });
+      platformMap.set(p.platform, {
+        username: p.username,
+        rating: p.rating,
+        maxRating: p.max_rating,
+      });
     }
     const connected = new Set<Platform>();
     if (platformMap.has("codeforces")) connected.add("codeforces");
@@ -234,7 +275,9 @@ export const generateSmartSheet = createServerFn({ method: "POST" })
     if (platformMap.has("leetcode")) connected.add("leetcode");
 
     if (connected.size === 0) {
-      throw new Error("Connect at least one of Codeforces, CodeChef, or LeetCode to generate a sheet.");
+      throw new Error(
+        "Connect at least one of Codeforces, CodeChef, or LeetCode to generate a sheet.",
+      );
     }
 
     // 2. Effective user rating (prefer CF, else normalize)
@@ -258,7 +301,8 @@ export const generateSmartSheet = createServerFn({ method: "POST" })
       return d.toISOString().slice(0, 10);
     });
     const completedRecent = last3.filter((d) => recentDates.includes(d)).length;
-    const adaptiveShift = completedRecent >= 2 ? 50 : completedRecent === 0 && recentDates.length > 0 ? -50 : 0;
+    const adaptiveShift =
+      completedRecent >= 2 ? 50 : completedRecent === 0 && recentDates.length > 0 ? -50 : 0;
     const targetRating = effectiveRating + adaptiveShift;
 
     // 4. Topic analysis from CF submissions (if connected)
@@ -267,7 +311,9 @@ export const generateSmartSheet = createServerFn({ method: "POST" })
     const cfSolved = new Set<string>();
     if (cfInfo) {
       try {
-        const subs = await cached(`s:${cfInfo.username}`, 5 * 60_000, () => cf.userStatus(cfInfo.username, 3000));
+        const subs = await cached(`s:${cfInfo.username}`, 5 * 60_000, () =>
+          cf.userStatus(cfInfo.username, 3000),
+        );
         for (const s of subs) {
           if (s.verdict === "OK") cfSolved.add(`${s.problem.contestId ?? "x"}-${s.problem.index}`);
         }
@@ -319,7 +365,10 @@ export const generateSmartSheet = createServerFn({ method: "POST" })
             .sort((a, b) => a.dist - b.dist)
             .slice(0, 20)
             .sort(() => rng() - 0.5);
-          const weakPick = near.find((c) => c.p.tags.some((t) => weakSet.has(t)) && !used.has(`cf:${c.p.contestId}-${c.p.index}`));
+          const weakPick = near.find(
+            (c) =>
+              c.p.tags.some((t) => weakSet.has(t)) && !used.has(`cf:${c.p.contestId}-${c.p.index}`),
+          );
           const fallback = near.find((c) => !used.has(`cf:${c.p.contestId}-${c.p.index}`));
           const chosen = weakPick ?? fallback;
           if (!chosen) continue;
@@ -348,7 +397,15 @@ export const generateSmartSheet = createServerFn({ method: "POST" })
     if (dist.codechef > 0) {
       const offsets = buildOffsets(dist.codechef, tier.mix);
       for (const off of offsets) {
-        const pick = pickFromPool(codechefPool, targetRating + off, weakSet, ccSolved, new Set([...used].filter((u) => u.startsWith("cc:")).map((u) => u.slice(3))), rng, effectiveRating);
+        const pick = pickFromPool(
+          codechefPool,
+          targetRating + off,
+          weakSet,
+          ccSolved,
+          new Set([...used].filter((u) => u.startsWith("cc:")).map((u) => u.slice(3))),
+          rng,
+          effectiveRating,
+        );
         if (!pick) continue;
         const id = `cc:${pick.p.code}`;
         used.add(id);
@@ -370,7 +427,15 @@ export const generateSmartSheet = createServerFn({ method: "POST" })
     if (dist.leetcode > 0) {
       const offsets = buildOffsets(dist.leetcode, tier.mix);
       for (const off of offsets) {
-        const pick = pickFromPool(leetcodePool, targetRating + off, weakSet, lcSolved, new Set([...used].filter((u) => u.startsWith("lc:")).map((u) => u.slice(3))), rng, effectiveRating);
+        const pick = pickFromPool(
+          leetcodePool,
+          targetRating + off,
+          weakSet,
+          lcSolved,
+          new Set([...used].filter((u) => u.startsWith("lc:")).map((u) => u.slice(3))),
+          rng,
+          effectiveRating,
+        );
         if (!pick) continue;
         const id = `lc:${pick.p.code}`;
         used.add(id);
@@ -391,7 +456,11 @@ export const generateSmartSheet = createServerFn({ method: "POST" })
     // 8. AI rationale
     const apiKey = process.env.LOVABLE_API_KEY;
     const rationales = apiKey
-      ? await generateRationales(items, { tier: tier.name, weak: weakTags, strong: strongTags }, apiKey)
+      ? await generateRationales(
+          items,
+          { tier: tier.name, weak: weakTags, strong: strongTags },
+          apiKey,
+        )
       : new Map<string, { en: string; bn: string }>();
 
     const fullItems: SheetItem[] = items.map((it) => {
@@ -447,11 +516,13 @@ function buildOffsets(count: number, mix: Record<Difficulty, number>): number[] 
 export const markProblemSolved = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({
-      platform: z.enum(["codechef", "leetcode", "codeforces"]),
-      problem_key: z.string().min(1).max(128),
-      solved: z.boolean(),
-    }).parse(d),
+    z
+      .object({
+        platform: z.enum(["codechef", "leetcode", "codeforces"]),
+        problem_key: z.string().min(1).max(128),
+        solved: z.boolean(),
+      })
+      .parse(d),
   )
   .handler(async ({ context, data }) => {
     if (data.solved) {

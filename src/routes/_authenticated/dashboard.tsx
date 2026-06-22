@@ -16,7 +16,10 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
       { title: "Dashboard — CP Coach" },
-      { name: "description", content: "Your unified competitive programming dashboard across every platform." },
+      {
+        name: "description",
+        content: "Your unified competitive programming dashboard across every platform.",
+      },
     ],
   }),
   component: Dashboard,
@@ -45,10 +48,16 @@ function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="text-3xl md:text-4xl font-display font-semibold tracking-tight">
+        <motion.h1
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-3xl md:text-4xl font-display font-semibold tracking-tight"
+        >
           Welcome back, <span className="text-gradient-brand">{display}</span>
         </motion.h1>
-        <p className="text-muted-foreground mt-2">Your unified competitive programming command center.</p>
+        <p className="text-muted-foreground mt-2">
+          Your unified competitive programming command center.
+        </p>
       </div>
 
       {isLoading ? (
@@ -64,16 +73,29 @@ function Dashboard() {
           <div className="grid lg:grid-cols-3 gap-4">
             <ScoreCard score={score} className="lg:col-span-2" />
             <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-              <Kpi icon={TrendingUp} label="Total solved" value={score.totalSolved.toLocaleString()} />
+              <Kpi
+                icon={TrendingUp}
+                label="Total solved"
+                value={score.totalSolved.toLocaleString()}
+              />
               <Kpi icon={Award} label="Contests" value={score.totalContests} />
             </div>
           </div>
 
           {/* Connected platforms grid */}
           <section>
+<<<<<<< HEAD
             <div className="flex items-end justify-between mb-3 gap-3">
               <h2 className="text-lg sm:text-xl font-display font-semibold">Connected platforms</h2>
               <Link to="/platforms" className="text-xs text-primary hover:underline inline-flex items-center gap-1 shrink-0">
+=======
+            <div className="flex items-end justify-between mb-3">
+              <h2 className="text-xl font-display font-semibold">Connected platforms</h2>
+              <Link
+                to="/platforms"
+                className="text-xs text-primary hover:underline inline-flex items-center gap-1"
+              >
+>>>>>>> 78f89df (added footer in site)
                 Manage <ArrowRight className="size-3" />
               </Link>
             </div>
@@ -82,22 +104,47 @@ function Dashboard() {
                 const meta = PLATFORMS[row.platform as PlatformId];
                 if (!meta) return null;
                 return (
-                  <motion.div key={row.platform} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+                  <motion.div
+                    key={row.platform}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.05 * i }}
+                  >
                     <PlatformStatCard meta={meta} row={row} />
                   </motion.div>
                 );
               })}
-              <Link to="/platforms" className="glass rounded-2xl p-5 border-dashed border-2 border-border/40 flex items-center justify-center text-sm text-muted-foreground hover:text-foreground hover:border-primary/40 transition min-h-[180px]">
-                <span className="inline-flex items-center gap-2"><Plug className="size-4" /> Connect another platform</span>
+              <Link
+                to="/platforms"
+                className="glass rounded-2xl p-5 border-dashed border-2 border-border/40 flex items-center justify-center text-sm text-muted-foreground hover:text-foreground hover:border-primary/40 transition min-h-[180px]"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <Plug className="size-4" /> Connect another platform
+                </span>
               </Link>
             </div>
           </section>
 
           {/* Quick links */}
           <section className="grid md:grid-cols-3 gap-4">
-            <QuickLink to="/sheet" title="Today's Sheet" desc="Personalized problems for your level." icon={Sparkles} />
-            <QuickLink to="/analytics" title="Analytics" desc="Deep dive into your performance." icon={Activity} />
-            <QuickLink to="/coach" title="AI Coach" desc="Get cross-platform feedback." icon={Sparkles} />
+            <QuickLink
+              to="/sheet"
+              title="Today's Sheet"
+              desc="Personalized problems for your level."
+              icon={Sparkles}
+            />
+            <QuickLink
+              to="/analytics"
+              title="Analytics"
+              desc="Deep dive into your performance."
+              icon={Activity}
+            />
+            <QuickLink
+              to="/coach"
+              title="AI Coach"
+              desc="Get cross-platform feedback."
+              icon={Sparkles}
+            />
           </section>
         </>
       )}
@@ -105,16 +152,32 @@ function Dashboard() {
   );
 }
 
-function ScoreCard({ score, className }: { score: ReturnType<typeof computeCPFlowScore>; className?: string }) {
+function ScoreCard({
+  score,
+  className,
+}: {
+  score: ReturnType<typeof computeCPFlowScore>;
+  className?: string;
+}) {
   const grad = tierGradient(score.tier);
   return (
     <GlassCard className={`relative overflow-hidden ${className}`}>
-      <div className={`absolute -top-24 -right-24 size-72 rounded-full bg-gradient-to-br ${grad} opacity-25 blur-3xl pointer-events-none`} />
+      <div
+        className={`absolute -top-24 -right-24 size-72 rounded-full bg-gradient-to-br ${grad} opacity-25 blur-3xl pointer-events-none`}
+      />
       <div className="relative flex items-center justify-between gap-6 flex-wrap">
         <div>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">CP Coach Score</div>
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            CP Coach Score
+          </div>
           <div className="mt-2 flex items-baseline gap-2">
+<<<<<<< HEAD
             <span className={`text-5xl sm:text-6xl md:text-7xl font-display font-bold bg-gradient-to-br ${grad} bg-clip-text text-transparent tabular-nums`}>
+=======
+            <span
+              className={`text-6xl md:text-7xl font-display font-bold bg-gradient-to-br ${grad} bg-clip-text text-transparent tabular-nums`}
+            >
+>>>>>>> 78f89df (added footer in site)
               {score.score}
             </span>
             <span className="text-xl text-muted-foreground">/ 100</span>
@@ -158,7 +221,10 @@ function ScoreBreakdown({ score }: { score: ReturnType<typeof computeCPFlowScore
             const meta = PLATFORMS[b.platform as PlatformId];
             if (!meta) return null;
             return (
-              <span key={b.platform} className="inline-flex items-center gap-1.5 text-muted-foreground">
+              <span
+                key={b.platform}
+                className="inline-flex items-center gap-1.5 text-muted-foreground"
+              >
                 <span className="size-2 rounded-sm" style={{ background: meta.color }} />
                 {meta.name}
               </span>
@@ -169,7 +235,15 @@ function ScoreBreakdown({ score }: { score: ReturnType<typeof computeCPFlowScore
   );
 }
 
-function Kpi({ icon: Icon, label, value }: { icon: React.ComponentType<{ className?: string }>; label: string; value: number | string }) {
+function Kpi({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: number | string;
+}) {
   return (
     <GlassCard className="!p-5">
       <div className="flex items-center justify-between">
@@ -182,14 +256,26 @@ function Kpi({ icon: Icon, label, value }: { icon: React.ComponentType<{ classNa
 }
 
 function PlatformStatCard({
-  meta, row,
+  meta,
+  row,
 }: {
   meta: PlatformMeta;
-  row: { platform: string; username: string; rating: number | null; max_rating: number | null; rank_label: string | null; problems_solved: number; contest_count: number };
+  row: {
+    platform: string;
+    username: string;
+    rating: number | null;
+    max_rating: number | null;
+    rank_label: string | null;
+    problems_solved: number;
+    contest_count: number;
+  };
 }) {
   return (
     <div className="glass rounded-2xl p-5 relative overflow-hidden hover:bg-white/[0.04] hover:-translate-y-0.5 transition group">
-      <div className="absolute -top-12 -right-12 size-32 rounded-full opacity-20 blur-2xl" style={{ background: meta.color }} />
+      <div
+        className="absolute -top-12 -right-12 size-32 rounded-full opacity-20 blur-2xl"
+        style={{ background: meta.color }}
+      />
       <div className="relative flex items-start justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <PlatformLogo p={meta} size={42} />
@@ -217,14 +303,29 @@ function Mini({ label, value }: { label: string; value: number | string }) {
   return (
     <div className="rounded-lg bg-white/[0.03] border border-white/[0.05] py-2">
       <div className="text-base font-display font-semibold tabular-nums">{value}</div>
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">{label}</div>
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
+        {label}
+      </div>
     </div>
   );
 }
 
-function QuickLink({ to, title, desc, icon: Icon }: { to: string; title: string; desc: string; icon: React.ComponentType<{ className?: string }> }) {
+function QuickLink({
+  to,
+  title,
+  desc,
+  icon: Icon,
+}: {
+  to: string;
+  title: string;
+  desc: string;
+  icon: React.ComponentType<{ className?: string }>;
+}) {
   return (
-    <Link to={to} className="glass rounded-2xl p-5 hover:bg-white/[0.04] hover:-translate-y-0.5 transition group">
+    <Link
+      to={to}
+      className="glass rounded-2xl p-5 hover:bg-white/[0.04] hover:-translate-y-0.5 transition group"
+    >
       <div className="flex items-center gap-3">
         <div className="size-9 rounded-lg bg-primary/10 ring-1 ring-primary/20 grid place-items-center">
           <Icon className="size-4 text-primary" />
@@ -247,7 +348,8 @@ function EmptyState() {
       </div>
       <h2 className="mt-5 text-2xl font-display font-semibold">Connect your first platform</h2>
       <p className="text-muted-foreground mt-2 max-w-md mx-auto">
-        Plug in Codeforces, LeetCode or AtCoder to unlock your unified CP Coach Score, daily sheet, and AI coaching.
+        Plug in Codeforces, LeetCode or AtCoder to unlock your unified CP Coach Score, daily sheet,
+        and AI coaching.
       </p>
       <Link to="/platforms">
         <Button className="mt-6 bg-gradient-brand text-white border-0 shadow-glow h-11 px-6">

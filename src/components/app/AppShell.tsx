@@ -51,7 +51,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex">
       {/* Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 shrink-0 border-r border-border/50 bg-sidebar/60 backdrop-blur-xl">
-        <Link to="/dashboard" className="flex items-center gap-2 px-6 h-16 border-b border-border/50">
+        <Link
+          to="/dashboard"
+          className="flex items-center gap-2 px-6 h-16 border-b border-border/50"
+        >
           <BrandLogo className="size-12" />
           <span className="font-display text-lg font-semibold tracking-tight">CP Coach</span>
         </Link>
@@ -125,8 +128,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </Link>
         <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
           <NotificationBell />
+<<<<<<< HEAD
           <Link to="/settings" aria-label="Settings" className="hidden sm:inline-flex">
             <Button variant="ghost" size="icon" className="h-10 w-10"><SettingsIcon className="size-4" /></Button>
+=======
+          <Link to="/settings" aria-label="Settings">
+            <Button variant="ghost" size="icon">
+              <SettingsIcon className="size-4" />
+            </Button>
+>>>>>>> 78f89df (added footer in site)
           </Link>
           <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={onSignOut} aria-label="Sign out" className="h-10 w-10">
@@ -161,7 +171,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
         </div>
+<<<<<<< HEAD
         <div className="max-w-7xl 2xl:max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8 pb-32 lg:pb-12">{children}</div>
+=======
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-8 pb-28 lg:pb-12">
+          {children}
+        </div>
+>>>>>>> 78f89df (added footer in site)
       </main>
     </div>
   );

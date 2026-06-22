@@ -14,10 +14,7 @@ export function UserAvatar({ className, name, src }: Props) {
   const { user, isGuest } = useAuth();
   const meta = (user?.user_metadata ?? {}) as Record<string, unknown>;
   const url =
-    src ??
-    (meta.avatar_url as string | undefined) ??
-    (meta.picture as string | undefined) ??
-    null;
+    src ?? (meta.avatar_url as string | undefined) ?? (meta.picture as string | undefined) ?? null;
   const display =
     name ??
     (meta.full_name as string | undefined) ??

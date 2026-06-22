@@ -31,8 +31,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // initial
   useEffect(() => {
-    const saved = (typeof localStorage !== "undefined" && localStorage.getItem(STORAGE_KEY)) as ThemeMode | null;
-    const initial: ThemeMode = saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
+    const saved = (typeof localStorage !== "undefined" &&
+      localStorage.getItem(STORAGE_KEY)) as ThemeMode | null;
+    const initial: ThemeMode =
+      saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
     setModeState(initial);
     const r = initial === "system" ? systemPref() : initial;
     setResolved(r);
@@ -54,7 +56,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setMode = useCallback((m: ThemeMode) => {
     setModeState(m);
-    try { localStorage.setItem(STORAGE_KEY, m); } catch { /* ignore */ }
+    try {
+      localStorage.setItem(STORAGE_KEY, m);
+    } catch {
+      /* ignore */
+    }
     const r = m === "system" ? systemPref() : m;
     setResolved(r);
     applyTheme(r);

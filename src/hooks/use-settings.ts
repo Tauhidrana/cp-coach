@@ -29,6 +29,7 @@ export function useSettings() {
 export function resolveLanguage(pref: "auto" | "en" | "bn" | undefined | null): "en" | "bn" {
   if (pref === "bn") return "bn";
   if (pref === "en") return "en";
-  if (typeof navigator !== "undefined" && navigator.language?.toLowerCase().startsWith("bn")) return "bn";
+  if (typeof navigator !== "undefined" && navigator.language?.toLowerCase().startsWith("bn"))
+    return "bn";
   return "en";
 }

@@ -13,7 +13,10 @@ export const Route = createFileRoute("/_authenticated/roadmap")({
   head: () => ({
     meta: [
       { title: "Roadmap — CP Coach" },
-      { name: "description", content: "AI-generated learning roadmap from your current to your target rating." },
+      {
+        name: "description",
+        content: "AI-generated learning roadmap from your current to your target rating.",
+      },
     ],
   }),
   component: RoadmapPage,
@@ -27,7 +30,11 @@ function RoadmapPage() {
 
   const { data: profile } = useQuery({ queryKey: ["profile"], queryFn: () => profileFn() });
   const handle = profile?.codeforces_handle ?? "";
-  const { data: cf } = useQuery({ queryKey: ["cf", handle], queryFn: () => cfFn({ data: { handle } }), enabled: !!handle });
+  const { data: cf } = useQuery({
+    queryKey: ["cf", handle],
+    queryFn: () => cfFn({ data: { handle } }),
+    enabled: !!handle,
+  });
 
   const [target, setTarget] = useState<number>(1600);
   useEffect(() => {
@@ -46,7 +53,9 @@ function RoadmapPage() {
     return (
       <GlassCard>
         <p className="text-sm text-muted-foreground">Connect your Codeforces handle first.</p>
-        <Link to="/dashboard"><Button className="mt-4 bg-gradient-brand text-white border-0">Go to dashboard</Button></Link>
+        <Link to="/dashboard">
+          <Button className="mt-4 bg-gradient-brand text-white border-0">Go to dashboard</Button>
+        </Link>
       </GlassCard>
     );
   }
@@ -60,25 +69,43 @@ function RoadmapPage() {
             <Sparkles className="size-3" /> AI-built
           </span>
         </h1>
-        <p className="text-muted-foreground mt-1">A milestone-based path from where you are to where you want to be.</p>
+        <p className="text-muted-foreground mt-1">
+          A milestone-based path from where you are to where you want to be.
+        </p>
       </div>
 
       <GlassCard>
         <div className="grid md:grid-cols-[1fr_auto_auto] gap-4 items-end">
           <div>
-            <label className="text-xs uppercase tracking-wider text-muted-foreground">Current rating</label>
+            <label className="text-xs uppercase tracking-wider text-muted-foreground">
+              Current rating
+            </label>
             <div className="mt-1 text-2xl font-display font-semibold">{cf?.user.rating ?? "—"}</div>
           </div>
           <div>
-            <label className="text-xs uppercase tracking-wider text-muted-foreground flex items-center gap-1.5"><Target className="size-3" /> Target rating</label>
+            <label className="text-xs uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <Target className="size-3" /> Target rating
+            </label>
             <Input
-              type="number" min={800} max={3500} step={100}
-              value={target} onChange={(e) => setTarget(Number(e.target.value))}
+              type="number"
+              min={800}
+              max={3500}
+              step={100}
+              value={target}
+              onChange={(e) => setTarget(Number(e.target.value))}
               className="mt-1 w-32 bg-white/[0.03] border-border/60"
             />
           </div>
-          <Button onClick={() => mut.mutate()} disabled={mut.isPending || target <= (cf?.user.rating ?? 0)} className="bg-gradient-brand text-white border-0 shadow-glow">
-            {mut.isPending ? <Loader2 className="size-4 mr-2 animate-spin" /> : <Map className="size-4 mr-2" />}
+          <Button
+            onClick={() => mut.mutate()}
+            disabled={mut.isPending || target <= (cf?.user.rating ?? 0)}
+            className="bg-gradient-brand text-white border-0 shadow-glow"
+          >
+            {mut.isPending ? (
+              <Loader2 className="size-4 mr-2 animate-spin" />
+            ) : (
+              <Map className="size-4 mr-2" />
+            )}
             Generate roadmap
           </Button>
         </div>
@@ -113,17 +140,26 @@ function RoadmapPage() {
                 <div className="glass rounded-2xl p-6">
                   <div className="flex items-start justify-between flex-wrap gap-3">
                     <div>
-                      <div className="text-xs text-muted-foreground uppercase tracking-wider">Milestone {i + 1} · {m.weeks} weeks</div>
+                      <div className="text-xs text-muted-foreground uppercase tracking-wider">
+                        Milestone {i + 1} · {m.weeks} weeks
+                      </div>
                       <h3 className="mt-1 font-display text-xl font-semibold">{m.title}</h3>
                     </div>
                     <div className="text-right">
                       <div className="text-xs text-muted-foreground">target</div>
-                      <div className="text-2xl font-display font-semibold text-gradient-brand">{m.ratingTarget}</div>
+                      <div className="text-2xl font-display font-semibold text-gradient-brand">
+                        {m.ratingTarget}
+                      </div>
                     </div>
                   </div>
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {m.topics.map((t) => (
-                      <span key={t} className="text-[10px] rounded-md px-2 py-1 bg-primary/10 text-primary ring-1 ring-primary/20">{t}</span>
+                      <span
+                        key={t}
+                        className="text-[10px] rounded-md px-2 py-1 bg-primary/10 text-primary ring-1 ring-primary/20"
+                      >
+                        {t}
+                      </span>
                     ))}
                   </div>
                   <ul className="mt-4 space-y-2">

@@ -3,7 +3,13 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
 const PLATFORM_IDS = [
-  "codeforces", "leetcode", "atcoder", "codechef", "hackerrank", "gfg", "coding-ninjas",
+  "codeforces",
+  "leetcode",
+  "atcoder",
+  "codechef",
+  "hackerrank",
+  "gfg",
+  "coding-ninjas",
 ] as const;
 const PlatformIdSchema = z.enum(PLATFORM_IDS);
 
@@ -145,7 +151,9 @@ export const listMyPlatforms = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("user_platforms")
-      .select("platform, username, rating, max_rating, rank_label, problems_solved, contest_count, is_manual, last_synced_at, raw_data")
+      .select(
+        "platform, username, rating, max_rating, rank_label, problems_solved, contest_count, is_manual, last_synced_at, raw_data",
+      )
       .eq("user_id", context.userId);
     if (error) throw error;
     return data ?? [];

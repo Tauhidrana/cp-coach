@@ -5,9 +5,11 @@ Rebuild the Daily Sheet as an adaptive, multi-platform, mentor-style recommender
 ## What changes
 
 ### 1. New server function: `generateSmartSheet`
+
 Replaces `generateSheet`. Inputs: `size` (5 / 10 / 15) and optional `language` (en/bn).
 
 Pipeline:
+
 1. **Load context** — pull all connected platforms via `user_platforms`, fetch CF submissions + problemset (cached), read last 7 `daily_sheet_completions` for adaptive signal.
 2. **Determine effective rating tier** — use CF rating if present, else derive a normalized rating from LeetCode/CodeChef. Map to tier: Beginner (0-999) / Pupil (1000-1199) / Specialist (1200-1399) / Expert (1400-1699) / CM (1700+).
 3. **Difficulty mix** — per tier, compute easy/medium/hard split exactly as spec (e.g. Specialist 30/50/20).
@@ -40,16 +42,19 @@ Pipeline:
    ```
 
 ### 2. Adaptive + weekly plan + rating goal helpers
+
 - `weeklyPlan` is computed locally (deterministic by day-of-week per spec: Mon Greedy, Tue Binary Search+Math, …, Sun Revision).
 - `ratingGoal` uses `profiles.target_rating` and a heuristic (≈40 quality problems per 100 rating points, scaled by current vs target gap).
 
 ### 3. New table: `solved_problems`
+
 Tracks problems marked solved on non-CF platforms (CF auto-solved via submissions).
 Columns: `user_id`, `platform`, `problem_key` (unique per-platform id, e.g. CC code or LC slug), `solved_at`. RLS own-rows.
 
 The Daily Sheet UI gets a per-problem ✓ checkbox that calls `markProblemSolved`. CF problems read from the live submissions cache; no manual marking needed.
 
 ### 4. UI overhaul (`src/routes/_authenticated/sheet.tsx`)
+
 - **Today's Goal hero card** — tier badge, estimated time, focus topics, platform distribution chips, adaptive-shift indicator ("difficulty +50 — you crushed yesterday").
 - **Grouped sections** by platform with brand-colored headers and platform logos.
 - **Problem card** — title, rating chip, difficulty (easy/medium/hard color), tags, est-time, ✓ mark solved, expand for AI rationale (EN/BN toggle).
@@ -58,6 +63,7 @@ The Daily Sheet UI gets a per-problem ✓ checkbox that calls `markProblemSolved
 - Skeletons for all sections; framer-motion stagger preserved.
 
 ### 5. Cleanup
+
 - Remove old `generateSheet` once `sheet.tsx` no longer imports it; keep `mark complete` flow (still useful to silence reminders, and is auto-triggered when all items checked).
 
 ## Technical notes

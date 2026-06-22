@@ -32,7 +32,9 @@ export const getCFProfile = createServerFn({ method: "GET" })
 
 export const getContests = createServerFn({ method: "GET" }).handler(async () => {
   const all = await cached("contests", () => cf.contestList());
-  const upcoming = all.filter((c) => c.phase === "BEFORE").sort((a, b) => (a.startTimeSeconds ?? 0) - (b.startTimeSeconds ?? 0));
+  const upcoming = all
+    .filter((c) => c.phase === "BEFORE")
+    .sort((a, b) => (a.startTimeSeconds ?? 0) - (b.startTimeSeconds ?? 0));
   const recent = all.filter((c) => c.phase === "FINISHED").slice(0, 10);
   return { upcoming: upcoming.slice(0, 25), recent };
 });
@@ -41,10 +43,12 @@ export const getContests = createServerFn({ method: "GET" }).handler(async () =>
 
 export const generateSheet = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) =>
-    z.object({
-      handle: z.string().min(1),
-      size: z.union([z.literal(5), z.literal(10), z.literal(15)]),
-    }).parse(d),
+    z
+      .object({
+        handle: z.string().min(1),
+        size: z.union([z.literal(5), z.literal(10), z.literal(15)]),
+      })
+      .parse(d),
   )
   .handler(async ({ data }) => {
     const [user, submissions, ps] = await Promise.all([
@@ -63,7 +67,11 @@ export const generateSheet = createServerFn({ method: "POST" })
     })();
 
     // Weakest topics first
-    const weakTags = analysis.topics.slice().sort((a, b) => a.score - b.score).slice(0, 6).map((t) => t.tag);
+    const weakTags = analysis.topics
+      .slice()
+      .sort((a, b) => a.score - b.score)
+      .slice(0, 6)
+      .map((t) => t.tag);
     const weakSet = new Set(weakTags);
 
     const isSolved = (p: CFProblem) => analysis.solvedSet.has(`${p.contestId ?? "x"}-${p.index}`);
@@ -78,12 +86,15 @@ export const generateSheet = createServerFn({ method: "POST" })
       byRating.set(p.rating, arr);
     }
     // Shuffle deterministically by handle+day
-    const seed = (data.handle + new Date().toISOString().slice(0, 10)).split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+    const seed = (data.handle + new Date().toISOString().slice(0, 10))
+      .split("")
+      .reduce((a, c) => a + c.charCodeAt(0), 0);
     const rng = mulberry32(seed);
     for (const arr of byRating.values()) arr.sort(() => rng() - 0.5);
 
     const picked = new Set<string>();
-    const sheet: { problem: CFProblem; weak: boolean; difficulty: "easy" | "medium" | "hard" }[] = [];
+    const sheet: { problem: CFProblem; weak: boolean; difficulty: "easy" | "medium" | "hard" }[] =
+      [];
     for (const offset of buckets) {
       const target = Math.round((userRating + offset) / 100) * 100;
       const candidates = byRating.get(target) ?? [];
@@ -99,7 +110,8 @@ export const generateSheet = createServerFn({ method: "POST" })
       if (chosen) {
         picked.add(`${chosen.contestId}-${chosen.index}`);
         const isWeak = chosen.tags.some((t) => weakSet.has(t));
-        const diff: "easy" | "medium" | "hard" = offset <= -100 ? "easy" : offset <= 100 ? "medium" : "hard";
+        const diff: "easy" | "medium" | "hard" =
+          offset <= -100 ? "easy" : offset <= 100 ? "medium" : "hard";
         sheet.push({ problem: chosen, weak: isWeak, difficulty: diff });
       }
     }
@@ -121,10 +133,12 @@ function mulberry32(a: number) {
 
 export const aiCoachAnalysis = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) =>
-    z.object({
-      handle: z.string().min(1),
-      language: z.enum(["en", "bn"]).optional(),
-    }).parse(d),
+    z
+      .object({
+        handle: z.string().min(1),
+        language: z.enum(["en", "bn"]).optional(),
+      })
+      .parse(d),
   )
   .handler(async ({ data }) => {
     const apiKey = process.env.LOVABLE_API_KEY;
@@ -136,7 +150,10 @@ export const aiCoachAnalysis = createServerFn({ method: "POST" })
       cached(`r:${data.handle}`, () => cf.userRating(data.handle)),
     ]);
     const a = analyzeSubmissions(submissions, user.rating ?? 0);
-    const weak = a.topics.slice().sort((x, y) => x.score - y.score).slice(0, 5);
+    const weak = a.topics
+      .slice()
+      .sort((x, y) => x.score - y.score)
+      .slice(0, 5);
     const strong = a.topics.slice(0, 5);
 
     const summary = {
@@ -147,7 +164,8 @@ export const aiCoachAnalysis = createServerFn({ method: "POST" })
       totalSolved: a.totalSolved,
       contests: ratingHistory.length,
       lastContestDelta: ratingHistory.length
-        ? ratingHistory[ratingHistory.length - 1].newRating - ratingHistory[ratingHistory.length - 1].oldRating
+        ? ratingHistory[ratingHistory.length - 1].newRating -
+          ratingHistory[ratingHistory.length - 1].oldRating
         : 0,
       strongTopics: strong.map((t) => ({ tag: t.tag, solved: t.solved, score: t.score })),
       weakTopics: weak.map((t) => ({ tag: t.tag, solved: t.solved, score: t.score })),
@@ -232,9 +250,20 @@ Return STRICT JSON only, no markdown fences, with shape:
 Produce 5-7 milestones, ordered by progression. Prioritize the user's weakest topics first.`;
 
     const result = await generateText({ model, prompt });
-    let parsed: { milestones: { title: string; ratingTarget: number; weeks: number; topics: string[]; goals: string[] }[] };
+    let parsed: {
+      milestones: {
+        title: string;
+        ratingTarget: number;
+        weeks: number;
+        topics: string[];
+        goals: string[];
+      }[];
+    };
     try {
-      const cleaned = result.text.replace(/^```json\s*/i, "").replace(/```$/g, "").trim();
+      const cleaned = result.text
+        .replace(/^```json\s*/i, "")
+        .replace(/```$/g, "")
+        .trim();
       parsed = JSON.parse(cleaned);
     } catch {
       parsed = { milestones: [] };
@@ -273,11 +302,13 @@ export const getMyProfile = createServerFn({ method: "GET" })
 export const saveMyProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({
-      codeforces_handle: z.string().min(1).max(48).nullable().optional(),
-      display_name: z.string().max(80).nullable().optional(),
-      target_rating: z.number().int().min(800).max(3500).nullable().optional(),
-    }).parse(d),
+    z
+      .object({
+        codeforces_handle: z.string().min(1).max(48).nullable().optional(),
+        display_name: z.string().max(80).nullable().optional(),
+        target_rating: z.number().int().min(800).max(3500).nullable().optional(),
+      })
+      .parse(d),
   )
   .handler(async ({ context, data }) => {
     const { error } = await context.supabase
@@ -290,12 +321,14 @@ export const saveMyProfile = createServerFn({ method: "POST" })
 export const toggleBookmark = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({
-      contest_id: z.number().int(),
-      contest_name: z.string(),
-      start_time: z.string(),
-      bookmark: z.boolean(),
-    }).parse(d),
+    z
+      .object({
+        contest_id: z.number().int(),
+        contest_name: z.string(),
+        start_time: z.string(),
+        bookmark: z.boolean(),
+      })
+      .parse(d),
   )
   .handler(async ({ context, data }) => {
     if (data.bookmark) {

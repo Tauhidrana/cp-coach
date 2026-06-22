@@ -86,12 +86,19 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
-            onClick={() => { setAttempt(0); setShowFinal(false); router.invalidate(); reset(); }}
+            onClick={() => {
+              setAttempt(0);
+              setShowFinal(false);
+              router.invalidate();
+              reset();
+            }}
             className="rounded-md bg-gradient-brand px-4 py-2 text-sm font-medium text-white"
           >
             Try again
           </button>
-          <a href="/" className="rounded-md border border-border px-4 py-2 text-sm">Home</a>
+          <a href="/" className="rounded-md border border-border px-4 py-2 text-sm">
+            Home
+          </a>
         </div>
       </div>
     </div>
@@ -112,14 +119,34 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "CP Coach" },
       { property: "og:site_name", content: "CP Coach" },
       { property: "og:title", content: "CP Coach — Practice Smarter. Climb Faster." },
-      { property: "og:description", content: "AI-powered app for competitive programmers to analyze performance, track progress, and generate personalized practice." },
+      {
+        property: "og:description",
+        content:
+          "AI-powered app for competitive programmers to analyze performance, track progress, and generate personalized practice.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "CP Coach — Practice Smarter. Climb Faster." },
-      { name: "twitter:description", content: "AI-powered app for competitive programmers to analyze performance, track progress, and generate personalized practice." },
-      { name: "description", content: "AI-powered app for competitive programmers to analyze performance, track progress, and generate personalized practice." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/EsKhWk4aepQPvU6BSdXYnkV49n73/social-images/social-1782017576876-ChatGPT_Image_Jun_21,_2026,_10_09_52_AM.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/EsKhWk4aepQPvU6BSdXYnkV49n73/social-images/social-1782017576876-ChatGPT_Image_Jun_21,_2026,_10_09_52_AM.webp" },
+      {
+        name: "twitter:description",
+        content:
+          "AI-powered app for competitive programmers to analyze performance, track progress, and generate personalized practice.",
+      },
+      {
+        name: "description",
+        content:
+          "AI-powered app for competitive programmers to analyze performance, track progress, and generate personalized practice.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/EsKhWk4aepQPvU6BSdXYnkV49n73/social-images/social-1782017576876-ChatGPT_Image_Jun_21,_2026,_10_09_52_AM.webp",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/EsKhWk4aepQPvU6BSdXYnkV49n73/social-images/social-1782017576876-ChatGPT_Image_Jun_21,_2026,_10_09_52_AM.webp",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -140,7 +167,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <head><HeadContent /></head>
+      <head>
+        <HeadContent />
+      </head>
       <body>
         {children}
         <Scripts />
@@ -198,7 +227,13 @@ function RootComponent() {
   );
 }
 
-function QueryClientFallback({ queryClient, children }: { queryClient: QueryClient; children: ReactNode }) {
+function QueryClientFallback({
+  queryClient,
+  children,
+}: {
+  queryClient: QueryClient;
+  children: ReactNode;
+}) {
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 

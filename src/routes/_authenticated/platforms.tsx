@@ -1,11 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Plus, RefreshCw, Trash2, Pencil, ExternalLink } from "lucide-react";
 import {
-  listMyPlatforms,
   connectPlatform,
   syncPlatform,
   upsertManualPlatform,
@@ -26,6 +25,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { usePlatformSync, formatSyncTime } from "@/hooks/use-platform-sync";
 
 export const Route = createFileRoute("/_authenticated/platforms")({
   head: () => ({
@@ -42,8 +42,7 @@ export const Route = createFileRoute("/_authenticated/platforms")({
 
 function PlatformsPage() {
   const qc = useQueryClient();
-  const listFn = useServerFn(listMyPlatforms);
-  const { data: rows, isLoading } = useQuery({ queryKey: ["platforms"], queryFn: () => listFn() });
+  const { rows, isLoading, isSyncing, lastSyncedAt, syncNow } = usePlatformSync();
   const connected = new Map((rows ?? []).map((r) => [r.platform, r] as const));
 
   const [open, setOpen] = useState<PlatformMeta | null>(null);

@@ -37,17 +37,45 @@ function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <motion.h1
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-3xl md:text-4xl font-display font-semibold tracking-tight"
-        >
-          Welcome back, <span className="text-gradient-brand">{display}</span>
-        </motion.h1>
-        <p className="text-muted-foreground mt-2">
-          Your unified competitive programming command center.
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <motion.h1
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl md:text-4xl font-display font-semibold tracking-tight"
+          >
+            Welcome back, <span className="text-gradient-brand">{display}</span>
+          </motion.h1>
+          <p className="text-muted-foreground mt-2">
+            Your unified competitive programming command center.
+          </p>
+        </div>
+        {platforms.length > 0 && (
+          <div className="flex items-center gap-3 text-xs">
+            <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+              <span
+                className={`size-1.5 rounded-full ${
+                  isSyncing ? "bg-primary animate-pulse" : "bg-success"
+                }`}
+              />
+              {isSyncing ? "Syncing latest data…" : formatSyncTime(lastSyncedAt)}
+            </span>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => syncNow(false)}
+              disabled={isSyncing}
+              className="h-8 border-border/60 bg-white/[0.02]"
+            >
+              {isSyncing ? (
+                <Loader2 className="size-3.5 mr-1.5 animate-spin" />
+              ) : (
+                <RefreshCw className="size-3.5 mr-1.5" />
+              )}
+              Sync now
+            </Button>
+          </div>
+        )}
       </div>
 
       {isLoading ? (

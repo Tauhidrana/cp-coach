@@ -12,7 +12,7 @@ import {
 } from "@/lib/platforms.functions";
 import { PLATFORM_LIST, type PlatformMeta } from "@/lib/platforms/registry";
 import { PlatformLogo } from "@/components/platform-logo";
-import { GlassCard } from "@/components/glass-card";
+
 import { CardSkeleton } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

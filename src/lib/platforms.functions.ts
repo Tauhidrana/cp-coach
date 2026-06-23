@@ -13,6 +13,29 @@ const PLATFORM_IDS = [
 ] as const;
 const PlatformIdSchema = z.enum(PLATFORM_IDS);
 
+const API_PLATFORMS: readonly string[] = [
+  "codeforces",
+  "leetcode",
+  "atcoder",
+  "codechef",
+  "hackerrank",
+];
+
+async function retryWithBackoff<T>(fn: () => Promise<T>, attempts = 3): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      lastErr = e;
+      if (i < attempts - 1) {
+        await new Promise((r) => setTimeout(r, [500, 1500, 3000][i] ?? 3000));
+      }
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error("Sync failed");
+}
+
 const ConnectInput = z.object({
   platform: PlatformIdSchema,
   username: z.string().min(1).max(64).trim(),
@@ -86,7 +109,7 @@ export const syncPlatform = createServerFn({ method: "POST" })
     if (row.is_manual) throw new Error("Manual platform — update fields directly");
 
     const { fetchPlatformStats } = await import("./platforms/adapters.server");
-    const stats = await fetchPlatformStats(data.platform, row.username);
+    const stats = await retryWithBackoff(() => fetchPlatformStats(data.platform, row.username));
     const { error: updErr } = await context.supabase
       .from("user_platforms")
       .update({
@@ -157,4 +180,57 @@ export const listMyPlatforms = createServerFn({ method: "GET" })
       .eq("user_id", context.userId);
     if (error) throw error;
     return data ?? [];
+  });
+
+// Sync ALL connected API-backed platforms in parallel. Per-platform failures
+// are isolated — one bad platform never blocks the rest. Returns a summary
+// the client uses to surface toasts and "last synced" indicators.
+export const syncAllPlatforms = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: rows, error } = await context.supabase
+      .from("user_platforms")
+      .select("platform, username, is_manual")
+      .eq("user_id", context.userId);
+    if (error) throw error;
+
+    const targets = (rows ?? []).filter(
+      (r) => !r.is_manual && API_PLATFORMS.includes(r.platform),
+    );
+    if (targets.length === 0) return { results: [], syncedAt: new Date().toISOString() };
+
+    const { fetchPlatformStats } = await import("./platforms/adapters.server");
+
+    const results = await Promise.all(
+      targets.map(async (r) => {
+        try {
+          const stats = await retryWithBackoff(() =>
+            fetchPlatformStats(r.platform as never, r.username),
+          );
+          const nowIso = new Date().toISOString();
+          await context.supabase
+            .from("user_platforms")
+            .update({
+              rating: stats.rating,
+              max_rating: stats.maxRating,
+              rank_label: stats.rankLabel,
+              problems_solved: stats.problemsSolved,
+              contest_count: stats.contestCount,
+              raw_data: (stats.raw ?? null) as never,
+              last_synced_at: nowIso,
+              updated_at: nowIso,
+            })
+            .eq("user_id", context.userId)
+            .eq("platform", r.platform);
+          return { platform: r.platform, ok: true as const };
+        } catch (e) {
+          return {
+            platform: r.platform,
+            ok: false as const,
+            error: e instanceof Error ? e.message : "Sync failed",
+          };
+        }
+      }),
+    );
+    return { results, syncedAt: new Date().toISOString() };
   });

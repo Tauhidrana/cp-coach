@@ -1,11 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Plus, RefreshCw, Trash2, Pencil, ExternalLink } from "lucide-react";
 import {
-  listMyPlatforms,
   connectPlatform,
   syncPlatform,
   upsertManualPlatform,
@@ -13,7 +12,7 @@ import {
 } from "@/lib/platforms.functions";
 import { PLATFORM_LIST, type PlatformMeta } from "@/lib/platforms/registry";
 import { PlatformLogo } from "@/components/platform-logo";
-import { GlassCard } from "@/components/glass-card";
+
 import { CardSkeleton } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +25,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { usePlatformSync, formatSyncTime } from "@/hooks/use-platform-sync";
 
 export const Route = createFileRoute("/_authenticated/platforms")({
   head: () => ({
@@ -42,22 +42,49 @@ export const Route = createFileRoute("/_authenticated/platforms")({
 
 function PlatformsPage() {
   const qc = useQueryClient();
-  const listFn = useServerFn(listMyPlatforms);
-  const { data: rows, isLoading } = useQuery({ queryKey: ["platforms"], queryFn: () => listFn() });
+  const { rows, isLoading, isSyncing, lastSyncedAt, syncNow } = usePlatformSync();
   const connected = new Map((rows ?? []).map((r) => [r.platform, r] as const));
 
   const [open, setOpen] = useState<PlatformMeta | null>(null);
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl md:text-4xl font-display font-semibold tracking-tight">
-          Connected <span className="text-gradient-brand">Platforms</span>
-        </h1>
-        <p className="text-muted-foreground mt-2">
-          Connect your competitive programming accounts. CP Coach merges everything into one unified
-          profile and score.
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-display font-semibold tracking-tight">
+            Connected <span className="text-gradient-brand">Platforms</span>
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Connect your competitive programming accounts. CP Coach merges everything into one unified
+            profile and score.
+          </p>
+        </div>
+        {rows && rows.length > 0 && (
+          <div className="flex items-center gap-3 text-xs">
+            <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+              <span
+                className={`size-1.5 rounded-full ${
+                  isSyncing ? "bg-primary animate-pulse" : "bg-success"
+                }`}
+              />
+              {isSyncing ? "Syncing latest data…" : formatSyncTime(lastSyncedAt)}
+            </span>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => syncNow(false)}
+              disabled={isSyncing}
+              className="h-8 border-border/60 bg-white/[0.02]"
+            >
+              {isSyncing ? (
+                <Loader2 className="size-3.5 mr-1.5 animate-spin" />
+              ) : (
+                <RefreshCw className="size-3.5 mr-1.5" />
+              )}
+              Sync all
+            </Button>
+          </div>
+        )}
       </div>
 
       {isLoading ? (

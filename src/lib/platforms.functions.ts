@@ -86,7 +86,7 @@ export const syncPlatform = createServerFn({ method: "POST" })
     if (row.is_manual) throw new Error("Manual platform — update fields directly");
 
     const { fetchPlatformStats } = await import("./platforms/adapters.server");
-    const stats = await fetchPlatformStats(data.platform, row.username);
+    const stats = await retryWithBackoff(() => fetchPlatformStats(data.platform, row.username));
     const { error: updErr } = await context.supabase
       .from("user_platforms")
       .update({

@@ -13,6 +13,29 @@ const PLATFORM_IDS = [
 ] as const;
 const PlatformIdSchema = z.enum(PLATFORM_IDS);
 
+const API_PLATFORMS: readonly string[] = [
+  "codeforces",
+  "leetcode",
+  "atcoder",
+  "codechef",
+  "hackerrank",
+];
+
+async function retryWithBackoff<T>(fn: () => Promise<T>, attempts = 3): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      lastErr = e;
+      if (i < attempts - 1) {
+        await new Promise((r) => setTimeout(r, [500, 1500, 3000][i] ?? 3000));
+      }
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error("Sync failed");
+}
+
 const ConnectInput = z.object({
   platform: PlatformIdSchema,
   username: z.string().min(1).max(64).trim(),

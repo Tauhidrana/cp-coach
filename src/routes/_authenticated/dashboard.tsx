@@ -1,9 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { motion } from "framer-motion";
-import { ArrowRight, Plug, Sparkles, TrendingUp, Award, Activity } from "lucide-react";
-import { listMyPlatforms } from "@/lib/platforms.functions";
+import { ArrowRight, Plug, Sparkles, TrendingUp, Award, Activity, RefreshCw, Loader2 } from "lucide-react";
 import { PLATFORMS, type PlatformId, type PlatformMeta } from "@/lib/platforms/registry";
 import { computeCPFlowScore, tierGradient } from "@/lib/score";
 import { PlatformLogo } from "@/components/platform-logo";
@@ -11,6 +8,7 @@ import { GlassCard } from "@/components/glass-card";
 import { CardSkeleton } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/use-auth";
+import { usePlatformSync, formatSyncTime } from "@/hooks/use-platform-sync";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -27,14 +25,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const { user, isGuest } = useAuth();
-  const listFn = useServerFn(listMyPlatforms);
-  const { data: rows, isLoading } = useQuery({
-    queryKey: ["platforms"],
-    queryFn: () => listFn(),
-    throwOnError: false,
-    retry: 2,
-    retryDelay: (attemptIndex) => [1000, 2000, 5000][attemptIndex] ?? 5000,
-  });
+  const { rows: platforms, isLoading, isSyncing, lastSyncedAt, syncNow } = usePlatformSync();
 
   const display =
     (user?.user_metadata?.full_name as string | undefined) ||
@@ -42,7 +33,6 @@ function Dashboard() {
     user?.email?.split("@")[0] ||
     (isGuest ? "Guest" : "Coder");
 
-  const platforms = rows ?? [];
   const score = computeCPFlowScore(platforms);
 
   return (

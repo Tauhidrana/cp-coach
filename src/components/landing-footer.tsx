@@ -65,9 +65,6 @@ const companyLinks: readonly FooterItem[] = [
 
 const PORTFOLIO_URL = "https://tauhidrana.vercel.app/";
 
-const socialLinks = [
-  { label: "Portfolio — Kazi Tauhid Rana", href: PORTFOLIO_URL, icon: Globe },
-] as const;
 
 const infoItems = [
   { label: "Bangladesh", href: null, icon: MapPin },

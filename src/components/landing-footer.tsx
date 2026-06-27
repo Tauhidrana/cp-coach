@@ -3,6 +3,7 @@ import { type FormEvent } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
+  Bug,
   ChevronRight,
   Globe,
   Languages,
@@ -10,9 +11,8 @@ import {
   MapPin,
   Moon,
   Sun,
-
-  Youtube,
 } from "lucide-react";
+
 import { BrandLogo } from "@/components/brand-logo";
 import { useTheme } from "@/components/theme-provider";
 import {
@@ -42,29 +42,8 @@ const platformLinks: readonly FooterItem[] = [
   { label: "Leaderboard", href: "/auth" },
 ] as const;
 
-const resourceLinks: readonly FooterItem[] = [
-  { label: "Blog", href: "/auth" },
-  { label: "Documentation", href: "/auth" },
-  { label: "Guides", href: "/auth" },
-  { label: "FAQ", href: "/auth" },
-  { label: "Changelog", href: "/auth" },
-  { label: "Community", href: "/auth" },
-  { label: "Feedback", href: "/auth" },
-  { label: "API", href: "/auth", suffix: "Coming Soon" },
-] as const;
-
-const companyLinks: readonly FooterItem[] = [
-  { label: "About", href: "/auth" },
-  { label: "Contact", href: "/auth" },
-  { label: "Privacy", href: "/auth" },
-  { label: "Terms", href: "/auth" },
-  { label: "Careers", href: "/auth" },
-  { label: "Sponsors", href: "/auth" },
-  { label: "Open Source", href: "/auth" },
-] as const;
-
 const PORTFOLIO_URL = "https://tauhidrana.vercel.app/";
-
+const REPORT_BUG_URL = "mailto:support@cpcoach.xyz?subject=Bug%20Report%20-%20CP%20Coach";
 
 const infoItems = [
   { label: "Bangladesh", href: null, icon: MapPin },
@@ -74,9 +53,8 @@ const infoItems = [
 
 const footerGroups = [
   { title: "Platform", links: platformLinks },
-  { title: "Resources", links: resourceLinks },
-  { title: "Company", links: companyLinks },
 ] as const;
+
 
 function FooterLink({
   href,
@@ -226,7 +204,7 @@ export function LandingFooter() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-120px" }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="hidden gap-8 lg:grid lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr_1.1fr]"
+          className="hidden gap-8 lg:grid lg:grid-cols-[1.2fr_0.8fr_1.1fr]"
         >
           <div className="space-y-6">
             <div>
@@ -312,24 +290,21 @@ export function LandingFooter() {
               <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent" />
               <div className="absolute right-0 top-0 size-28 rounded-full bg-accent/20 blur-3xl" />
               <div className="relative">
-                <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                  ★★★★★ 5.0
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                  <Bug className="size-3.5" /> Support
                 </span>
                 <h3 className="mt-4 text-xl font-semibold tracking-tight">
-                  Built for Competitive Programmers
+                  Report a Bug
                 </h3>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  Practice smarter with AI-generated daily sheets, personalized analytics, and
-                  structured learning paths.
+                  Found something broken or unexpected? Let us know and we'll fix it fast.
                 </p>
-                <p className="mt-3 text-sm text-foreground/85">
-                  Trusted by competitive programmers worldwide
-                </p>
-                <Link to="/auth" className="mt-5 inline-flex">
+                <a href={REPORT_BUG_URL} className="mt-5 inline-flex">
                   <Button className="h-10 rounded-full border-0 bg-gradient-brand px-5 text-white shadow-glow hover:opacity-95">
-                    Start Free <ArrowRight className="size-4" />
+                    Report a Bug <ArrowRight className="size-4" />
                   </Button>
-                </Link>
+                </a>
+
 
                 <div className="mt-6 rounded-[22px] border border-white/10 bg-white/3 p-4">
                   <div className="text-lg font-semibold">Stay Updated</div>
@@ -436,24 +411,21 @@ export function LandingFooter() {
           <div className="relative">
             <div className="absolute inset-0 rounded-[24px] bg-gradient-brand opacity-25 blur-2xl" />
             <div className="glass-strong relative rounded-[24px] p-5">
-              <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                ★★★★★ 5.0
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                <Bug className="size-3.5" /> Support
               </span>
               <h3 className="mt-3 text-lg font-semibold tracking-tight">
-                Built for Competitive Programmers
+                Report a Bug
               </h3>
               <p className="mt-2.5 text-sm leading-6 text-muted-foreground">
-                Practice smarter with AI-generated daily sheets, personalized analytics, and
-                structured learning paths.
+                Found something broken or unexpected? Let us know and we'll fix it fast.
               </p>
-              <p className="mt-3 text-sm text-foreground/85">
-                Trusted by competitive programmers worldwide
-              </p>
-              <Link to="/auth" className="mt-4 inline-flex">
+              <a href={REPORT_BUG_URL} className="mt-4 inline-flex">
                 <Button className="h-10 rounded-full border-0 bg-gradient-brand px-5 text-white shadow-glow hover:opacity-95">
-                  Start Free <ArrowRight className="size-4" />
+                  Report a Bug <ArrowRight className="size-4" />
                 </Button>
-              </Link>
+              </a>
+
             </div>
           </div>
 

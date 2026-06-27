@@ -518,7 +518,17 @@ export function LandingFooter() {
 
         <div className="mt-10 border-t border-white/10 pt-5">
                   <div className="flex flex-col gap-4 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
-            <div>© 2026 CP Coach. All rights reserved.</div>
+            <div>
+              © 2026 CP Coach. All rights reserved. · Made by{" "}
+              <a
+                href={PORTFOLIO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-foreground hover:text-primary transition-colors"
+              >
+                Kazi Tauhid Rana
+              </a>
+            </div>
             <div className="text-foreground/80">Practice Smarter. Climb Faster.</div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
               <LanguageSelector />

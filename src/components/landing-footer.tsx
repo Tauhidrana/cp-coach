@@ -46,9 +46,9 @@ const PORTFOLIO_URL = "https://tauhidrana.vercel.app/";
 const REPORT_BUG_URL = "mailto:support@cpcoach.xyz?subject=Bug%20Report%20-%20CP%20Coach";
 
 const infoItems = [
-  { label: "Bangladesh", href: null, icon: MapPin },
+  { label: "Boalia,Rajshahi", href: null, icon: MapPin },
   { label: "cpcoach.xyz", href: "https://cpcoach.xyz", icon: Globe },
-  { label: "support@cpcoach.xyz", href: "mailto:support@cpcoach.xyz", icon: Mail },
+  { label: "tauhidrana00@gmail.com", href: "mailto:tauhidrana00@gmail.com", icon: Mail },
 ] as const;
 
 const footerGroups = [

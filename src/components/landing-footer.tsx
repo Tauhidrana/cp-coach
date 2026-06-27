@@ -290,24 +290,21 @@ export function LandingFooter() {
               <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent" />
               <div className="absolute right-0 top-0 size-28 rounded-full bg-accent/20 blur-3xl" />
               <div className="relative">
-                <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                  ★★★★★ 5.0
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                  <Bug className="size-3.5" /> Support
                 </span>
                 <h3 className="mt-4 text-xl font-semibold tracking-tight">
-                  Built for Competitive Programmers
+                  Report a Bug
                 </h3>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  Practice smarter with AI-generated daily sheets, personalized analytics, and
-                  structured learning paths.
+                  Found something broken or unexpected? Let us know and we'll fix it fast.
                 </p>
-                <p className="mt-3 text-sm text-foreground/85">
-                  Trusted by competitive programmers worldwide
-                </p>
-                <Link to="/auth" className="mt-5 inline-flex">
+                <a href={REPORT_BUG_URL} className="mt-5 inline-flex">
                   <Button className="h-10 rounded-full border-0 bg-gradient-brand px-5 text-white shadow-glow hover:opacity-95">
-                    Start Free <ArrowRight className="size-4" />
+                    Report a Bug <ArrowRight className="size-4" />
                   </Button>
-                </Link>
+                </a>
+
 
                 <div className="mt-6 rounded-[22px] border border-white/10 bg-white/3 p-4">
                   <div className="text-lg font-semibold">Stay Updated</div>

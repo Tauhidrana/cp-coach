@@ -4,16 +4,13 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   ChevronRight,
-  Disc3,
-  Facebook,
-  Github,
   Globe,
   Languages,
-  Linkedin,
   Mail,
   MapPin,
   Moon,
   Sun,
+
   Youtube,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";

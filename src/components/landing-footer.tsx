@@ -42,29 +42,8 @@ const platformLinks: readonly FooterItem[] = [
   { label: "Leaderboard", href: "/auth" },
 ] as const;
 
-const resourceLinks: readonly FooterItem[] = [
-  { label: "Blog", href: "/auth" },
-  { label: "Documentation", href: "/auth" },
-  { label: "Guides", href: "/auth" },
-  { label: "FAQ", href: "/auth" },
-  { label: "Changelog", href: "/auth" },
-  { label: "Community", href: "/auth" },
-  { label: "Feedback", href: "/auth" },
-  { label: "API", href: "/auth", suffix: "Coming Soon" },
-] as const;
-
-const companyLinks: readonly FooterItem[] = [
-  { label: "About", href: "/auth" },
-  { label: "Contact", href: "/auth" },
-  { label: "Privacy", href: "/auth" },
-  { label: "Terms", href: "/auth" },
-  { label: "Careers", href: "/auth" },
-  { label: "Sponsors", href: "/auth" },
-  { label: "Open Source", href: "/auth" },
-] as const;
-
 const PORTFOLIO_URL = "https://tauhidrana.vercel.app/";
-
+const REPORT_BUG_URL = "mailto:support@cpcoach.xyz?subject=Bug%20Report%20-%20CP%20Coach";
 
 const infoItems = [
   { label: "Bangladesh", href: null, icon: MapPin },
@@ -74,9 +53,8 @@ const infoItems = [
 
 const footerGroups = [
   { title: "Platform", links: platformLinks },
-  { title: "Resources", links: resourceLinks },
-  { title: "Company", links: companyLinks },
 ] as const;
+
 
 function FooterLink({
   href,

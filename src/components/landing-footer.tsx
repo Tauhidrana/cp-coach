@@ -275,29 +275,34 @@ export function LandingFooter() {
               <div className="mb-4 text-sm font-semibold uppercase tracking-[0.22em] text-foreground/85">
                 Social
               </div>
-              <div className="flex flex-wrap gap-3">
-                {socialLinks.map((social) => {
-                  const Icon = social.icon;
-                  return (
-                    <motion.a
-                      key={social.label}
-                      href={social.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={social.label}
-                      whileHover={{ y: -3, scale: 1.04 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="group relative inline-flex size-12 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/3 text-muted-foreground transition-colors duration-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
-                    >
-                      <span className="absolute inset-0 rounded-2xl bg-gradient-brand opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      <span className="absolute inset-px rounded-[15px] bg-[#07101f]/90" />
-                      <span className="absolute inset-0 rounded-2xl opacity-0 shadow-[0_0_28px_rgba(96,165,250,0.35)] transition-opacity duration-300 group-hover:opacity-100" />
-                      <Icon className="relative z-10 size-4" />
-                    </motion.a>
-                  );
-                })}
+              <div className="space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Made by{" "}
+                  <a
+                    href={PORTFOLIO_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-foreground hover:text-primary transition-colors"
+                  >
+                    Kazi Tauhid Rana
+                  </a>
+                </p>
+                <motion.a
+                  href={PORTFOLIO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -2, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-white/10 bg-white/3 px-4 py-2 text-sm text-foreground transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+                >
+                  <span className="absolute inset-0 rounded-full bg-gradient-brand opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <span className="absolute inset-px rounded-full bg-[#07101f]/90" />
+                  <Globe className="relative z-10 size-4" />
+                  <span className="relative z-10">Visit Portfolio</span>
+                </motion.a>
               </div>
             </div>
+
           </div>
 
           {footerGroups.map((group) => (

@@ -204,7 +204,7 @@ export function LandingFooter() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-120px" }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="hidden gap-8 lg:grid lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr_1.1fr]"
+          className="hidden gap-8 lg:grid lg:grid-cols-[1.2fr_0.8fr_1.1fr]"
         >
           <div className="space-y-6">
             <div>

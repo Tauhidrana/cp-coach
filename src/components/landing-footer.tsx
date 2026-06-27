@@ -4,16 +4,13 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   ChevronRight,
-  Disc3,
-  Facebook,
-  Github,
   Globe,
   Languages,
-  Linkedin,
   Mail,
   MapPin,
   Moon,
   Sun,
+
   Youtube,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
@@ -66,13 +63,10 @@ const companyLinks: readonly FooterItem[] = [
   { label: "Open Source", href: "/auth" },
 ] as const;
 
+const PORTFOLIO_URL = "https://tauhidrana.vercel.app/";
+
 const socialLinks = [
-  { label: "GitHub", href: "https://github.com/Tauhidrana", icon: Github },
-  { label: "Facebook", href: "https://facebook.com/kazitauhidrana", icon: Facebook },
-  { label: "Discord", href: "https://discord.com", icon: Disc3 },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/kazitauhidrana0", icon: Linkedin },
-  { label: "YouTube", href: "https://youtube.com", icon: Youtube },
-  { label: "X", href: "https://x.com", icon: Globe },
+  { label: "Portfolio — Kazi Tauhid Rana", href: PORTFOLIO_URL, icon: Globe },
 ] as const;
 
 const infoItems = [
@@ -521,7 +515,17 @@ export function LandingFooter() {
 
         <div className="mt-10 border-t border-white/10 pt-5">
                   <div className="flex flex-col gap-4 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
-            <div>© 2026 CP Coach. All rights reserved.</div>
+            <div>
+              © 2026 CP Coach. All rights reserved. · Made by{" "}
+              <a
+                href={PORTFOLIO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-foreground hover:text-primary transition-colors"
+              >
+                Kazi Tauhid Rana
+              </a>
+            </div>
             <div className="text-foreground/80">Practice Smarter. Climb Faster.</div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
               <LanguageSelector />

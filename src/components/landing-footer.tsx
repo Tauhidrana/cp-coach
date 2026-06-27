@@ -66,13 +66,10 @@ const companyLinks: readonly FooterItem[] = [
   { label: "Open Source", href: "/auth" },
 ] as const;
 
+const PORTFOLIO_URL = "https://tauhidrana.vercel.app/";
+
 const socialLinks = [
-  { label: "GitHub", href: "https://github.com/Tauhidrana", icon: Github },
-  { label: "Facebook", href: "https://facebook.com/kazitauhidrana", icon: Facebook },
-  { label: "Discord", href: "https://discord.com", icon: Disc3 },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/kazitauhidrana0", icon: Linkedin },
-  { label: "YouTube", href: "https://youtube.com", icon: Youtube },
-  { label: "X", href: "https://x.com", icon: Globe },
+  { label: "Portfolio — Kazi Tauhid Rana", href: PORTFOLIO_URL, icon: Globe },
 ] as const;
 
 const infoItems = [

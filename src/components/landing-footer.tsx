@@ -411,24 +411,21 @@ export function LandingFooter() {
           <div className="relative">
             <div className="absolute inset-0 rounded-[24px] bg-gradient-brand opacity-25 blur-2xl" />
             <div className="glass-strong relative rounded-[24px] p-5">
-              <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                ★★★★★ 5.0
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                <Bug className="size-3.5" /> Support
               </span>
               <h3 className="mt-3 text-lg font-semibold tracking-tight">
-                Built for Competitive Programmers
+                Report a Bug
               </h3>
               <p className="mt-2.5 text-sm leading-6 text-muted-foreground">
-                Practice smarter with AI-generated daily sheets, personalized analytics, and
-                structured learning paths.
+                Found something broken or unexpected? Let us know and we'll fix it fast.
               </p>
-              <p className="mt-3 text-sm text-foreground/85">
-                Trusted by competitive programmers worldwide
-              </p>
-              <Link to="/auth" className="mt-4 inline-flex">
+              <a href={REPORT_BUG_URL} className="mt-4 inline-flex">
                 <Button className="h-10 rounded-full border-0 bg-gradient-brand px-5 text-white shadow-glow hover:opacity-95">
-                  Start Free <ArrowRight className="size-4" />
+                  Report a Bug <ArrowRight className="size-4" />
                 </Button>
-              </Link>
+              </a>
+
             </div>
           </div>
 

@@ -3,6 +3,7 @@ import { type FormEvent } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
+  Bug,
   ChevronRight,
   Globe,
   Languages,
@@ -10,9 +11,8 @@ import {
   MapPin,
   Moon,
   Sun,
-
-  Youtube,
 } from "lucide-react";
+
 import { BrandLogo } from "@/components/brand-logo";
 import { useTheme } from "@/components/theme-provider";
 import {

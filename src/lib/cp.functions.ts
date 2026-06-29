@@ -131,6 +131,126 @@ function mulberry32(a: number) {
 
 // ---- AI Coach (Gemini via Lovable AI Gateway) ----
 
+type CoachSummary = {
+  handle: string;
+  rating?: number | null;
+  maxRating?: number | null;
+  rank?: string | null;
+  totalSolved: number;
+  contests: number;
+  lastContestDelta: number;
+  strongTopics: { tag: string; solved: number; score: number }[];
+  weakTopics: { tag: string; solved: number; score: number }[];
+  ratingDistribution: [number, number][];
+};
+
+function nextRatingGoal(rating?: number | null): number {
+  const current = rating && rating > 0 ? rating : 800;
+  if (current < 1200) return 1200;
+  if (current < 1400) return 1400;
+  if (current < 1600) return 1600;
+  if (current < 1900) return 1900;
+  if (current < 2100) return 2100;
+  return current + 200;
+}
+
+function buildCoachReport(summary: CoachSummary, lang: "en" | "bn"): string {
+  const weak = summary.weakTopics.slice(0, 3).map((t) => t.tag);
+  const strong = summary.strongTopics.slice(0, 3).map((t) => t.tag);
+  const target = nextRatingGoal(summary.rating);
+  const rating = summary.rating ?? 0;
+  const deltaText = summary.lastContestDelta
+    ? `${summary.lastContestDelta > 0 ? "+" : ""}${summary.lastContestDelta}`
+    : "stable";
+
+  if (lang === "bn") {
+    return `## সারসংক্ষেপ
+@${summary.handle} এখন ${rating || "unrated"} রেটিংয়ে আছে, ${summary.totalSolved}টি সমস্যা solved এবং ${summary.contests}টি rated contest history আছে। শেষ contest delta: ${deltaText}।
+
+## শক্তিশালী দিক
+আপনার সবচেয়ে ভালো এলাকা: ${strong.join(", ") || "implementation"}। এগুলো ধরে রাখতে প্রতি সপ্তাহে ২-৩টি revision problem solve করুন।
+
+## দুর্বলতা
+এই মুহূর্তে সবচেয়ে বেশি improvement আসবে ${weak.join(", ") || "greedy, math, binary search"} থেকে। ভুল submission গুলো upsolve করে pattern notes লিখুন।
+
+## এই সপ্তাহের ফোকাস
+প্রতিদিন ৩-৫টি targeted problem solve করুন: 70% weak topic, 20% revision, 10% challenge। প্রতিটি unsolved problem ৩০ মিনিট পরে editorial দেখে পুনরায় implement করুন।
+
+## পরবর্তী র‍্যাঙ্কের পথ
+পরবর্তী লক্ষ্য ${target}। ${Math.max(80, target - rating)} rating gap কমাতে contest-এর আগে virtual practice, পরে same-day upsolve, এবং weak topic drill বজায় রাখুন।`;
+  }
+
+  return `## Overall Assessment
+@${summary.handle} is currently ${rating || "unrated"} with ${summary.totalSolved} solved problems and ${summary.contests} rated contests. Last contest delta: ${deltaText}.
+
+## Strengths
+Your strongest areas are ${strong.join(", ") || "implementation"}. Keep them sharp with 2-3 weekly revision problems.
+
+## Weaknesses
+The fastest improvement should come from ${weak.join(", ") || "greedy, math, and binary search"}. Upsolve failed submissions and write short pattern notes.
+
+## Recommended Focus This Week
+Solve 3-5 targeted problems daily: 70% weak topics, 20% revision, 10% stretch challenge. For every unsolved problem, read the editorial after 30 minutes and re-implement it.
+
+## Path to Next Rank
+Aim for ${target}. To close the ${Math.max(80, target - rating)} rating gap, keep a contest-before virtual practice routine, same-day upsolving, and focused weak-topic drills.`;
+}
+
+function buildRoadmapFallback(ctx: {
+  currentRating: number;
+  targetRating: number;
+  topics: { tag: string; solved: number; score: number }[];
+}) {
+  const weak = ctx.topics
+    .slice()
+    .sort((a, b) => a.score - b.score)
+    .slice(0, 6)
+    .map((t) => t.tag);
+  const topicPlan = weak.length ? weak : ["implementation", "greedy", "binary search", "math", "graphs"];
+  const gap = Math.max(100, ctx.targetRating - ctx.currentRating);
+  const steps = Math.min(6, Math.max(4, Math.ceil(gap / 200)));
+
+  return {
+    milestones: Array.from({ length: steps }).map((_, i) => {
+      const ratingTarget = Math.min(
+        ctx.targetRating,
+        Math.max(ctx.currentRating + 100, ctx.currentRating + Math.round(((i + 1) / steps) * gap)),
+      );
+      const topics = [topicPlan[i % topicPlan.length], topicPlan[(i + 1) % topicPlan.length]].filter(
+        Boolean,
+      );
+      return {
+        title: `Master ${topics[0] ?? "core problem solving"}`,
+        ratingTarget,
+        weeks: i < 2 ? 2 : 3,
+        topics,
+        goals: [
+          `Solve 20 targeted ${topics[0] ?? "practice"} problems around ${Math.max(800, ratingTarget - 200)}-${ratingTarget}.`,
+          "Upsolve every failed contest problem within 24 hours.",
+          "Run one timed virtual contest and review mistakes before moving on.",
+        ],
+      };
+    }),
+  };
+}
+
+function parseRoadmapJson(text: string) {
+  const cleaned = text
+    .replace(/^```json\s*/i, "")
+    .replace(/```$/g, "")
+    .trim();
+  const parsed = JSON.parse(cleaned) as {
+    milestones?: {
+      title: string;
+      ratingTarget: number;
+      weeks: number;
+      topics: string[];
+      goals: string[];
+    }[];
+  };
+  return { milestones: Array.isArray(parsed.milestones) ? parsed.milestones : [] };
+}
+
 export const aiCoachAnalysis = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) =>
     z
@@ -142,8 +262,6 @@ export const aiCoachAnalysis = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("AI gateway not configured");
-
     const [user, submissions, ratingHistory] = await Promise.all([
       cached(`u:${data.handle}`, () => cf.userInfo(data.handle)),
       cached(`s:${data.handle}`, () => cf.userStatus(data.handle, 3000)),
@@ -172,12 +290,11 @@ export const aiCoachAnalysis = createServerFn({ method: "POST" })
       ratingDistribution: a.ratingDistribution,
     };
 
-    const { createLovableAiGatewayProvider } = await import("./ai-gateway.server");
-    const { generateText } = await import("ai");
-    const gateway = createLovableAiGatewayProvider(apiKey);
-    const model = gateway("google/gemini-3-flash-preview");
-
     const lang = data.language === "bn" ? "bn" : "en";
+    if (!apiKey) {
+      return { report: buildCoachReport(summary, lang), summary, language: lang };
+    }
+
     const langInstruction =
       lang === "bn"
         ? `Write the ENTIRE response in natural, fluent Bangla (বাংলা). Use Bangla script for all section headings and body text. Keep tag names like "dp", "graphs", "binary search" in English inside backticks. Use Bangla numerals only inside narrative text; keep ratings in Western digits.`
@@ -199,8 +316,17 @@ ${headings}
 
 Be brief and specific, no fluff. Tone: direct, motivating, like a senior CP grandmaster mentoring a student. Max 350 words.`;
 
-    const result = await generateText({ model, prompt });
-    return { report: result.text, summary, language: lang };
+    try {
+      const { createLovableAiGatewayProvider } = await import("./ai-gateway.server");
+      const { generateText } = await import("ai");
+      const gateway = createLovableAiGatewayProvider(apiKey);
+      const model = gateway("google/gemini-3-flash-preview");
+      const result = await generateText({ model, prompt });
+      return { report: result.text, summary, language: lang };
+    } catch (error) {
+      console.error("AI coach gateway failed; using deterministic fallback", error);
+      return { report: buildCoachReport(summary, lang), summary, language: lang };
+    }
   });
 
 // ---- Roadmap generator ----
@@ -211,8 +337,6 @@ export const generateRoadmap = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("AI gateway not configured");
-
     const [user, submissions] = await Promise.all([
       cached(`u:${data.handle}`, () => cf.userInfo(data.handle)),
       cached(`s:${data.handle}`, () => cf.userStatus(data.handle, 3000)),
@@ -226,10 +350,7 @@ export const generateRoadmap = createServerFn({ method: "POST" })
       topics: a.topics.map((t) => ({ tag: t.tag, solved: t.solved, score: t.score })),
     };
 
-    const { createLovableAiGatewayProvider } = await import("./ai-gateway.server");
-    const { generateText } = await import("ai");
-    const gateway = createLovableAiGatewayProvider(apiKey);
-    const model = gateway("google/gemini-3-flash-preview");
+    if (!apiKey) return buildRoadmapFallback(ctx);
 
     const prompt = `Create a focused Codeforces learning roadmap from rating ${ctx.currentRating} to ${ctx.targetRating} for handle @${user.handle}.
 
@@ -249,26 +370,18 @@ Return STRICT JSON only, no markdown fences, with shape:
 }
 Produce 5-7 milestones, ordered by progression. Prioritize the user's weakest topics first.`;
 
-    const result = await generateText({ model, prompt });
-    let parsed: {
-      milestones: {
-        title: string;
-        ratingTarget: number;
-        weeks: number;
-        topics: string[];
-        goals: string[];
-      }[];
-    };
     try {
-      const cleaned = result.text
-        .replace(/^```json\s*/i, "")
-        .replace(/```$/g, "")
-        .trim();
-      parsed = JSON.parse(cleaned);
-    } catch {
-      parsed = { milestones: [] };
+      const { createLovableAiGatewayProvider } = await import("./ai-gateway.server");
+      const { generateText } = await import("ai");
+      const gateway = createLovableAiGatewayProvider(apiKey);
+      const model = gateway("google/gemini-3-flash-preview");
+      const result = await generateText({ model, prompt });
+      const parsed = parseRoadmapJson(result.text);
+      return parsed.milestones.length ? parsed : buildRoadmapFallback(ctx);
+    } catch (error) {
+      console.error("Roadmap AI gateway failed; using deterministic fallback", error);
+      return buildRoadmapFallback(ctx);
     }
-    return parsed;
   });
 
 // ---- Profile (Lovable Cloud) ----

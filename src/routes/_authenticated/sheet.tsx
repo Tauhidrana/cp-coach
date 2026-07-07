@@ -241,18 +241,37 @@ function SheetPage() {
         </>
       ) : !mut.isPending ? (
         <GlassCard>
-          <h3 className="font-display text-lg font-semibold">Ready when you are</h3>
-          <p className="text-sm text-muted-foreground mt-1">
-            Hit <span className="text-primary">Generate sheet</span> — we'll pick problems across
-            Codeforces, CodeChef, and LeetCode based on your rating, weak topics, and yesterday's
-            progress.
-          </p>
-          {!doneToday ? null : null}
-          <Link to="/platforms">
-            <Button variant="outline" className="mt-4 border-border/60">
-              Manage platforms
-            </Button>
-          </Link>
+          <div className="flex flex-col items-center text-center py-6">
+            <div className="size-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-glow mb-4">
+              <Sparkles className="size-7 text-white" />
+            </div>
+            <h3 className="font-display text-xl font-semibold">Ready when you are</h3>
+            <p className="text-sm text-muted-foreground mt-2 max-w-md">
+              We&apos;ll pick problems across Codeforces, CodeChef, and LeetCode based on your
+              rating, weak topics, and recent progress.
+            </p>
+            {mut.error ? (
+              <p className="mt-3 text-sm text-destructive max-w-md">
+                {(mut.error as Error).message}
+              </p>
+            ) : null}
+            <div className="flex flex-wrap gap-3 justify-center mt-5">
+              <Button
+                size="lg"
+                onClick={() => mut.mutate(size)}
+                disabled={mut.isPending}
+                className="bg-gradient-brand text-white border-0 shadow-glow"
+              >
+                <Sparkles className="size-4 mr-2" />
+                Generate sheet
+              </Button>
+              <Link to="/platforms">
+                <Button size="lg" variant="outline" className="border-border/60">
+                  Manage platforms
+                </Button>
+              </Link>
+            </div>
+          </div>
         </GlassCard>
       ) : null}
     </div>

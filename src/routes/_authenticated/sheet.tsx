@@ -76,6 +76,15 @@ function SheetPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  // Auto-generate on first mount so users always land on a ready sheet.
+  const autoRan = useRef(false);
+  useEffect(() => {
+    if (autoRan.current) return;
+    autoRan.current = true;
+    mut.mutate(size);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const completeMut = useMutation({
     mutationFn: () => markFn(),
     onSuccess: () => {

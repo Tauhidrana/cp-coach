@@ -398,9 +398,16 @@ async function fetchHackerRank(username: string): Promise<PlatformStats> {
 // CSES has no public API. Users are identified by numeric ID from cses.fi/user/{id}.
 // We scrape the public profile page for username, submission count, and activity dates.
 // The solved-tasks list requires login, so problemsSolved reflects submission count.
-async function fetchCSES(userId: string): Promise<PlatformStats> {
-  const id = userId.trim();
-  if (!/^\d+$/.test(id)) throw new Error("CSES user must be a numeric ID (from cses.fi/user/ID)");
+async function fetchCSES(userInput: string): Promise<PlatformStats> {
+  const raw = userInput.trim();
+  // Accept a numeric ID OR a full profile URL like https://cses.fi/user/12345
+  const urlMatch = raw.match(/cses\.fi\/user\/(\d+)/i);
+  const id = urlMatch ? urlMatch[1] : raw;
+  if (!/^\d+$/.test(id)) {
+    throw new Error(
+      "CSES has no public username lookup. Paste your profile URL (cses.fi/user/…) or the numeric ID from it.",
+    );
+  }
   const res = await fetch(`https://cses.fi/user/${id}`, {
     headers: { "User-Agent": UA, Accept: "text/html" },
   });

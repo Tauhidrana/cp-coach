@@ -8,7 +8,8 @@ export type PlatformId =
   | "codechef"
   | "hackerrank"
   | "gfg"
-  | "coding-ninjas";
+  | "coding-ninjas"
+  | "cses";
 
 export interface PlatformMeta {
   id: PlatformId;

@@ -10,6 +10,7 @@ const PLATFORM_IDS = [
   "hackerrank",
   "gfg",
   "coding-ninjas",
+  "cses",
 ] as const;
 const PlatformIdSchema = z.enum(PLATFORM_IDS);
 
@@ -19,6 +20,7 @@ const API_PLATFORMS: readonly string[] = [
   "atcoder",
   "codechef",
   "hackerrank",
+  "cses",
 ];
 
 async function retryWithBackoff<T>(fn: () => Promise<T>, attempts = 3): Promise<T> {

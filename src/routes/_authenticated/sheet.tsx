@@ -245,7 +245,7 @@ function SheetPage() {
             <div className="size-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-glow mb-4">
               <Sparkles className="size-7 text-white" />
             </div>
-            <h3 className="font-display text-xl font-semibold">Ready when you are</h3>
+            <h2 className="font-display text-xl font-semibold">Ready when you are</h2>
             <p className="text-sm text-muted-foreground mt-2 max-w-md">
               We&apos;ll pick problems across Codeforces, CodeChef, and LeetCode based on your
               rating, weak topics, and recent progress.

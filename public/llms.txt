@@ -1,0 +1,10 @@
+# CP Coach
+
+> AI-powered competitive programming coach. Unified profile across Codeforces, LeetCode, AtCoder, CodeChef and more, with personalized daily practice sheets, weak-topic analytics, contest tracker, and a Gemini-powered AI coach.
+
+CP Coach helps competitive programmers train deliberately. It pulls submission and rating history from every major judge into one profile, computes a unified CP Coach Score, surfaces weak topics, generates daily practice sheets tuned to the user's level, and offers a conversational AI coach.
+
+## Pages
+
+- [Home](/): Landing page with product overview, features, and sign-up.
+- [Sign in](/auth): Google sign-in and guest access for CP Coach.

@@ -29,8 +29,24 @@ export const Route = createFileRoute("/")({
           "AI-powered Codeforces companion: personalized daily sheets, weak-topic detection, contest tracker, and an AI coach to push your rating higher.",
       },
       { property: "og:title", content: "CP Coach — Practice Smarter. Climb Faster." },
-      { property: "og:description", content: "AI-powered Codeforces training companion." },
+      {
+        property: "og:description",
+        content:
+          "AI daily sheets, weak-topic analytics, and a Gemini coach for competitive programmers.",
+      },
+      { property: "og:url", content: "https://cpcoach.xyz/" },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/EsKhWk4aepQPvU6BSdXYnkV49n73/social-images/social-1782017576876-ChatGPT_Image_Jun_21,_2026,_10_09_52_AM.webp",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/EsKhWk4aepQPvU6BSdXYnkV49n73/social-images/social-1782017576876-ChatGPT_Image_Jun_21,_2026,_10_09_52_AM.webp",
+      },
     ],
+    links: [{ rel: "canonical", href: "https://cpcoach.xyz/" }],
   }),
   component: Landing,
 });
@@ -134,6 +150,7 @@ function Landing() {
         </div>
       </header>
 
+      <main>
       {/* Hero */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 pb-20 sm:pb-32 text-center">
         <motion.div
@@ -389,6 +406,7 @@ function Landing() {
           </Button>
         </Link>
       </section>
+      </main>
       <LandingFooter />
     </div>
   );

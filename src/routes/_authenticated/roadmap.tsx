@@ -17,6 +17,11 @@ export const Route = createFileRoute("/_authenticated/roadmap")({
         name: "description",
         content: "AI-generated learning roadmap from your current to your target rating.",
       },
+      { property: "og:title", content: "Your Personal CP Roadmap" },
+      {
+        property: "og:description",
+        content: "A milestone-by-milestone AI plan from your current rating to your target.",
+      },
     ],
   }),
   component: RoadmapPage,

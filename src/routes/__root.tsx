@@ -110,43 +110,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CP Coach — Practice Smarter. Climb Faster." },
+      { title: "CP Coach — AI Competitive Programming Coach" },
       {
         name: "description",
         content:
-          "AI-powered competitive programming coach. Unified profile across Codeforces, CodeChef, LeetCode and AtCoder with personalized daily sheets, analytics, and an AI coach.",
+          "One profile across Codeforces, LeetCode, AtCoder, CodeChef & more. AI daily sheets, weak-topic analytics, contest tracker, and a Gemini coach.",
       },
       { name: "author", content: "CP Coach" },
       { property: "og:site_name", content: "CP Coach" },
-      { property: "og:title", content: "CP Coach — Practice Smarter. Climb Faster." },
-      {
-        property: "og:description",
-        content:
-          "AI-powered app for competitive programmers to analyze performance, track progress, and generate personalized practice.",
-      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "CP Coach — Practice Smarter. Climb Faster." },
-      {
-        name: "twitter:description",
-        content:
-          "AI-powered app for competitive programmers to analyze performance, track progress, and generate personalized practice.",
-      },
-      {
-        name: "description",
-        content:
-          "AI-powered app for competitive programmers to analyze performance, track progress, and generate personalized practice.",
-      },
-      {
-        property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/EsKhWk4aepQPvU6BSdXYnkV49n73/social-images/social-1782017576876-ChatGPT_Image_Jun_21,_2026,_10_09_52_AM.webp",
-      },
-      {
-        name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/EsKhWk4aepQPvU6BSdXYnkV49n73/social-images/social-1782017576876-ChatGPT_Image_Jun_21,_2026,_10_09_52_AM.webp",
-      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -155,6 +128,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: "CP Coach",
+              url: "https://cpcoach.xyz",
+              logo: "https://cpcoach.xyz/favicon.ico",
+            },
+            {
+              "@type": "WebSite",
+              name: "CP Coach",
+              url: "https://cpcoach.xyz",
+              description:
+                "AI-powered competitive programming coach unifying Codeforces, LeetCode, AtCoder, CodeChef and more.",
+            },
+          ],
+        }),
       },
     ],
   }),

@@ -30,6 +30,11 @@ export const Route = createFileRoute("/_authenticated/analytics")({
         name: "description",
         content: "Deep dive into your Codeforces rating, topics and activity.",
       },
+      { property: "og:title", content: "CP Analytics — Rating, Topics & Activity" },
+      {
+        property: "og:description",
+        content: "Charts and topic breakdowns for your competitive programming performance.",
+      },
     ],
   }),
   component: AnalyticsPage,

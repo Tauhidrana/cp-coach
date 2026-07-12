@@ -10,6 +10,7 @@ const PLATFORM_IDS = [
   "hackerrank",
   "gfg",
   "coding-ninjas",
+  "cses",
 ] as const;
 const PlatformIdSchema = z.enum(PLATFORM_IDS);
 
@@ -19,6 +20,7 @@ const API_PLATFORMS: readonly string[] = [
   "atcoder",
   "codechef",
   "hackerrank",
+  "cses",
 ];
 
 async function retryWithBackoff<T>(fn: () => Promise<T>, attempts = 3): Promise<T> {
@@ -46,7 +48,7 @@ export const connectPlatform = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => ConnectInput.parse(d))
   .handler(async ({ context, data }) => {
     const { fetchPlatformStats } = await import("./platforms/adapters.server");
-    const apiPlatforms = ["codeforces", "leetcode", "atcoder", "codechef", "hackerrank"] as const;
+    const apiPlatforms = ["codeforces", "leetcode", "atcoder", "codechef", "hackerrank", "cses"] as const;
     const isApi = (apiPlatforms as readonly string[]).includes(data.platform);
 
     let stats: {

@@ -394,6 +394,56 @@ async function fetchHackerRank(username: string): Promise<PlatformStats> {
   };
 }
 
+// ---------- CSES ----------
+// CSES has no public API. Users are identified by numeric ID from cses.fi/user/{id}.
+// We scrape the public profile page for username, submission count, and activity dates.
+// The solved-tasks list requires login, so problemsSolved reflects submission count.
+async function fetchCSES(userId: string): Promise<PlatformStats> {
+  const id = userId.trim();
+  if (!/^\d+$/.test(id)) throw new Error("CSES user must be a numeric ID (from cses.fi/user/ID)");
+  const res = await fetch(`https://cses.fi/user/${id}`, {
+    headers: { "User-Agent": UA, Accept: "text/html" },
+  });
+  if (res.status === 404) throw new Error("CSES user not found");
+  if (!res.ok) throw new Error(`CSES ${res.status}`);
+  const html = await res.text();
+
+  const nameMatch = html.match(/<title>\s*CSES\s*-\s*User\s+([^<]+?)\s*<\/title>/i);
+  if (!nameMatch) throw new Error("CSES profile not accessible");
+  const displayName = nameMatch[1].trim();
+
+  const pick = (re: RegExp) => {
+    const m = html.match(re);
+    return m ? m[1].trim() : null;
+  };
+  const toInt = (s: string | null) => {
+    if (!s) return null;
+    const n = parseInt(s.replace(/[^\d]/g, ""), 10);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  const submissions = toInt(pick(/Submission\s+count:\s*<\/td>\s*<td[^>]*>\s*(\d+)/i)) ?? 0;
+  const firstSub = pick(/First\s+submission:\s*<\/td>\s*<td[^>]*>\s*([^<]+)</i);
+  const lastSub = pick(/Last\s+submission:\s*<\/td>\s*<td[^>]*>\s*([^<]+)</i);
+
+  // Parse language table for extras
+  const languages: Array<{ name: string; count: number; share: string }> = [];
+  const langRe = /<tr><td[^>]*>([^<]+)<\/td><td[^>]*>(\d+)<\/td><td[^>]*>([\d.]+%)<\/td>/g;
+  let m: RegExpExecArray | null;
+  while ((m = langRe.exec(html)) !== null) {
+    languages.push({ name: m[1].trim(), count: parseInt(m[2], 10), share: m[3] });
+  }
+
+  return {
+    rating: null,
+    maxRating: null,
+    rankLabel: null,
+    problemsSolved: submissions,
+    contestCount: 0,
+    raw: { displayName, firstSubmission: firstSub, lastSubmission: lastSub, languages },
+  };
+}
+
 export async function fetchPlatformStats(
   platform: PlatformId,
   username: string,
@@ -409,6 +459,8 @@ export async function fetchPlatformStats(
       return fetchCodeChef(username);
     case "hackerrank":
       return fetchHackerRank(username);
+    case "cses":
+      return fetchCSES(username);
     default:
       throw new Error(`Platform ${platform} requires manual entry`);
   }

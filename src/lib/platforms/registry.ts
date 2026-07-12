@@ -8,7 +8,8 @@ export type PlatformId =
   | "codechef"
   | "hackerrank"
   | "gfg"
-  | "coding-ninjas";
+  | "coding-ninjas"
+  | "cses";
 
 export interface PlatformMeta {
   id: PlatformId;
@@ -94,6 +95,15 @@ export const PLATFORMS: Record<PlatformId, PlatformMeta> = {
     url: (u) => `https://www.codingninjas.com/studio/profile/${u}`,
     apiSupported: false,
     usernameHint: "manually update stats",
+  },
+  cses: {
+    id: "cses",
+    name: "CSES",
+    short: "CSES",
+    color: "#0b7285",
+    url: (u) => `https://cses.fi/user/${u}`,
+    apiSupported: true,
+    usernameHint: "numeric ID from cses.fi/user/ID",
   },
 };
 

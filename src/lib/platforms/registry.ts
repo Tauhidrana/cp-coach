@@ -103,7 +103,7 @@ export const PLATFORMS: Record<PlatformId, PlatformMeta> = {
     color: "#0b7285",
     url: (u) => `https://cses.fi/user/${u}`,
     apiSupported: true,
-    usernameHint: "numeric ID from cses.fi/user/ID",
+    usernameHint: "paste profile URL or numeric ID (cses.fi/user/…)",
   },
 };
 

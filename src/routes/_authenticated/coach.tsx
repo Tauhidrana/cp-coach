@@ -18,6 +18,11 @@ export const Route = createFileRoute("/_authenticated/coach")({
         name: "description",
         content: "Personalized AI coaching feedback for your Codeforces journey.",
       },
+      { property: "og:title", content: "AI Coach for Competitive Programmers" },
+      {
+        property: "og:description",
+        content: "Gemini-powered feedback tuned to your topics, contests, and rating velocity.",
+      },
     ],
   }),
   component: CoachPage,

@@ -18,6 +18,11 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
         name: "description",
         content: "Your unified competitive programming dashboard across every platform.",
       },
+      { property: "og:title", content: "Your CP Dashboard" },
+      {
+        property: "og:description",
+        content: "One view of your rating, solves, and progress across every CP platform.",
+      },
     ],
   }),
   component: Dashboard,

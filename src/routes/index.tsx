@@ -150,6 +150,7 @@ function Landing() {
         </div>
       </header>
 
+      <main>
       {/* Hero */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 pb-20 sm:pb-32 text-center">
         <motion.div

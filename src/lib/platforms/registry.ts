@@ -96,6 +96,15 @@ export const PLATFORMS: Record<PlatformId, PlatformMeta> = {
     apiSupported: false,
     usernameHint: "manually update stats",
   },
+  cses: {
+    id: "cses",
+    name: "CSES",
+    short: "CSES",
+    color: "#0b7285",
+    url: (u) => `https://cses.fi/user/${u}`,
+    apiSupported: true,
+    usernameHint: "numeric ID from cses.fi/user/ID",
+  },
 };
 
 export const PLATFORM_LIST: PlatformMeta[] = Object.values(PLATFORMS);

@@ -66,6 +66,8 @@ function ContestsPage() {
         </p>
       </div>
 
+      <h2 className="text-lg font-display font-semibold">Upcoming Contests</h2>
+
       {isLoading ? (
         <div className="grid md:grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (

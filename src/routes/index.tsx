@@ -406,6 +406,7 @@ function Landing() {
           </Button>
         </Link>
       </section>
+      </main>
       <LandingFooter />
     </div>
   );
